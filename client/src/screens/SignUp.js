@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import InputField from "../components/InputField";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const SignUp = () => {
   const [errors, setErrors] = useState({});
@@ -55,6 +56,8 @@ const SignUp = () => {
   const handleError = (error, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
+
+  const navigation = useNavigation();
 
   return (
     <>
@@ -112,7 +115,7 @@ const SignUp = () => {
               </View>
               <View>
                 <Pressable
-                  onPress={handleValidation}
+                  onPress={() => navigation.navigate("SignIn")}
                   className=" p-3 rounded-md"
                 >
                   <Text className="text-white text-center font-bold text-lg">
