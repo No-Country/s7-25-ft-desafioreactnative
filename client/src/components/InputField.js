@@ -35,6 +35,9 @@ const InputField = ({
               ? COLORS.white
               : COLORS.grey,
             alignItems: "center",
+            borderTopColor: "transparent",
+            borderLeftColor: "transparent",
+            borderRightColor: "transparent",
           },
         ]}
       >
@@ -50,7 +53,7 @@ const InputField = ({
             "flex w-full justify-center  px-3 h-full rounded-md text-white"
           }
           placeholder={placeholder}
-          placeholderTextColor="grey"
+          placeholderTextColor="white"
           {...props}
         />
       </View>
