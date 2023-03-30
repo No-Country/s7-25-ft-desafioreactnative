@@ -7,6 +7,13 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    colors: {
+      brandGreen: "#CBFB5E",
+      brandBlue: "#0E0B1F",
+      neutralLightGray: "#EEEEEE",
+      neutralDarkGray: "#71737B",
+      neutralMarineBlue: "#20242F",
+    },
   },
   plugins: [],
 };
