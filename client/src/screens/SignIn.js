@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   StatusBar,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import InputField from "../components/InputField";
 import { useState } from "react";
@@ -29,17 +30,14 @@ const SignIn = () => {
   const [passwordReveal, setPasswordReveal] = useState(true);
   const [eyeColor, setEyeColor] = useState("#EEEEEE");
   const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
     email: "",
     password: "",
-    confirmPassword: "",
-    city: "",
   });
 
   const handleValidation = async () => {
     Keyboard.dismiss();
     setValid(true);
+    setLoading | true;
 
     if (!formData.email) {
       handleError("Por favor, introduzca su correo electrónico", "email");
@@ -50,6 +48,7 @@ const SignIn = () => {
       setValid(false);
     }
     if (valid) {
+      setLoading(false);
       console.log("Formulario validado");
     }
   };
@@ -77,6 +76,12 @@ const SignIn = () => {
           className="flex-1 gap-y-2 px-8 pb-8 lg:px-8 lg:py-8 w-full justify-center "
           style={{ paddingTop: StatusBar.currentHeight }}
         >
+          <ActivityIndicator
+            animating={loading ? true : false}
+            color="#CBFB5E"
+            className="self-center absolute m-auto z-10"
+            size="large"
+          />
           <KeyboardAvoidingView>
             <ScrollView>
               <Text className="text-4xl mb-10 font-bold text-left text-[#FFFFFF]">
