@@ -1,4 +1,4 @@
-import { View, ActivityIndicator,StyleSheet } from 'react-native';
+import { ActivityIndicator,StyleSheet, SafeAreaView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -13,9 +13,9 @@ export default function OnBoardingView() {
 
     const Loading = () =>{
         return(
-            <View>
+            <SafeAreaView>
                 <ActivityIndicator size={'large'} color={'blue'} animating={true}/>
-            </View>
+            </SafeAreaView>
         );
     }
 
@@ -36,9 +36,9 @@ export default function OnBoardingView() {
       },[]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
     {loading?<Loading/>:viewedOnboarding ? <HomeScreen/>:<OnBoarding/>}
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Text,View,StyleSheet } from 'react-native';
+import { Text,StyleSheet, SafeAreaView } from 'react-native';
 import React from 'react';
 import OnBoarding from './components/OnBoarding';
 import OnBoardingView from './components/OnBoardingView';
@@ -23,10 +23,10 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistorStore}>
-        <View className="flex-1 bg-white">
+        <SafeAreaView className="flex-1 bg-white">
           <OnBoardingView/>
           <StatusBar style="auto" />
-        </View>
+        </SafeAreaView>
       </PersistGate>
     </Provider>
     
