@@ -1,5 +1,6 @@
+import { View, StyleSheet } from "react-native";
+import React from "react";
 import { StatusBar } from "expo-status-bar";
-import { Text, View } from "react-native";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import persistStore from "redux-persist/es/persistStore";
@@ -19,10 +20,12 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistorStore}>
-        <StatusBar style="light" />
-        <NavigationContainer>
-          <StackNavigation />
-        </NavigationContainer>
+        <View className="flex-1 ">
+          <StatusBar style="auto" />
+          <NavigationContainer>
+            <StackNavigation />
+          </NavigationContainer>
+        </View>
       </PersistGate>
     </Provider>
   );

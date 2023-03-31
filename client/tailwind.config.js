@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   content: [
     "./App.{js,jsx,ts,tsx}",
@@ -14,6 +15,8 @@ module.exports = {
       neutralDarkGray: "#71737B",
       neutralMarineBlue: "#20242F",
     },
+    extend: {
+    }
   },
   plugins: [],
 };
