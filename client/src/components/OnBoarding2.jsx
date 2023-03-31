@@ -14,34 +14,68 @@ export default function OnBoarding2({}) {
   const navigation = useNavigation();
 
     const [loaded] = useFonts({
-      'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
-      'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
-      'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
-      'Montserrat-Regular': require('../assets/fonts/Montserrat-Regular.ttf'),
-      'Montserrat-Bold': require('../assets/fonts/Montserrat-Bold.ttf'),
-      });
+      "Roboto-Bold": require("../../assets/fonts/Roboto-Bold.ttf"),
+      "Roboto-Medium": require("../../assets/fonts/Roboto-Medium.ttf"),
+      "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
+      "Montserrat-Regular": require("../../assets/fonts/Montserrat-Regular.ttf"),
+      "Montserrat-Bold": require("../../assets/fonts/Montserrat-Bold.ttf"),
+    });
       if (!loaded) {
         return null;
       }
       return (
         <View style={styles.container}>
-          <TailImage style={{backgroundColor:'#22242A'}} source={require('../assets/ImgOnBoarding/OnBoarding2.png')} className='w-full h-full justify-end items-center '>
-            <TailView className='w-3/4 h-2/4 flex-col justify-center items-center'>
-              <TailText style={{ fontFamily: 'Roboto-Bold', lineHeight: 45 }} className='text-4xl  text-neutral-100 antialiased text-center'>DESCUBRE</TailText>
-              <TailText style={{ fontFamily: 'Montserrat-Bold' }} className='text-neutral-100 mt-4 mb-20 leading-tight text-lg text-center'>DISFRUTA Y CONOCE NUEVOS{'\n'}SONIDOS Y ARTISTAS EMERGENTES</TailText>
-              <TailView className='flex-row gap-2'>
-                <View style={{width:7,height:7,backgroundColor:'#CBFB5E'}}></View>
-                <View style={{width:7,height:7,backgroundColor:'#CBFB5E'}}></View>
-                <View style={{width:7,height:7,backgroundColor:'#71737B'}}></View>
-                <View style={{width:7,height:7,backgroundColor:'#71737B'}}></View>
+          <TailImage
+            style={{ backgroundColor: "#22242A" }}
+            source={require("../../assets/ImgOnBoarding/OnBoarding2.png")}
+            className="w-full h-full justify-end items-center "
+          >
+            <TailView className="w-3/4 h-2/4 flex-col justify-center items-center">
+              <TailText
+                style={{ fontFamily: "Roboto-Bold", lineHeight: 45 }}
+                className="text-4xl  text-neutral-100 antialiased text-center"
+              >
+                DESCUBRE
+              </TailText>
+              <TailText
+                style={{ fontFamily: "Montserrat-Bold" }}
+                className="text-neutral-100 mt-4 mb-20 leading-tight text-lg text-center"
+              >
+                DISFRUTA Y CONOCE NUEVOS{"\n"}SONIDOS Y ARTISTAS EMERGENTES
+              </TailText>
+              <TailView className="flex-row gap-2">
+                <View
+                  style={{ width: 7, height: 7, backgroundColor: "#CBFB5E" }}
+                ></View>
+                <View
+                  style={{ width: 7, height: 7, backgroundColor: "#CBFB5E" }}
+                ></View>
+                <View
+                  style={{ width: 7, height: 7, backgroundColor: "#71737B" }}
+                ></View>
+                <View
+                  style={{ width: 7, height: 7, backgroundColor: "#71737B" }}
+                ></View>
               </TailView>
-              <TailPressable style={StyleSheet.compose(styles.GreenBg,{marginTop:'52.5%'})} underlayColor='#b6e154' onPress={()=>navigation.navigate('Onboarding3')} className='justify-center items-center py-5 w-full bg-neutral-300 rounded-full'>
-                <TailText style={{ fontFamily: 'Roboto-Bold'}} className='text-xl uppercase text-slate-900'>Continuar</TailText>
+              <TailPressable
+                style={StyleSheet.compose(styles.GreenBg, {
+                  marginTop: "52.5%",
+                })}
+                underlayColor="#b6e154"
+                onPress={() => navigation.navigate("Onboarding3")}
+                className="justify-center items-center py-5 w-full bg-neutral-300 rounded-full"
+              >
+                <TailText
+                  style={{ fontFamily: "Roboto-Bold" }}
+                  className="text-xl uppercase text-slate-900"
+                >
+                  Continuar
+                </TailText>
               </TailPressable>
             </TailView>
-        </TailImage>
+          </TailImage>
         </View>
-  );
+      );
 }
 const styles = StyleSheet.create({
   container: {
