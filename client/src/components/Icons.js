@@ -198,7 +198,7 @@ export const SearchIcon = () => {
   );
 };
 
-export const HomeIcon = () => {
+export const HomeIcon = ({ color }) => {
   return (
     <Svg
       width="24"
@@ -211,7 +211,7 @@ export const HomeIcon = () => {
         fill-rule="evenodd"
         clip-rule="evenodd"
         d="M2 12.28V24.4519H9.8V18.3659H14.48V24.4519H22.28V12.28L12.14 1.62964L2 12.28Z"
-        stroke="#71737B"
+        stroke={color}
         stroke-width="2.5"
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -220,7 +220,7 @@ export const HomeIcon = () => {
   );
 };
 
-export const ExploreIcon = () => {
+export const ExploreIcon = ({ color }) => {
   return (
     <Svg
       width="18"
@@ -233,7 +233,7 @@ export const ExploreIcon = () => {
         fill-rule="evenodd"
         clip-rule="evenodd"
         d="M8.91016 19.6281C8.91016 19.6281 2.03516 13.5324 2.03516 8.04631C2.03516 4.34311 5.1132 1.34106 8.91016 1.34106C12.7071 1.34106 15.7852 4.34311 15.7852 8.04631C15.7852 13.5324 8.91016 19.6281 8.91016 19.6281Z"
-        stroke="#71737B"
+        stroke={color}
         stroke-width="2.5"
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -242,7 +242,7 @@ export const ExploreIcon = () => {
         fill-rule="evenodd"
         clip-rule="evenodd"
         d="M12.0352 8.04637C12.0352 6.3631 10.636 4.99854 8.91016 4.99854C7.18427 4.99854 5.78516 6.3631 5.78516 8.04637C5.78516 9.72965 7.18427 11.0942 8.91016 11.0942C10.636 11.0942 12.0352 9.72965 12.0352 8.04637Z"
-        stroke="#71737B"
+        stroke={color}
         stroke-width="2.5"
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -251,7 +251,7 @@ export const ExploreIcon = () => {
   );
 };
 
-export const RadioIcon = () => {
+export const RadioIcon = ({ color }) => {
   return (
     <Svg
       width="23"
@@ -264,13 +264,13 @@ export const RadioIcon = () => {
         fill-rule="evenodd"
         clip-rule="evenodd"
         d="M21.5672 7.89238V19.2726C21.5672 20.3158 20.7517 21.1693 19.7347 21.1693H5.0749C4.05788 21.1693 3.24243 20.3158 3.24243 19.2726V7.89238C3.24243 7.10525 3.70971 6.40346 4.37856 6.13793L15.9598 1.25391L16.5828 2.82817L9.01472 5.99567H19.7347C20.7517 5.99567 21.5672 6.83971 21.5672 7.89238ZM5.07495 7.8924V10.7366H16.0698V8.84048H17.9023V10.7366H19.7347V7.8924H5.07495ZM19.7347 19.2726V12.6341H5.07495V19.2726H19.7347ZM6.44922 15.9344C6.44922 14.625 7.47475 13.5635 8.73981 13.5635C10.0049 13.5635 11.0304 14.625 11.0304 15.9344C11.0304 17.2438 10.0049 18.3052 8.73981 18.3052C7.47475 18.3052 6.44922 17.2438 6.44922 15.9344Z"
-        fill="#71737B"
+        fill={color}
       />
     </Svg>
   );
 };
 
-export const AccountIcon = () => {
+export const AccountIcon = ({ color }) => {
   return (
     <Svg
       width="20"
@@ -283,7 +283,7 @@ export const AccountIcon = () => {
         fill-rule="evenodd"
         clip-rule="evenodd"
         d="M17.5925 15.5109C15.3374 14.0866 12.6842 13.3811 10 13.492C7.31578 13.3811 4.66257 14.0866 2.4075 15.5109C2.07332 15.7394 1.87453 16.1126 1.875 16.5106V19.5877H18.125V16.5106C18.1255 16.1126 17.9267 15.7394 17.5925 15.5109Z"
-        stroke="#71737B"
+        stroke={color}
         stroke-width="2.5"
         stroke-linecap="round"
         stroke-linejoin="round"
@@ -292,7 +292,7 @@ export const AccountIcon = () => {
         fill-rule="evenodd"
         clip-rule="evenodd"
         d="M14.375 5.56776C14.375 3.21117 12.4162 1.30078 10 1.30078C7.58375 1.30078 5.625 3.21117 5.625 5.56776C5.625 7.92434 7.58375 9.83473 10 9.83473C12.4162 9.83473 14.375 7.92434 14.375 5.56776Z"
-        stroke="#71737B"
+        stroke={color}
         stroke-width="2.5"
         stroke-linecap="round"
         stroke-linejoin="round"
