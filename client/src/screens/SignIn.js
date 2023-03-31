@@ -26,6 +26,8 @@ const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const [valid, setValid] = useState(false);
   const [screen, setScreen] = useState(0);
+  const [passwordReveal, setPasswordReveal] = useState(true);
+  const [eyeColor, setEyeColor] = useState("#EEEEEE");
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
@@ -57,13 +59,19 @@ const SignIn = () => {
   };
 
   const navigation = useNavigation();
+  const handlePasswordVisibility = () => {
+    setPasswordReveal(!passwordReveal);
+    setEyeColor((prevEyeColor) =>
+      prevEyeColor === "#EEEEEE" ? "#CBFB5E" : "#EEEEEE"
+    );
+  };
 
   return (
     <>
       <ImageBackground
         source={backgroundImage}
         style={{ flex: 1 }}
-        className="bg-black opacity-85"
+        className="bg-[#000] opacity-85"
       >
         <View
           className="flex-1 gap-y-2 px-8 pb-8 lg:px-8 lg:py-8 w-full justify-center "
@@ -71,7 +79,7 @@ const SignIn = () => {
         >
           <KeyboardAvoidingView>
             <ScrollView>
-              <Text className="text-4xl mb-10 font-bold text-left text-white">
+              <Text className="text-4xl mb-10 font-bold text-left text-[#FFFFFF]">
                 Iniciar sesión
               </Text>
               <View>
@@ -80,7 +88,7 @@ const SignIn = () => {
                     <AtIcon />
                   </View>
                   <InputField
-                    className=" text-white placeholder:font-bold placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
+                    className=" text-[#FFFFFF]  placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
                     placeholder="E-Mail"
                     onChangeText={(text) =>
                       setFormData({ ...formData, email: text })
@@ -95,11 +103,14 @@ const SignIn = () => {
                   <View className="flex-1 flex-row items-center">
                     <LockIcon />
                   </View>
-                  <View className="absolute right-1 flex-row items-center">
-                    <EyeIcon />
-                  </View>
+                  <Pressable
+                    className="absolute right-1 flex-row items-center justify-center w-10 h-10 z-50"
+                    onPress={handlePasswordVisibility}
+                  >
+                    <EyeIcon color={eyeColor} />
+                  </Pressable>
                   <InputField
-                    className=" text-white placeholder:font-bold placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
+                    className=" text-[#FFFFFF]  placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
                     placeholder="Contraseña"
                     onChangeText={(text) =>
                       setFormData({ ...formData, password: text })
@@ -108,11 +119,12 @@ const SignIn = () => {
                     password
                     value={formData.password}
                     underlineColorAndroid="transparent"
+                    secureTextEntry={passwordReveal}
                   />
                 </View>
 
                 <View>
-                  <Text className="text-white text-right my-6">
+                  <Text className="text-[#FFFFFF] text-right my-6">
                     ¿Olvidaste tu contraseña?
                   </Text>
                 </View>
@@ -128,7 +140,7 @@ const SignIn = () => {
                 </View>
                 <View className="flex-row justify-center items-center ">
                   <View className=" bg-[#EEEEEE] h-[1px] w-4/12"></View>
-                  <Text className="text-white text-center mx-2">
+                  <Text className="text-[#FFFFFF] text-center mx-2">
                     O registrate con
                   </Text>
 
@@ -162,7 +174,7 @@ const SignIn = () => {
                   </View>
                 </View>
                 <View className="justify-center flex-row">
-                  <Text className="text-white text-center my-10">
+                  <Text className="text-[#FFFFFF] text-center my-10">
                     ¿Aún no tienes una cuenta?
                   </Text>
                   <Text
