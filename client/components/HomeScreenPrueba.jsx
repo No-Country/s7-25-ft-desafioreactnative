@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, SafeAreaView } from 'react-native'
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -14,12 +14,12 @@ export default function HomeScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text>Home Screen</Text>
       <TouchableOpacity onPress={clearOnboarding}>
         <Text>Limpiar Onboarding</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
