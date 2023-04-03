@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, StyleSheet, Text, TouchableHighlight, SafeAreaView } from 'react-native';
+import { Image, StyleSheet, Text, TouchableHighlight, SafeAreaView, Dimensions } from 'react-native';
 import 'react-native-gesture-handler';
 import { styled } from 'nativewind';
 import { useFonts } from 'expo-font';
@@ -12,6 +12,8 @@ const TailImage = styled(Image);
 const TailPressable = styled(TouchableHighlight);
 
 export default function OnBoarding1({}) {
+  const height = Dimensions.get('window').height;
+  const width = Dimensions.get('window').width;
 
   const navigation = useNavigation();
     const [loaded] = useFonts({
@@ -23,21 +25,22 @@ export default function OnBoarding1({}) {
       if (!loaded) {
         return null;
       }
+      
       return (
         <SafeAreaView style={styles.container}>
           <TailImage style={styles.BlueBg} source={require('../assets/ImgOnBoarding/OnBoarding1.jpg')} className='w-full h-1/2'></TailImage>
           <TailSafeAreaView style={styles.BlueBg} className='w-full h-1/2 items-center'>
             <TailSafeAreaView className='w-5/6 h-full flex-col justify-center items-center'>
-            <TailSafeAreaView className='flex-row gap-2 self-start ml-6'>
-                <SafeAreaView style={{width:7,height:7,backgroundColor:'#CBFB5E'}}></SafeAreaView>
-                <SafeAreaView style={{width:7,height:7,backgroundColor:'#71737B'}}></SafeAreaView>
-                <SafeAreaView style={{width:7,height:7,backgroundColor:'#71737B'}}></SafeAreaView>
-                <SafeAreaView style={{width:7,height:7,backgroundColor:'#71737B'}}></SafeAreaView>
+            <TailSafeAreaView className='flex-row gap-2 self-start'>
+                <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#CBFB5E'}}></SafeAreaView>
+                <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#71737B'}}></SafeAreaView>
+                <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#71737B'}}></SafeAreaView>
+                <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#71737B'}}></SafeAreaView>
               </TailSafeAreaView>
-              <TailText style={ StyleSheet.compose({fontFamily: 'Roboto-Regular'},styles.GreenColor)} className='self-center text-xl mt-16 mb-24 tracking-wide'>DESCUBRE LO QUE PODEMOS OFRECERTE</TailText>
-              <TailText style={{ fontFamily: 'Roboto-Medium' }} className='text-neutral-200 mt-6 leading-tight text-2xl self-center text-center'>¿Te gustaría comprar o vender{'\n'}tus creaciones musicales?</TailText>
-              <TailPressable style={styles.GreenBg} underlayColor='#b6e154' onPress={()=>{navigation.navigate('Onboarding2')}} className='justify-center items-center py-5 w-full bg-neutral-300 rounded-full mt-36 mb-1'>
-                <TailText style={{ fontFamily: 'Roboto-Bold'}} className='text-xl uppercase text-slate-900'>Continuar</TailText>
+              <TailText style={ StyleSheet.compose({fontFamily:'Roboto-Regular',marginTop:height*0.05,fontSize:height*0.019,letterSpacing:width*0.001},styles.GreenColor)} className='self-center'>DESCUBRE LO QUE PODEMOS OFRECERTE</TailText>
+              <TailText style={{ fontFamily: 'Roboto-Medium',marginTop:height*0.1,fontSize:height*0.025}} className='text-neutral-200 leading-tight self-center text-center'>¿Te gustaría comprar o vender{'\n'}tus creaciones musicales?</TailText>
+              <TailPressable style={StyleSheet.compose({marginTop:height*0.14,height:height*0.06},styles.GreenBg)} underlayColor='#b6e154' onPress={()=>{navigation.navigate('Onboarding2')}} className='justify-center items-center w-full bg-neutral-300 rounded-full '>
+                <TailText style={{ fontFamily: 'Roboto-Bold',fontSize:height*0.020}} className=' uppercase text-slate-900'>Continuar</TailText>
               </TailPressable>
             </TailSafeAreaView>
           </TailSafeAreaView>
@@ -60,7 +63,5 @@ const styles = StyleSheet.create({
     BlueBg:{
       backgroundColor:'#0E0B1F',
     }
-
-
 
   });

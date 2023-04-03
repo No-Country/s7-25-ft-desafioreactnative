@@ -1,5 +1,5 @@
 import React from 'react'
-import {ImageBackground, StyleSheet, Text, TouchableHighlight, SafeAreaView } from 'react-native';
+import {ImageBackground, StyleSheet, Text, TouchableHighlight, SafeAreaView, Dimensions } from 'react-native';
 import { styled } from 'nativewind';
 import { useFonts } from 'expo-font';
 import { useNavigation } from '@react-navigation/native';
@@ -10,6 +10,9 @@ const TailImage = styled(ImageBackground);
 const TailPressable = styled(TouchableHighlight);
 
 export default function OnBoarding2({}) {
+  
+  const height = Dimensions.get('window').height;
+  const width = Dimensions.get('window').width;
 
   const navigation = useNavigation();
 
@@ -27,16 +30,16 @@ export default function OnBoarding2({}) {
         <SafeAreaView style={styles.container}>
           <TailImage style={{backgroundColor:'#22242A'}} source={require('../assets/ImgOnBoarding/OnBoarding2.png')} className='w-full h-full justify-end items-center '>
             <TailSafeAreaView className='w-3/4 h-2/4 flex-col justify-center items-center'>
-              <TailText style={{ fontFamily: 'Roboto-Bold', lineHeight: 45 }} className='text-4xl  text-neutral-100 antialiased text-center'>DESCUBRE</TailText>
-              <TailText style={{ fontFamily: 'Montserrat-Bold' }} className='text-neutral-100 mt-4 mb-20 leading-tight text-lg text-center'>DISFRUTA Y CONOCE NUEVOS{'\n'}SONIDOS Y ARTISTAS EMERGENTES</TailText>
+              <TailText style={{ fontFamily: 'Roboto-Bold',fontSize:height*0.035}} className=' text-neutral-100 antialiased text-center'>DESCUBRE</TailText>
+              <TailText style={{ fontFamily: 'Montserrat-Bold',fontSize:height*0.018,marginTop:height*0.04,marginBottom:height*0.06,lineHeight:height*0.028 }} className='text-neutral-100 text-center'>DISFRUTA Y CONOCE NUEVOS{'\n'}SONIDOS Y ARTISTAS EMERGENTES</TailText>
               <TailSafeAreaView className='flex-row gap-2'>
-                <SafeAreaView style={{width:7,height:7,backgroundColor:'#CBFB5E'}}></SafeAreaView>
-                <SafeAreaView style={{width:7,height:7,backgroundColor:'#CBFB5E'}}></SafeAreaView>
-                <SafeAreaView style={{width:7,height:7,backgroundColor:'#71737B'}}></SafeAreaView>
-                <SafeAreaView style={{width:7,height:7,backgroundColor:'#71737B'}}></SafeAreaView>
+                <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#CBFB5E'}}></SafeAreaView>
+                <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#CBFB5E'}}></SafeAreaView>
+                <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#71737B'}}></SafeAreaView>
+                <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#71737B'}}></SafeAreaView>
               </TailSafeAreaView>
-              <TailPressable style={StyleSheet.compose(styles.GreenBg,{marginTop:'52.5%'})} underlayColor='#b6e154' onPress={()=>navigation.navigate('Onboarding3')} className='justify-center items-center py-5 w-full bg-neutral-300 rounded-full'>
-                <TailText style={{ fontFamily: 'Roboto-Bold'}} className='text-xl uppercase text-slate-900'>Continuar</TailText>
+              <TailPressable style={StyleSheet.compose(styles.GreenBg,{marginTop:height*0.174,height:height*0.06})} underlayColor='#b6e154' onPress={()=>navigation.navigate('Onboarding3')} className='justify-center items-center w-full bg-neutral-300 rounded-full'>
+                <TailText style={{ fontFamily: 'Roboto-Bold',fontSize:height*0.020}} className=' uppercase text-slate-900'>Continuar</TailText>
               </TailPressable>
             </TailSafeAreaView>
         </TailImage>
