@@ -7,6 +7,8 @@ const {
 	updateUser,
 	deleteUser,
 	login,
+	forgotPassword,
+	resetPassword,
 } = require('../controllers/users.controller');
 
 // Middlewares
@@ -22,14 +24,21 @@ const {
 
 const usersRouter = express.Router();
 
+// register
 usersRouter.post('/', createUserValidators, createUser);
 
 usersRouter.post('/login', login);
 
-// Protecting below endpoints
-usersRouter.use(protectSession);
+usersRouter.post('/forgot-password', forgotPassword);
 
-usersRouter.get('/', getAllUsers);//protectAdmin
+// usersRouter.post('/reset-password', resetPassword);
+usersRouter.post('/reset-password', resetPassword);
+// probar con dos puntos como si fuera params
+
+// Protecting below endpoints
+// usersRouter.use(protectSession);
+
+usersRouter.get('/', getAllUsers); //protectAdmin
 
 usersRouter.patch('/:id', userExists, protectUsersAccount, updateUser);
 
