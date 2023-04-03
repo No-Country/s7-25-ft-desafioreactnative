@@ -133,7 +133,7 @@ const SignIn = () => {
                     ¿Olvidaste tu contraseña?
                   </Text>
                 </View>
-                <View className="bg-brandGreen rounded-full mb-4 mt-1 mb-16">
+                <View className="bg-brandGreen rounded-full mt-1 mb-16">
                   <Pressable
                     onPress={handleValidation}
                     className="p-3 rounded-full"
