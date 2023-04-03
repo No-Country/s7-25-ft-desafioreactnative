@@ -1,9 +1,10 @@
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import HomeScreen from "../screens/HomeScreenPrueba";
 import OnBoarding from "../navigation/OnBoardingNavigation";
+import { useNavigation } from "@react-navigation/native";
+import SignUp from "../screens/SignUp";
+
 
 export default function OnBoardingView() {
   const [loading, setLoading] = useState(true);
@@ -38,7 +39,7 @@ export default function OnBoardingView() {
       {loading ? (
         <Loading />
       ) : viewedOnboarding ? (
-        <HomeScreen />
+        <SignUp/>
       ) : (
         <OnBoarding />
       )}

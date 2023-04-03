@@ -17,21 +17,21 @@ export default function OnBoarding2({}) {
   const navigation = useNavigation();
 
     const [loaded] = useFonts({
-      'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
-      'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
-      'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
-      'Montserrat-Regular': require('../assets/fonts/Montserrat-Regular.ttf'),
-      'Montserrat-Bold': require('../assets/fonts/Montserrat-Bold.ttf'),
+      'Roboto-Bold': require('../../assets/fonts/Roboto-Bold.ttf'),
+      'Roboto-Medium': require('../../assets/fonts/Roboto-Medium.ttf'),
+      'Roboto-Regular': require('../../assets/fonts/Roboto-Regular.ttf'),
+      'Montserrat-Regular': require('../../assets/fonts/Montserrat-Regular.ttf'),
+      'Montserrat-Bold': require('../../assets/fonts/Montserrat-Bold.ttf'),
       });
       if (!loaded) {
         return null;
       }
       return (
         <SafeAreaView style={styles.container}>
-          <TailImage style={{backgroundColor:'#22242A'}} source={require('../assets/ImgOnBoarding/OnBoarding2.png')} className='w-full h-full justify-end items-center '>
+          <TailImage style={{backgroundColor:'#22242A'}} source={require('../../assets/ImgOnBoarding/OnBoarding2.png')} className='w-full h-full justify-end items-center '>
             <TailSafeAreaView className='w-3/4 h-2/4 flex-col justify-center items-center'>
-              <TailText style={{ fontFamily: 'Roboto-Bold',fontSize:height*0.035}} className=' text-neutral-100 antialiased text-center'>DESCUBRE</TailText>
-              <TailText style={{ fontFamily: 'Montserrat-Bold',fontSize:height*0.018,marginTop:height*0.04,marginBottom:height*0.06,lineHeight:height*0.028 }} className='text-neutral-100 text-center'>DISFRUTA Y CONOCE NUEVOS{'\n'}SONIDOS Y ARTISTAS EMERGENTES</TailText>
+              <TailText style={{ fontFamily: 'Roboto-Bold',fontSize:height*0.035}} className=' text-neutralLightGray antialiased text-center'>DESCUBRE</TailText>
+              <TailText style={{ fontFamily: 'Montserrat-Bold',fontSize:height*0.018,marginTop:height*0.04,marginBottom:height*0.06,lineHeight:height*0.028 }} className='text-neutralLightGray text-center'>DISFRUTA Y CONOCE NUEVOS{'\n'}SONIDOS Y ARTISTAS EMERGENTES</TailText>
               <TailSafeAreaView className='flex-row gap-2'>
                 <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#CBFB5E'}}></SafeAreaView>
                 <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#CBFB5E'}}></SafeAreaView>

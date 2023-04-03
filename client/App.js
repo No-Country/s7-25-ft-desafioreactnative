@@ -1,7 +1,6 @@
 import { Text, View, StyleSheet } from "react-native";
 import React from "react";
-import OnBoarding from "./components/OnBoarding";
-import OnBoardingView from "./components/OnBoardingView";
+import OnBoardingView from "./src/components/OnBoardingView";
 
 import { StatusBar } from "expo-status-bar";
 import { Provider } from "react-redux";
@@ -11,6 +10,7 @@ import store from "./src/redux/store";
 import { NativeWindStyleSheet } from "nativewind";
 import { NavigationContainer } from "@react-navigation/native";
 import StackNavigation from "./src/navigation/StackNavigation";
+import SignIn from "./src/screens/SignIn";
 
 let persistorStore = persistStore(store);
 
@@ -24,9 +24,10 @@ export default function App() {
     <Provider store={store}>
       <PersistGate persistor={persistorStore}>
         <View className="flex-1 bg-white">
-          <OnBoardingView />
-          <StatusBar style="auto" />
-        </View>
+        <NavigationContainer>
+        <StackNavigation/>
+        </NavigationContainer>
+        </View> 
       </PersistGate>
     </Provider>
   );

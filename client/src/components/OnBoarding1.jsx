@@ -17,10 +17,10 @@ export default function OnBoarding1({}) {
 
   const navigation = useNavigation();
     const [loaded] = useFonts({
-        'Roboto-Bold': require('../assets/fonts/Roboto-Bold.ttf'),
-        'Roboto-Medium': require('../assets/fonts/Roboto-Medium.ttf'),
-        'Roboto-Regular': require('../assets/fonts/Roboto-Regular.ttf'),
-        'Montserrat-Regular': require('../assets/fonts/Montserrat-Regular.ttf'),
+        'Roboto-Bold': require('../../assets/fonts/Roboto-Bold.ttf'),
+        'Roboto-Medium': require('../../assets/fonts/Roboto-Medium.ttf'),
+        'Roboto-Regular': require('../../assets/fonts/Roboto-Regular.ttf'),
+        'Montserrat-Regular': require('../../assets/fonts/Montserrat-Regular.ttf'),
       });
       if (!loaded) {
         return null;
@@ -28,7 +28,7 @@ export default function OnBoarding1({}) {
       
       return (
         <SafeAreaView style={styles.container}>
-          <TailImage style={styles.BlueBg} source={require('../assets/ImgOnBoarding/OnBoarding1.jpg')} className='w-full h-1/2'></TailImage>
+          <TailImage style={styles.BlueBg} source={require('../../assets/ImgOnBoarding/OnBoarding1.jpg')} className='w-full h-1/2'></TailImage>
           <TailSafeAreaView style={styles.BlueBg} className='w-full h-1/2 items-center'>
             <TailSafeAreaView className='w-5/6 h-full flex-col justify-center items-center'>
             <TailSafeAreaView className='flex-row gap-2 self-start'>
@@ -37,8 +37,8 @@ export default function OnBoarding1({}) {
                 <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#71737B'}}></SafeAreaView>
                 <SafeAreaView style={{width:width*0.015,height:width*0.015,backgroundColor:'#71737B'}}></SafeAreaView>
               </TailSafeAreaView>
-              <TailText style={ StyleSheet.compose({fontFamily:'Roboto-Regular',marginTop:height*0.05,fontSize:height*0.019,letterSpacing:width*0.001},styles.GreenColor)} className='self-center'>DESCUBRE LO QUE PODEMOS OFRECERTE</TailText>
-              <TailText style={{ fontFamily: 'Roboto-Medium',marginTop:height*0.1,fontSize:height*0.025}} className='text-neutral-200 leading-tight self-center text-center'>¿Te gustaría comprar o vender{'\n'}tus creaciones musicales?</TailText>
+              <TailText style={ StyleSheet.compose({fontFamily:'Roboto-Regular',marginTop:height*0.05,fontSize:height*0.019,letterSpacing:width*0.001},styles.GreenColor)} className=' self-center'>DESCUBRE LO QUE PODEMOS OFRECERTE</TailText>
+              <TailText style={{ fontFamily: 'Roboto-Medium',marginTop:height*0.1,fontSize:height*0.025}} className='text-neutralLightGray leading-tight self-center text-center'>¿Te gustaría comprar o vender{'\n'}tus creaciones musicales?</TailText>
               <TailPressable style={StyleSheet.compose({marginTop:height*0.14,height:height*0.06},styles.GreenBg)} underlayColor='#b6e154' onPress={()=>{navigation.navigate('Onboarding2')}} className='justify-center items-center w-full bg-neutral-300 rounded-full '>
                 <TailText style={{ fontFamily: 'Roboto-Bold',fontSize:height*0.020}} className=' uppercase text-slate-900'>Continuar</TailText>
               </TailPressable>
