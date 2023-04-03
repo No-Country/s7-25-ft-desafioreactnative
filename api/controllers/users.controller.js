@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const nodemailer = require('nodemailer');
 
 // Models
 const { User } = require('../models/user.model');
@@ -27,21 +28,15 @@ const getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 const createUser = catchAsync(async (req, res, next) => {
-	const { name, email, password, role } = req.body;
-
-	if (role !== 'admin' && role !== 'normal') {
-		return next(new AppError('Invalid role', 400));
-	}
+	const { email, password } = req.body;
 
 	// Encrypt the password
 	const salt = await bcrypt.genSalt(12);
 	const hashedPassword = await bcrypt.hash(password, salt);
 
 	const newUser = await User.create({
-		name,
 		email,
 		password: hashedPassword,
-		role,
 	});
 
 	// Remove password from response
@@ -103,10 +98,91 @@ const login = catchAsync(async (req, res, next) => {
 	});
 });
 
+const forgotPassword = catchAsync(async (req, res, next) => {
+	// we need the user's email from the request body
+	const { email } = req.body;
+
+	// we need to search the email in the database
+	const user = await User.findOne({ where: { email } });
+
+	// if the email doesn't exist, send error
+	if (!user) {
+		return next(new AppError('Email does not exist', 400));
+	}
+
+	// generate a token that expires in 1 hour
+	const token = jwt.sign(
+		{ userId: user.id, email: user.email },
+		process.env.JWT_SECRET,
+		{
+			expiresIn: '1h',
+		}
+	);
+
+	// send email with token
+	const transporter = nodemailer.createTransport({
+		host: 'smtp.gmail.com',
+		port: 587,
+		auth: {
+			user: process.env.EMAIL_ADDRESS,
+			pass: process.env.EMAIL_PASSWORD,
+		},
+	});
+
+	// configure the email content
+	const mailOptions = {
+		from: process.env.EMAIL_ADDRESS,
+		to: user.email,
+		subject: 'restableciendo contraseña',
+		html: `<a href='${process.env.BASE_URL}/#/reset-password/${token}'>click aqui para restablecer tu contraseña</a>`,
+	};
+
+	// 	send email
+	transporter.sendMail(mailOptions, (error, info) => {
+		if (error) {
+			return next(new AppError('no se pudo enviar el mensaje', 400));
+		}
+	});
+	return res.status(200).json({
+		status: 'succes',
+	});
+});
+
+const resetPassword = catchAsync(async (req, res, next) => {
+	const { token, password } = req.body;
+
+	// check if the token is valid
+	const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+	const salt = await bcrypt.genSalt(12);
+	const hashedPassword = await bcrypt.hash(password, salt);
+
+	// search for the user that corresponse to the token id and update the password
+
+	const user = await User.update(
+		{ password: hashedPassword },
+		{ where: { id: decodedToken.userId } }
+	);
+
+	// reset the password of the user
+	// user.password = password;
+
+	// await user.save();
+
+	// show succes message
+
+	return res.status(200).json({
+		status: 'Contraseña cambiada exitosamente',
+		data: { user },
+	});
+});
+
 module.exports = {
 	getAllUsers,
 	createUser,
 	updateUser,
 	deleteUser,
 	login,
+	forgotPassword,
+	resetPassword,
 };

@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#0E0B1F"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -29,6 +27,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "307cf2a6-3e34-430b-9fcb-728324ddbf17"
+      }
     }
   }
 }
