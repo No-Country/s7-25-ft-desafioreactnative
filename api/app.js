@@ -1,7 +1,9 @@
 const express = require('express');
 
 // Routers
-const { usersRouter } = require('./routes/users.routes');
+
+const { usersRouter } = require("./routes/users.routes");
+const { tracksRouter } = require("./routes/tracks.routes");
 
 // Controllers
 const { globalErrorHandler } = require('./controllers/error.controller');
@@ -18,7 +20,8 @@ app.use(
 app.use(express.json());
 
 // Define endpoints
-app.use('/api/v1/users', usersRouter);
+app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/tracks", tracksRouter);
 
 // Global error handler
 app.use(globalErrorHandler);
