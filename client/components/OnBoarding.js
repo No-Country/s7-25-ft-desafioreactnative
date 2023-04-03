@@ -13,7 +13,6 @@ import { View } from 'react-native';
 export default function OnBoarding() {
     const Stack = createNativeStackNavigator();
     return (
-      
       <NavigationContainer>
       <Stack.Navigator initialRouteName='Onboarding1' screenOptions={{headerShown:false,}}>
         <Stack.Screen name='Onboarding1' component={OnBoarding1}/>
