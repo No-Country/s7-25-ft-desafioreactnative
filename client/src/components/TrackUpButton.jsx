@@ -58,9 +58,11 @@ const TrackUpButton = () => {
           data: file,
         });
 
+        // cambiar los literales
         const trackData = {
-          user_id: "0e0b4e03-d49a-421b-9d2b-5fe35f361a20",
-          title: `${fileData.name}`,
+          user_id: "17c96aa1-d6ff-4f79-b334-b8f271c4fd71",
+          price: 20,
+          image_url: "http://www.google.com/images/asdkaskdk.jpg"
         };
 
         formData.append("trackData", JSON.stringify(trackData));
@@ -72,12 +74,13 @@ const TrackUpButton = () => {
             headers: {
               "Content-Type": "multipart/form-data",
             },
-            onUploadProgress: function(progressEvent) {
+            // contador de progreso hasta enviar el archivo al servidor
+            /* onUploadProgress: function(progressEvent) {
               const percentCompleted = Math.round(
                 (progressEvent.loaded * 100) / progressEvent.total
               );
               console.log(percentCompleted);
-            }
+            } */
           }
         );
         console.log(response.data);
