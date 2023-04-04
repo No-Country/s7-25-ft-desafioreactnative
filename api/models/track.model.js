@@ -11,10 +11,22 @@ const Track = db.define("track", {
     allowNull: false,
     unique: true,
   },
+  price: {
+    type: DataTypes.DOUBLE,
+    allowNull: false,
+    validate: {
+      min: 0,
+      max: 1000
+    }
+  },
   download_url: {
     type: DataTypes.TEXT,
     allowNull: false,
     unique: true,
+  },
+  image_url: {
+    type: DataTypes.TEXT,
+    defaultValue: "https://cdns.iconmonstr.com/wp-content/releases/preview/2012/240/iconmonstr-sound-wave-4.png",
   }
 });
 
