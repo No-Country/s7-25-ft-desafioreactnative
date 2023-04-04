@@ -2,7 +2,7 @@ const { storage } = require("../services.js");
 
 async function saveAudioToFirebase({uuid, buffer, originalname, mimetype }) {
   try {
-    const fileName = `${uuid + originalname}`;
+    const fileName = `tracks/${uuid + originalname}`;
 
     const file = storage.bucket().file(fileName);
 

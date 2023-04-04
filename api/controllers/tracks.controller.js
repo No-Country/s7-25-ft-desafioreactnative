@@ -8,20 +8,22 @@ const { v4: uuidv4 } = require("uuid");
 const uploadTrack = catchAsync(async (req, res, next) => {
   try {
 
-    // const { buffer, originalname, mimetype } = req.file;
+    const { originalname, mimetype } = req.file;
 
     const uuid = uuidv4()
 
     const response = await saveAudioToFirebase({uuid, ...req.file});
 
-    const { user_id, title } = JSON.parse(req.body.trackData);
+    const { user_id, image_url, price } = JSON.parse(req.body.trackData);
 
     const user = await User.findByPk(user_id);
 
     const track = await Track.create({
       id: uuid,
-      title: title.slice(0, -4),
+      title: originalname.slice(0, -4),
       download_url: response,
+      image_url,
+      price
     });
 
     await user.addTrack(track);
