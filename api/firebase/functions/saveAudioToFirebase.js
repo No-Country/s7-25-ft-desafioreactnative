@@ -1,9 +1,8 @@
 const { storage } = require("../services.js");
-const { v4: uuidv4 } = require("uuid");
 
-async function saveAudioToFirebase({ buffer, originalname, mimetype }) {
+async function saveAudioToFirebase({uuid, buffer, originalname, mimetype }) {
   try {
-    const fileName = `${uuidv4() + originalname}`;
+    const fileName = `${uuid + originalname}`;
 
     const file = storage.bucket().file(fileName);
 
