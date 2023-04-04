@@ -1,6 +1,5 @@
 import { Text, View, StyleSheet } from "react-native";
 import React from "react";
-import OnBoardingView from "./src/components/OnBoardingView";
 
 import { StatusBar } from "expo-status-bar";
 import { Provider } from "react-redux";

@@ -24,12 +24,11 @@ export default function OnBoarding4({}) {
       }
       const storeData = async () => {
         try {
-          await AsyncStorage.setItem('@SafeAreaViewedOnboarding', 'true');
-          Navigate.navigate('SignIn');
+          await AsyncStorage.setItem('@viewedOnboarding', 'true');
         }
         catch(err){
           console.log('Error @setitem: ',err);
-        }
+        }finally{Navigate.navigate('SignIn');}
       }
 
       return (
