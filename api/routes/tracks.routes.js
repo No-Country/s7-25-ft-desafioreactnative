@@ -14,6 +14,6 @@ const tracksRouter = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-tracksRouter.post('/upload', upload.single("audio"), uploadTrack)
+tracksRouter.post('/upload', upload.fields([{name: 'audio'}, {name: 'image'}]), uploadTrack)
 
 module.exports = { tracksRouter };

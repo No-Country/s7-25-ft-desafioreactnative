@@ -1,12 +1,16 @@
 const { storage } = require("../services.js");
 
-async function saveAudioToFirebase({uuid, buffer, originalname, mimetype }) {
+async function saveFileToFirebase({uuid, buffer, originalname, mimetype }) {
+
+  console.log(originalname)
+  console.log(mimetype.split("/")[0])
+
   try {
-    const fileName = `tracks/${uuid + originalname}`;
+    const fileName = `${mimetype.split("/")[0]}s/${uuid + originalname}`;
 
     const file = storage.bucket().file(fileName);
 
-    const result = await file.save(buffer, {
+    await file.save(buffer, {
       metadata: {
         contentType: mimetype,
       },
@@ -17,11 +21,11 @@ async function saveAudioToFirebase({uuid, buffer, originalname, mimetype }) {
         expires: '01-01-2100' 
       });
 
-    console.log(`Audio saved to Firebase Storage with name ${originalname}`);
+    console.log(`${mimetype} saved to Firebase Storage with name ${originalname}`);
     return signedUrl[0];
   } catch (error) {
     console.log(error);
   }
 }
 
-module.exports = { saveAudioToFirebase };
+module.exports = { saveFileToFirebase };
