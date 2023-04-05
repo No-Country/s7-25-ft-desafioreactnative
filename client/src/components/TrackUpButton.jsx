@@ -97,7 +97,7 @@ const TrackUpButton = () => {
             data: image,
           });
         }
-        // cambiar los literales
+        // cambiar los literales user_id y price
         const trackData = {
           user_id: "6323520c-46ab-4119-a68e-4f6c7b49c4fc",
           price: 20,
@@ -108,9 +108,10 @@ const TrackUpButton = () => {
         const response = await axios.post(
           "http://192.168.0.207:4000/api/v1/tracks/upload",
           formData,
-          {
+          { // cambiar literal de token
             headers: {
               "Content-Type": "multipart/form-data",
+              "Authorization": `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMjM1MjBjLTQ2YWItNDExOS1hNjhlLTRmNmM3YjQ5YzRmYyIsImlhdCI6MTY4MDY2NDEzOCwiZXhwIjoxNjgzMjU2MTM4fQ.IXG55h9tM5pGWREK37RsbMxILexZ2AxAa87PLUtTXeI"}`
             },
             onUploadProgress: function (progressEvent) {
               const percentCompleted = Math.round(
