@@ -8,20 +8,15 @@ const { v4: uuidv4 } = require("uuid");
 const uploadTrack = catchAsync(async (req, res, next) => {
   try {
     const { originalname } = req.files.audio[0];
+    const { user_id, price } = JSON.parse(req.body.trackData);
 
     const uuid = uuidv4();
 
-    const audioResponse = await saveFileToFirebase({uuid, ...req.files.audio[0]});
-
-    let imageResponse = undefined;
-
-    if (req.files.image) {
-      imageResponse = await saveFileToFirebase({ uuid, ...req.files.image[0] });
-    }
-
-    const { user_id, price } = JSON.parse(req.body.trackData);
-
-    const user = await User.findByPk(user_id);
+    const [audioResponse, imageResponse, user] = await Promise.all([
+      saveFileToFirebase({uuid, ...req.files.audio[0]}),
+      req.files.image ? saveFileToFirebase({ uuid, ...req.files.image[0] }) : undefined,
+      User.findByPk(user_id)
+    ]);
 
     const track = await Track.create({
       id: uuid,
