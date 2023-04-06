@@ -28,16 +28,23 @@ const getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 const createUser = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
+
+	const { userName, email, password } = req.body;
+
+	// if (role !== 'admin' && role !== 'normal') {
+	// 	return next(new AppError('Invalid role', 400));
+	// }
+
 
   // Encrypt the password
   const salt = await bcrypt.genSalt(12);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  const newUser = await User.create({
-    email,
-    password: hashedPassword,
-  });
+	const newUser = await User.create({
+		userName,
+		email,
+		password: hashedPassword,
+	});
 
   // Remove password from response
   newUser.password = undefined;
