@@ -49,7 +49,7 @@ const getProfile = catchAsync(async (req, res, next) => {
 
 	res.status(200).json({
 		status: 'succes',
-		data: profile,
+		data: { profile },
 	});
 });
 
