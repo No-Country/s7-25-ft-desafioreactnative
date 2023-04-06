@@ -1,9 +1,10 @@
-// import Models for use it
-const { User } = require("./user.model");
+// Models
+const { User } = require('./user.model');
+const { Profile } = require('./profile.model');
 const { Track } = require('./track.model');
-
-// Establish your models relations inside this function
 const initModels = () => {
+	User.hasOne(Profile);
+	Profile.belongsTo(User);
   User.hasMany(Track, { foreignKey: "user_id" });
   Track.belongsTo(User, { foreignKey: "user_id" });
 };
