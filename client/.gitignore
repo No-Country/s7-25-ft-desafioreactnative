@@ -1,4 +1,5 @@
 node_modules/
+android/
 .expo/
 dist/
 npm-debug.*
@@ -19,3 +20,4 @@ web-build/
 
 package-lock.json
 yarn.lock
+firebase.js
