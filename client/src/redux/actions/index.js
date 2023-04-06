@@ -26,10 +26,11 @@ export const registerUser = createAsyncThunk(
   "users/registerUser",
   async (formData) => {
     try {
-      const { name, email, password } = formData;
+      const { userName, email, password } = formData;
+
       const userData = {
-        name,
-        email,
+        userName: userName.toLowerCase(),
+        email: email.toLowerCase(),
         password,
       };
 
