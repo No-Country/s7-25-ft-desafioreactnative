@@ -1,6 +1,6 @@
 // import Models for use it
 const { User } = require("./user.model");
-const { Track } = require('./track.model');
+const { Track } = require("./track.model");
 
 // Establish your models relations inside this function
 const initModels = () => {
