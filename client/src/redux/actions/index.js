@@ -26,8 +26,15 @@ export const registerUser = createAsyncThunk(
   "users/registerUser",
   async (formData) => {
     try {
-      const { name, surname, email, password, city } = formData;
-      console.log(name, surname, email, password, city);
+      const { name, email, password } = formData;
+      const userData = {
+        name,
+        email,
+        password,
+      };
+
+      const response = await axios.post("/api/v1/users", userData);
+      return response.data;
     } catch (error) {
       throw error.code;
     }

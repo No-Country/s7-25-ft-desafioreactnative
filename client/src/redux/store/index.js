@@ -14,10 +14,10 @@ let rootReducer = combineReducers({
   users: usersReducer,
 });
 
-let persisteReducer = persistReducer(persistConfig, rootReducer);
+let persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-  reducer: persisteReducer,
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

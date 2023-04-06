@@ -9,11 +9,12 @@ import {
 } from "../actions";
 
 const initialState = {
-  users: [],
+  users: "",
   loading: false,
-  currentUser: [],
+  currentUser: "",
   isLogin: false,
-  userById: [],
+  status: "inactive",
+  userById: "",
   error: {},
 };
 
@@ -32,11 +33,16 @@ const usersReducer = createSlice({
     builder.addCase(fetchUserById.fulfilled, (state, action) => {
       state.userById = action.payload;
     });
+    builder.addCase(registerUser.pending, (state, action) => {
+      state.loading = true;
+    });
     builder.addCase(registerUser.fulfilled, (state, action) => {
       state.users = action.payload;
+      state.loading = false;
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.error = action.error;
+      state.loading = false;
     });
     builder.addCase(loginUser.pending, (state) => {
       state.loading = true;

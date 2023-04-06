@@ -8,16 +8,18 @@ import {
   StatusBar,
   ImageBackground,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { AtIcon, LockIcon, EyeIcon, ProfileIcon } from "../components/Icons";
 import InputField from "../components/InputField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import backgroundImage from "../../assets/signup-bg.png";
+import { registerUser } from "../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const SignUp = () => {
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
   const [valid, setValid] = useState(false);
   const [passwordReveal, setPasswordReveal] = useState(true);
   const [eyeColor, setEyeColor] = useState("#EEEEEE");
@@ -26,16 +28,32 @@ const SignUp = () => {
     email: "",
     password: "",
   });
+  const navigation = useNavigation();
+
+  const createTwoButtonAlert = () =>
+    Alert.alert("Felicidades", "¡Tu cuenta ha sido registrada!", [
+      { text: "Iniciar sesión", onPress: () => navigation.navigate("SignIn") },
+    ]);
+
+  const dispatch = useDispatch();
+  const userState = useSelector((state) => state.users);
+
+  const loading = userState.loading,
+    user = userState.users.data;
+
+  useEffect(() => {
+    console.log("LOADING STATE", loading);
+    console.log("USER DATA", user);
+  }, [loading]);
 
   const handleValidation = async () => {
     Keyboard.dismiss();
     setValid(true);
-    setLoading(true);
 
-    if (!formData.name) {
+    /* if (!formData.name) {
       handleError("Por favor, introduzca su nombre", "name");
       setValid(false);
-    }
+    } */
     if (!formData.email) {
       handleError("Por favor, introduzca su correo electrónico", "email");
       setValid(false);
@@ -44,14 +62,21 @@ const SignUp = () => {
       handleError("Por favor, confirme su contraseña", "password");
       setValid(false);
     }
-    setLoading(false);
+
+    if (valid) {
+      dispatch(registerUser(formData));
+    }
+    if (valid && loading === false) {
+      formData.email = "";
+      formData.name = "";
+      formData.password = "";
+      createTwoButtonAlert();
+    }
   };
 
   const handleError = (error, input) => {
     setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
-
-  const navigation = useNavigation();
 
   const handlePasswordVisibility = () => {
     setPasswordReveal(!passwordReveal);
@@ -95,7 +120,7 @@ const SignUp = () => {
                       setFormData({ ...formData, name: text })
                     }
                     error={errors.name}
-                    value={formData.name}
+                    value={formData.name.toLocaleLowerCase()}
                     underlineColorAndroid="transparent"
                   />
                 </View>
@@ -111,7 +136,7 @@ const SignUp = () => {
                       setFormData({ ...formData, email: text })
                     }
                     error={errors.email}
-                    value={formData.email}
+                    value={formData.email.toLocaleLowerCase()}
                     underlineColorAndroid="transparent"
                   />
                 </View>

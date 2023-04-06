@@ -1,3 +1,4 @@
+// Establish your models relations inside this function
 // Models
 const { User } = require('./user.model');
 const { Profile } = require('./profile.model');

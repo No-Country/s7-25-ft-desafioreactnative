@@ -1,15 +1,15 @@
 require('dotenv').config();
 const { app } = require('./app');
+
 // Utils
-const { initModels } = require('./models/initModels');
-const { db } = require('./utils/database.util');
+const { initModels } = require("./models/initModels");
+const { db } = require("./utils/database.util");
 
 //dotenv.config({ path: './config.env' });
 
 const startServer = async () => {
-	try {
-		await db.authenticate();
-
+  try {
+    await db.authenticate();
 		// Establish the relations between models
 		initModels();
 		await db.sync({ force: false });
