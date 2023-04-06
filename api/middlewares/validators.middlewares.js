@@ -19,6 +19,7 @@ const checkValidations = (req, res, next) => {
 };
 
 const createUserValidators = [
+
 	body('userName')
 		.isString()
 		.withMessage('Name must be a string')
@@ -36,7 +37,6 @@ const createUserValidators = [
 		.withMessage('Password must be at least 8 characters'),
 	checkValidations,
 ];
-
 const createProfileValidators = [
 	body('name')
 		.isString()
