@@ -2,6 +2,7 @@ const {
   saveFileToFirebase,
 } = require("../firebase/functions/saveAudioToFirebase");
 const { catchAsync } = require("../utils/catchAsync.util");
+const { AppError } = require('../utils/appError.util');
 const { User, Track } = require("../models/initModels");
 const { v4: uuidv4 } = require("uuid");
 
@@ -13,9 +14,11 @@ const uploadTrack = catchAsync(async (req, res, next) => {
     const uuid = uuidv4();
 
     const [audioResponse, imageResponse, user] = await Promise.all([
-      saveFileToFirebase({uuid, ...req.files.audio[0]}),
-      req.files.image ? saveFileToFirebase({ uuid, ...req.files.image[0] }) : undefined,
-      User.findByPk(user_id)
+      saveFileToFirebase({ uuid, ...req.files.audio[0] }),
+      req.files.image
+        ? saveFileToFirebase({ uuid, ...req.files.image[0] })
+        : undefined,
+      User.findByPk(user_id),
     ]);
 
     const track = await Track.create({
@@ -36,4 +39,14 @@ const uploadTrack = catchAsync(async (req, res, next) => {
   }
 });
 
-module.exports = { uploadTrack };
+const getTracks = catchAsync(async (req, res, next) => {
+    try {
+      res.status(200).json({
+        status: "success",
+      });
+    } catch (error) {
+      console.log(error)
+    }
+});
+
+module.exports = { uploadTrack, getTracks };
