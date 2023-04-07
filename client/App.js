@@ -9,6 +9,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import StackNavigation from "./src/navigation/StackNavigation";
 import axios from "axios";
 import { api } from "@env";
+import MainNavigation from "./src/navigation/MainNavigation";
 
 let persistorStore = persistStore(store);
 
@@ -26,7 +27,7 @@ export default function App() {
       <PersistGate persistor={persistorStore}>
         <View className="flex-1 bg-white">
           <NavigationContainer>
-            <StackNavigation />
+            <MainNavigation />
           </NavigationContainer>
         </View>
       </PersistGate>
