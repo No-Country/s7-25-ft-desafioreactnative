@@ -21,12 +21,13 @@ import {
   GoogleIcon,
   TwitterIcon,
 } from "../components/Icons";
+import { useDispatch } from "react-redux";
+import { signInUser } from "../redux/actions/userActions";
+import userInfo from "../redux/utils/userInfo";
 
 const SignIn = () => {
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
   const [valid, setValid] = useState(false);
-  const [screen, setScreen] = useState(0);
   const [passwordReveal, setPasswordReveal] = useState(true);
   const [eyeColor, setEyeColor] = useState("#EEEEEE");
   const [formData, setFormData] = useState({
@@ -34,10 +35,12 @@ const SignIn = () => {
     password: "",
   });
 
+  const dispatch = useDispatch();
+  const { loading, loggedInUser } = userInfo();
+
   const handleValidation = async () => {
     Keyboard.dismiss();
     setValid(true);
-    setLoading | true;
 
     if (!formData.email) {
       handleError("Por favor, introduzca su correo electrónico", "email");
@@ -48,8 +51,10 @@ const SignIn = () => {
       setValid(false);
     }
     if (valid) {
-      setLoading(false);
-      console.log("Formulario validado");
+      dispatch(signInUser(formData));
+    }
+    if (valid === true && loggedInUser === true) {
+      navigation.navigate("Home");
     }
   };
 
@@ -58,6 +63,7 @@ const SignIn = () => {
   };
 
   const navigation = useNavigation();
+
   const handlePasswordVisibility = () => {
     setPasswordReveal(!passwordReveal);
     setEyeColor((prevEyeColor) =>
@@ -99,7 +105,7 @@ const SignIn = () => {
                       setFormData({ ...formData, email: text })
                     }
                     error={errors.email}
-                    value={formData.email}
+                    value={formData.email.toLocaleLowerCase().trim()}
                     underlineColorAndroid="transparent"
                   />
                 </View>
