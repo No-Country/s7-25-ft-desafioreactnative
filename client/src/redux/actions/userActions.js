@@ -1,5 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { useSelector } from "react-redux";
+
+let baseAPI = "/api/v1/users";
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   try {
@@ -14,7 +17,7 @@ export const fetchUserById = createAsyncThunk(
   "users/fetchUserById",
   async (userId) => {
     try {
-      const userById = await axios.get(`/users/${userId}`);
+      const userById = await axios.get(`${baseAPI}/${userId}`);
       return [userById.data];
     } catch (error) {
       console.log(error);
@@ -34,7 +37,8 @@ export const registerUser = createAsyncThunk(
         password,
       };
 
-      const response = await axios.post("/api/v1/users", userData);
+      const response = await axios.post(`${baseAPI}`, userData);
+
       return response.data;
     } catch (error) {
       throw error.code;
@@ -42,13 +46,23 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const loginUser = createAsyncThunk(
+export const signInUser = createAsyncThunk(
   "users/loginUser",
   async (loginCredentials) => {
     try {
       const { email, password } = loginCredentials;
 
-      console.log(email, password);
+      const currentUserData = await axios.post(`${baseAPI}/login`, {
+        email,
+        password,
+      });
+
+      const currentUser = {
+        data: currentUserData.data.data.user,
+        token: currentUserData.data.data.token,
+      };
+
+      return currentUser;
     } catch (error) {
       throw error.code;
     }
@@ -57,6 +71,7 @@ export const loginUser = createAsyncThunk(
 
 export const logOutUser = createAsyncThunk("users/logOutUser", async () => {
   try {
+    console.log("User has been logged out");
   } catch (error) {
     console.log(error);
   }

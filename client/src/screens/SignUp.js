@@ -12,11 +12,11 @@ import {
 } from "react-native";
 import { AtIcon, LockIcon, EyeIcon, ProfileIcon } from "../components/Icons";
 import InputField from "../components/InputField";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import backgroundImage from "../../assets/signup-bg.png";
-import { registerUser } from "../redux/actions";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../redux/actions/userActions";
 
 const SignUp = () => {
   const [errors, setErrors] = useState({});
@@ -37,15 +37,7 @@ const SignUp = () => {
     ]);
 
   const dispatch = useDispatch();
-  const userState = useSelector((state) => state.users);
-
-  const loading = userState.loading,
-    user = userState.users.data;
-
-  useEffect(() => {
-    console.log("LOADING STATE", loading);
-    console.log("USER DATA", user);
-  }, [loading]);
+  const { loading } = userInfo();
 
   const handleValidation = async () => {
     Keyboard.dismiss();

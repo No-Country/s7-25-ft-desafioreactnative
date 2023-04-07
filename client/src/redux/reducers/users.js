@@ -3,17 +3,16 @@ import {
   fetchUsers,
   fetchUserById,
   registerUser,
-  loginUser,
+  signInUser,
   logOutUser,
   updateUser,
-} from "../actions";
+} from "../actions/userActions";
 
 const initialState = {
   users: "",
   loading: false,
   currentUser: "",
   isLogin: false,
-  status: "inactive",
   userById: "",
   error: {},
 };
@@ -37,26 +36,38 @@ const usersReducer = createSlice({
       state.loading = true;
     });
     builder.addCase(registerUser.fulfilled, (state, action) => {
-      state.users = action.payload;
       state.loading = false;
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.error = action.error;
       state.loading = false;
     });
-    builder.addCase(loginUser.pending, (state) => {
+    builder.addCase(signInUser.pending, (state, action) => {
       state.loading = true;
     });
-    builder.addCase(loginUser.fulfilled, (state, action) => {
+    builder.addCase(signInUser.fulfilled, (state, action) => {
       state.currentUser = action.payload;
+      state.token = action.payload.token;
+      state.loading = false;
+      state.isLogin = true;
+    });
+    builder.addCase(signInUser.rejected, (state) => {
       state.loading = false;
     });
-    builder.addCase(loginUser.rejected, (state) => {
-      state.loading = false;
+    builder.addCase(logOutUser.pending, (state, action) => {
+      state.loading = true;
     });
     builder.addCase(logOutUser.fulfilled, (state, action) => {
-      state.currentUser = [];
+      state.currentUser = "";
       state.isLogin = false;
+      state.token = "";
+      state.users = "";
+      state.loading = false;
+      state.userById = "";
+      state.error = {};
+    });
+    builder.addCase(logOutUser.rejected, (state) => {
+      state.loading = false;
     });
     builder.addCase(updateUser.fulfilled, (state, action) => {
       const { formData, profile_pic } = action.meta.arg;

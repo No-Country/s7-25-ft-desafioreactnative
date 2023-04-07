@@ -10,6 +10,8 @@ let persistConfig = {
   storage: AsyncStorage,
 };
 
+//AsyncStorage.clear();
+
 let rootReducer = combineReducers({
   users: usersReducer,
 });
