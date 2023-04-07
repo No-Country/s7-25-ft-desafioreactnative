@@ -2,9 +2,10 @@ const {
   saveFileToFirebase,
 } = require("../firebase/functions/saveAudioToFirebase");
 const { catchAsync } = require("../utils/catchAsync.util");
-const { AppError } = require('../utils/appError.util');
+const { AppError } = require("../utils/appError.util");
 const { User, Track } = require("../models/initModels");
 const { v4: uuidv4 } = require("uuid");
+const { Op } = require("sequelize");
 
 const uploadTrack = catchAsync(async (req, res, next) => {
   try {
@@ -40,13 +41,48 @@ const uploadTrack = catchAsync(async (req, res, next) => {
 });
 
 const getTracks = catchAsync(async (req, res, next) => {
-    try {
-      res.status(200).json({
-        status: "success",
-      });
-    } catch (error) {
-      console.log(error)
-    }
+  try {
+    const { page, search } = req.query;
+    const pageSize = 10;
+
+    const offset = (page - 1) * pageSize;
+    const limit = pageSize;
+
+    const filter = search
+      ? {
+          title: {
+            [Op.iLike]: `%${search}%`,
+          },
+        }
+      : {};
+
+    const tracks = await Track.findAll({
+      where: filter,
+      offset,
+      limit,
+      order: [["title", "ASC"]],
+    });
+
+    const count = await Track.findAndCountAll({ where: filter });
+    const totalTracks = count.count;
+    const totalPages = Math.ceil(totalTracks / pageSize);
+    const remainingPages = totalPages - page;
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        tracks,
+        pagination: {
+          pageSize,
+          page,
+          remainingPages,
+          totalPages,
+        },
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = { uploadTrack, getTracks };
