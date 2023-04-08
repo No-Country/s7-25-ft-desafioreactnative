@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { useSelector } from "react-redux";
 
 let baseAPI = "/api/v1/users";
 
@@ -76,6 +75,20 @@ export const logOutUser = createAsyncThunk("users/logOutUser", async () => {
     console.log(error);
   }
 });
+
+export const forgotPassword = createAsyncThunk(
+  "users/forgotPassword",
+  async (email) => {
+    try {
+      const currentUserData = await axios.post(`${baseAPI}/forgot-password`, {
+        email,
+      });
+      return currentUserData;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 
 export const updateUser = createAsyncThunk("users/updateUser", async (data) => {
   try {
