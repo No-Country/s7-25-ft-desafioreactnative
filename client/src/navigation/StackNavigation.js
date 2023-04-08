@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import OnBoardingNavigation from "./OnBoardingNavigation";
+import ForgotPassword from "../screens/ForgotPassword";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,18 @@ function StackNavigation() {
         />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen
+          options={{
+            headerBackButtonMenuEnabled: true,
+            headerShown: true,
+            headerMode: "screen",
+            headerStyle: { backgroundColor: "#0E0B1F" },
+            headerTintColor: "#FFF",
+            title: "",
+          }}
+          name="ForgotPassword"
+          component={ForgotPassword}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
