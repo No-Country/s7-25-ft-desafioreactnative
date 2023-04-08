@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import backgroundImage from "../../assets/signup-bg.png";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../redux/actions/userActions";
+import ValidateEmail from "../utils/validateEmail";
 
 const SignUp = () => {
   const [errors, setErrors] = useState({});
@@ -31,7 +32,7 @@ const SignUp = () => {
   });
   const navigation = useNavigation();
 
-  const createTwoButtonAlert = () =>
+  const signInSuccess = () =>
     Alert.alert("Felicidades", "¡Tu cuenta ha sido registrada!", [
       { text: "Iniciar sesión", onPress: () => navigation.navigate("SignIn") },
     ]);
@@ -44,11 +45,15 @@ const SignUp = () => {
     setValid(true);
 
     if (!formData.userName) {
-      handleError("Por favor, introduzca su nombre", "name");
+      handleError("Por favor, introduzca su nombre de usuario", "userName");
       setValid(false);
     }
     if (!formData.email) {
       handleError("Por favor, introduzca su correo electrónico", "email");
+      setValid(false);
+    }
+    if (!ValidateEmail(formData.email)) {
+      handleError("Por favor, introduzca un correo electrónico válido");
       setValid(false);
     }
     if (!formData.password) {
@@ -74,7 +79,8 @@ const SignUp = () => {
       formData.userName = "";
       formData.password = "";
       formData.confirmPassword = "";
-      createTwoButtonAlert();
+      setErrors({});
+      signInSuccess();
     }
   };
 
@@ -120,11 +126,17 @@ const SignUp = () => {
                   <InputField
                     className=" text-[#FFFFFF]  placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
                     placeholder="Nombre de Usuario"
-                    onChangeText={(text) =>
-                      setFormData({ ...formData, userName: text })
-                    }
+                    onChangeText={(text) => {
+                      setFormData({ ...formData, userName: text });
+                      if (errors.password) {
+                        setErrors((prevState) => ({
+                          ...prevState,
+                          userName: "",
+                        }));
+                      }
+                    }}
                     error={errors.userName}
-                    value={formData.userName}
+                    value={formData.userName.toLocaleLowerCase().trim()}
                     underlineColorAndroid="transparent"
                   />
                 </View>
@@ -136,11 +148,17 @@ const SignUp = () => {
                   <InputField
                     className=" text-[#FFFFFF] placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
                     placeholder="E-Mail"
-                    onChangeText={(text) =>
-                      setFormData({ ...formData, email: text })
-                    }
+                    onChangeText={(text) => {
+                      setFormData({ ...formData, email: text });
+                      if (errors.password) {
+                        setErrors((prevState) => ({
+                          ...prevState,
+                          email: "",
+                        }));
+                      }
+                    }}
                     error={errors.email}
-                    value={formData.email}
+                    value={formData.email.toLocaleLowerCase().trim()}
                     underlineColorAndroid="transparent"
                   />
                 </View>
@@ -158,9 +176,15 @@ const SignUp = () => {
                   <InputField
                     className=" text-[#FFFFFF] placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
                     placeholder="Contraseña"
-                    onChangeText={(text) =>
-                      setFormData({ ...formData, password: text })
-                    }
+                    onChangeText={(text) => {
+                      setFormData({ ...formData, password: text });
+                      if (errors.password) {
+                        setErrors((prevState) => ({
+                          ...prevState,
+                          password: "",
+                        }));
+                      }
+                    }}
                     error={errors.password}
                     value={formData.password}
                     underlineColorAndroid="transparent"
@@ -180,9 +204,15 @@ const SignUp = () => {
                   <InputField
                     className=" text-[#FFFFFF] placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
                     placeholder="Contraseña"
-                    onChangeText={(text) =>
-                      setFormData({ ...formData, confirmPassword: text })
-                    }
+                    onChangeText={(text) => {
+                      setFormData({ ...formData, confirmPassword: text });
+                      if (errors.password) {
+                        setErrors((prevState) => ({
+                          ...prevState,
+                          confirmPassword: "",
+                        }));
+                      }
+                    }}
                     error={errors.confirmPassword}
                     value={formData.confirmPassword}
                     underlineColorAndroid="transparent"
