@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require("multer");
 
-const { uploadTrack, getTracks } = require('../controllers/tracks.controller');
+const { uploadTrack, getTracks, uploadTracksTest } = require('../controllers/tracks.controller');
 
 const {
 	protectSession
@@ -10,6 +10,8 @@ const {
 const tracksRouter = express.Router();
 
 tracksRouter.get('/', getTracks);
+
+tracksRouter.post('/uploadForTests', uploadTracksTest)
 
 tracksRouter.use(protectSession);
 
