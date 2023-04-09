@@ -4,6 +4,7 @@ import 'react-native-gesture-handler';
 import { styled } from 'nativewind';
 import { useFonts } from 'expo-font';
 import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 
 
 const TailText = styled(Text);
@@ -28,6 +29,7 @@ export default function OnBoarding1({}) {
       
       return (
         <SafeAreaView style={styles.container}>
+        <StatusBar style='inverted'/>
           <TailImage style={styles.BlueBg} source={require('../../assets/ImgOnBoarding/OnBoarding1.jpg')} className='w-full h-1/2'></TailImage>
           <TailSafeAreaView style={styles.BlueBg} className='w-full h-1/2 items-center'>
             <TailSafeAreaView className='w-5/6 h-full flex-col justify-center items-center'>

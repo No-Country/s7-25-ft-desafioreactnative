@@ -22,6 +22,7 @@ import {
   TwitterIcon,
 } from "../components/Icons";
 
+
 const SignIn = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -67,6 +68,7 @@ const SignIn = () => {
 
   return (
     <>
+    
       <ImageBackground
         source={backgroundImage}
         style={{ flex: 1 }}

@@ -6,7 +6,6 @@ import { useEffect} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import OnBoardingNavigation from "./OnBoardingNavigation";
-
 const Stack = createNativeStackNavigator();
 
 function StackNavigation() {

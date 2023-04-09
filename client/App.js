@@ -10,6 +10,7 @@ import { NativeWindStyleSheet } from "nativewind";
 import { NavigationContainer } from "@react-navigation/native";
 import StackNavigation from "./src/navigation/StackNavigation";
 import SignIn from "./src/screens/SignIn";
+import GenresSelect from "./src/screens/GenresSelect";
 
 let persistorStore = persistStore(store);
 
@@ -23,9 +24,10 @@ export default function App() {
     <Provider store={store}>
       <PersistGate persistor={persistorStore}>
         <View className="flex-1 bg-white">
-        <NavigationContainer>
+        {/* <NavigationContainer>
         <StackNavigation/>
-        </NavigationContainer>
+        </NavigationContainer> */}
+         <GenresSelect/> 
         </View> 
       </PersistGate>
     </Provider>
