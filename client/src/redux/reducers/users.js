@@ -3,18 +3,20 @@ import {
   fetchUsers,
   fetchUserById,
   registerUser,
-  loginUser,
+  signInUser,
   logOutUser,
   updateUser,
-} from "../actions";
+  forgotPassword,
+} from "../actions/userActions";
 
 const initialState = {
-  users: [],
+  users: "",
   loading: false,
-  currentUser: [],
+  currentUser: "",
   isLogin: false,
-  userById: [],
+  userById: "",
   error: {},
+  reqStatus: null,
 };
 
 const usersReducer = createSlice({
@@ -32,26 +34,71 @@ const usersReducer = createSlice({
     builder.addCase(fetchUserById.fulfilled, (state, action) => {
       state.userById = action.payload;
     });
-    builder.addCase(registerUser.fulfilled, (state, action) => {
-      state.users = action.payload;
-    });
-    builder.addCase(registerUser.rejected, (state, action) => {
-      state.error = action.error;
-    });
-    builder.addCase(loginUser.pending, (state) => {
+
+    builder.addCase(registerUser.pending, (state, action) => {
       state.loading = true;
     });
-    builder.addCase(loginUser.fulfilled, (state, action) => {
-      state.currentUser = action.payload;
+    builder.addCase(registerUser.fulfilled, (state, action) => {
       state.loading = false;
     });
-    builder.addCase(loginUser.rejected, (state) => {
+    builder.addCase(registerUser.rejected, (state, action) => {
+      state.reqStatus = `${action.meta.requestStatus}`;
+      state.error = action.error.message;
       state.loading = false;
+    });
+    builder.addCase(signInUser.pending, (state, action) => {
+      state.loading = true;
+      state.error = {};
+    });
+    builder.addCase(signInUser.fulfilled, (state, action) => {
+      state.currentUser = action.payload;
+      state.token = action.payload.token;
+      state.loading = false;
+      state.isLogin = true;
+      state.error = {};
+    });
+    builder.addCase(signInUser.rejected, (state, action) => {
+      state.loading = false;
+      state.reqStatus = `${action.meta.requestStatus}`;
+      state.error = action.error.message;
+    });
+    builder.addCase(logOutUser.pending, (state, action) => {
+      state.loading = true;
     });
     builder.addCase(logOutUser.fulfilled, (state, action) => {
-      state.currentUser = [];
+      state.currentUser = "";
       state.isLogin = false;
+      state.token = "";
+      state.users = "";
+      state.loading = false;
+      state.userById = "";
+      state.error = {};
     });
+    builder.addCase(logOutUser.rejected, (state) => {
+      state.loading = false;
+      state.reqStatus = `${action.meta.requestStatus}`;
+      state.error = action.error.message;
+    });
+    builder.addCase(forgotPassword.pending, (state) => {
+      state.loading = true;
+      state.reqStatus = null;
+    });
+    builder.addCase(forgotPassword.fulfilled, (state, action) => {
+      state.currentUser = "";
+      state.isLogin = false;
+      state.token = "";
+      state.users = "";
+      state.loading = false;
+      state.userById = "";
+      state.error = {};
+      state.reqStatus = `${action.payload.data.status}`;
+    });
+    builder.addCase(forgotPassword.rejected, (state, action) => {
+      state.loading = false;
+      state.reqStatus = `${action.meta.requestStatus}`;
+      state.error = action.error.message;
+    });
+
     builder.addCase(updateUser.fulfilled, (state, action) => {
       const { formData, profile_pic } = action.meta.arg;
       state.currentUser = {
