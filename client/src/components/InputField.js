@@ -50,7 +50,7 @@ const InputField = ({
           onBlur={() => setIsFocused(false)}
           secureTextEntry={hidePassword}
           className={
-            "flex w-full justify-center  px-3 h-full rounded-md text-white"
+            "flex w-full justify-center  px-3 h-full rounded-md text-white relative"
           }
           placeholder={placeholder}
           placeholderTextColor="white"
@@ -58,7 +58,11 @@ const InputField = ({
         />
       </View>
 
-      {error && <Text className="my-1 text-xs color-[#ff0000]">{error}</Text>}
+      {error && (
+        <Text className="absolute bottom-[-20] text-xs color-[#ff0000]">
+          {error}
+        </Text>
+      )}
     </View>
   );
 };
