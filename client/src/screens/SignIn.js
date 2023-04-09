@@ -8,6 +8,7 @@ import {
   StatusBar,
   ImageBackground,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import InputField from "../components/InputField";
 import { useState } from "react";
@@ -21,13 +22,15 @@ import {
   GoogleIcon,
   TwitterIcon,
 } from "../components/Icons";
+import { useDispatch } from "react-redux";
+import { signInUser } from "../redux/actions/userActions";
+import userInfo from "../redux/utils/userInfo";
+import ValidateEmail from "../utils/validateEmail";
 
 
 const SignIn = () => {
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
   const [valid, setValid] = useState(false);
-  const [screen, setScreen] = useState(0);
   const [passwordReveal, setPasswordReveal] = useState(true);
   const [eyeColor, setEyeColor] = useState("#EEEEEE");
   const [formData, setFormData] = useState({
@@ -35,13 +38,21 @@ const SignIn = () => {
     password: "",
   });
 
+  const dispatch = useDispatch();
+  const { loading, loggedInUser, actionError } = userInfo();
+  const signInError = () =>
+    Alert.alert("Algo salió mal", `${actionError.message}`, [{ text: "OK" }]);
+
   const handleValidation = async () => {
     Keyboard.dismiss();
     setValid(true);
-    setLoading | true;
 
     if (!formData.email) {
       handleError("Por favor, introduzca su correo electrónico", "email");
+      setValid(false);
+    }
+    if (!ValidateEmail(formData.email)) {
+      handleError("Por favor, introduzca un correo electrónico válido");
       setValid(false);
     }
     if (!formData.password) {
@@ -49,8 +60,14 @@ const SignIn = () => {
       setValid(false);
     }
     if (valid) {
-      setLoading(false);
-      console.log("Formulario validado");
+      dispatch(signInUser(formData));
+    }
+    if (valid === true && loggedInUser === true) {
+      setErrors({});
+      navigation.navigate("Home");
+    }
+    if (actionError) {
+      signInError();
     }
   };
 
@@ -59,6 +76,7 @@ const SignIn = () => {
   };
 
   const navigation = useNavigation();
+
   const handlePasswordVisibility = () => {
     setPasswordReveal(!passwordReveal);
     setEyeColor((prevEyeColor) =>
@@ -97,11 +115,17 @@ const SignIn = () => {
                   <InputField
                     className=" text-[#FFFFFF]  placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
                     placeholder="E-Mail"
-                    onChangeText={(text) =>
-                      setFormData({ ...formData, email: text })
-                    }
+                    onChangeText={(text) => {
+                      setFormData({ ...formData, email: text });
+                      if (errors.email) {
+                        setErrors((prevState) => ({
+                          ...prevState,
+                          email: "",
+                        }));
+                      }
+                    }}
                     error={errors.email}
-                    value={formData.email}
+                    value={formData.email.toLocaleLowerCase().trim()}
                     underlineColorAndroid="transparent"
                   />
                 </View>
@@ -119,9 +143,15 @@ const SignIn = () => {
                   <InputField
                     className=" text-[#FFFFFF]  placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
                     placeholder="Contraseña"
-                    onChangeText={(text) =>
-                      setFormData({ ...formData, password: text })
-                    }
+                    onChangeText={(text) => {
+                      setFormData({ ...formData, password: text });
+                      if (errors.password) {
+                        setErrors((prevState) => ({
+                          ...prevState,
+                          password: "",
+                        }));
+                      }
+                    }}
                     error={errors.password}
                     password
                     value={formData.password}
@@ -130,11 +160,13 @@ const SignIn = () => {
                   />
                 </View>
 
-                <View>
+                <Pressable
+                  onPress={() => navigation.navigate("ForgotPassword")}
+                >
                   <Text className="text-[#FFFFFF] text-right my-6">
                     ¿Olvidaste tu contraseña?
                   </Text>
-                </View>
+                </Pressable>
                 <View className="bg-brandGreen rounded-full mt-1 mb-16">
                   <Pressable
                     onPress={handleValidation}
