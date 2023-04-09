@@ -24,10 +24,9 @@ export default function App() {
     <Provider store={store}>
       <PersistGate persistor={persistorStore}>
         <View className="flex-1 bg-white">
-        {/* <NavigationContainer>
+        <NavigationContainer>
         <StackNavigation/>
-        </NavigationContainer> */}
-         <GenresSelect/> 
+        </NavigationContainer> 
         </View> 
       </PersistGate>
     </Provider>
