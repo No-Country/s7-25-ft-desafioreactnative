@@ -9,6 +9,7 @@ const {
   login,
   forgotPassword,
   resetPassword,
+  bulkCreateUsers
 } = require("../controllers/users.controller");
 
 // Middlewares
@@ -26,6 +27,8 @@ const usersRouter = express.Router();
 
 // register
 usersRouter.post("/", createUserValidators, createUser);
+
+usersRouter.post("/createUsers", bulkCreateUsers);
 
 usersRouter.post("/login", login);
 

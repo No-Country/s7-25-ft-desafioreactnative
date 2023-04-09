@@ -21,8 +21,8 @@ const Track = db.define("track", {
   },
   download_url: {
     type: DataTypes.TEXT,
-    allowNull: false,
-    unique: true,
+    allowNull: false/* ,
+    unique: true, */
   },
   image_url: {
     type: DataTypes.TEXT,

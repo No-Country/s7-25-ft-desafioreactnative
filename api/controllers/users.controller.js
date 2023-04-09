@@ -182,6 +182,39 @@ const resetPassword = catchAsync(async (req, res, next) => {
   });
 });
 
+const bulkCreateUsers = catchAsync(async (req, res, next) => {
+  try {
+    const usersData = req.body;
+
+    // Hash the passwords for all the users
+    const users = await Promise.all(
+      usersData.map(async (userData) => {
+        const { password, ...rest } = userData;
+        const salt = await bcrypt.genSalt(12);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        return { ...rest, password: hashedPassword };
+      })
+    );
+
+    // Create the users in the database
+    const createdUsers = await User.bulkCreate(users);
+
+    // Remove password from response
+    const sanitizedUsers = createdUsers.map((user) => {
+      const { password, ...rest } = user.toJSON();
+      return rest;
+    });
+
+    // 201 -> Success and a resource has been created
+    return res.status(201).json({
+      status: "success",
+      data: { users: sanitizedUsers },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 module.exports = {
   getAllUsers,
   createUser,
@@ -190,4 +223,5 @@ module.exports = {
   login,
   forgotPassword,
   resetPassword,
+  bulkCreateUsers
 };
