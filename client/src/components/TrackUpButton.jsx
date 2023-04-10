@@ -97,16 +97,17 @@ const TrackUpButton = () => {
             data: image,
           });
         }
-        // cambiar los literales user_id y price
+        // cambiar los literales user_id, price y genres
         const trackData = {
-          user_id: "6323520c-46ab-4119-a68e-4f6c7b49c4fc",
+          user_id: "3c6a47a4-7c7f-47c3-aa45-0f387b078b97",
           price: 20,
+          genres: ["rock", "folk", "soul"]
         };
 
         formData.append("trackData", JSON.stringify(trackData));
         
         const response = await axios.post(
-          "http://192.168.0.207:4000/api/v1/tracks/upload",
+          "http://192.168.1.4:4000/api/v1/tracks/upload",
           formData,
           { // cambiar literal de token
             headers: {
