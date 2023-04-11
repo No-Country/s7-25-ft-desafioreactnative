@@ -116,10 +116,7 @@ const getTracks = catchAsync(async (req, res, next) => {
     });
 
     const totalTracks = count.count;
-    console.log("total pistas filtradas por findAndCountAll: " + totalTracks)
     const totalPages = Math.ceil(totalTracks / pageSize);
-    console.log("total paginas: " + totalPages);
-    console.log(totalPages);
     const remainingPages = totalPages - page;
 
     res.status(200).json({

@@ -5,8 +5,12 @@ const { Op } = require("sequelize");
 
 const getGenres = catchAsync(async (req, res, next) => {
   try {
+
+    const genres = await Genre.findAll();
+
     res.status(200).json({
       status: "success",
+      genres
     });
   } catch (error) {
     console.log(error);
