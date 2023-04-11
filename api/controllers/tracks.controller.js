@@ -95,9 +95,31 @@ const getTracks = catchAsync(async (req, res, next) => {
       order,
     });
 
-    const count = await Track.findAndCountAll({ where: filter });
+    const count = await Track.findAndCountAll({
+      where: filter,
+      distinct: true,
+      include: [
+        {
+          model: Genre,
+          as: "genres",
+          attributes: ["name"],
+          where:
+            genres.length > 0 && Array.isArray(genres)
+              ? {
+                  name: {
+                    [Op.in]: genres,
+                  },
+                }
+              : {},
+        },
+      ],
+    });
+
     const totalTracks = count.count;
+    console.log("total pistas filtradas por findAndCountAll: " + totalTracks)
     const totalPages = Math.ceil(totalTracks / pageSize);
+    console.log("total paginas: " + totalPages);
+    console.log(totalPages);
     const remainingPages = totalPages - page;
 
     res.status(200).json({
