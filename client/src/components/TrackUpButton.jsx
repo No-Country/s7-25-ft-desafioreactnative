@@ -99,7 +99,7 @@ const TrackUpButton = () => {
         }
         // cambiar los literales user_id, price y genres
         const trackData = {
-          user_id: "3c6a47a4-7c7f-47c3-aa45-0f387b078b97",
+          user_id: "2d826a7d-4d57-4ee5-b7f4-7c2b327649a7",
           price: 20,
           genres: ["rock", "folk", "soul"]
         };
@@ -107,12 +107,12 @@ const TrackUpButton = () => {
         formData.append("trackData", JSON.stringify(trackData));
         
         const response = await axios.post(
-          "http://192.168.1.4:4000/api/v1/tracks/upload",
+          "/api/v1/tracks/upload",
           formData,
           { // cambiar literal de token
             headers: {
               "Content-Type": "multipart/form-data",
-              "Authorization": `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMjM1MjBjLTQ2YWItNDExOS1hNjhlLTRmNmM3YjQ5YzRmYyIsImlhdCI6MTY4MDY2NDEzOCwiZXhwIjoxNjgzMjU2MTM4fQ.IXG55h9tM5pGWREK37RsbMxILexZ2AxAa87PLUtTXeI"}`
+              "Authorization": `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkODI2YTdkLTRkNTctNGVlNS1iN2Y0LTdjMmIzMjc2NDlhNyIsImlhdCI6MTY4MTE4NzgyMiwiZXhwIjoxNjgzNzc5ODIyfQ.F_eIvtMPdNHlwluOcDD6rfV1UD5K0w3dbsbT6knaVxM"}`
             },
             onUploadProgress: function (progressEvent) {
               const percentCompleted = Math.round(

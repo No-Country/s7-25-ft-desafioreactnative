@@ -110,7 +110,8 @@ const uploadTracksTest = catchAsync(async (req, res, next) => {
     // Crear las pistas y asociarlas al usuario
     const createdTracks = await Promise.all(
       tracksData.map(async (trackData) => {
-        const { title, price } = trackData;
+        const { title, price, genres } = trackData;
+
         const track = await Track.create({
           title: title.slice(0, -4),
           download_url:
@@ -119,7 +120,17 @@ const uploadTracksTest = catchAsync(async (req, res, next) => {
             "https://storage.googleapis.com/soundscaleapp-15d98.appspot.com/images/041322b4-ccef-4de0-9b58-7eb8fc025aedimagenSmokeMusic.jpg?GoogleAccessId=firebase-adminsdk-dmobp%40soundscaleapp-15d98.iam.gserviceaccount.com&Expires=4102455600&Signature=W26vXvBZGbBFlwRQsf0g7%2Bm5RXlOWfsuUPUEdmIiD0r01KjyASmiTiUEoO2jGzra0JXa5okss6OK3TThfdlGuQxE4hg7z2W0nWHI7gwCZaYbLbKr%2Bv6yGguIbMxbDK2h0M1UQBAdLeakk%2BTq%2Fif2VoK0SXfUFY%2F3dxXeGyqpy%2FM8WUyVaP3xMr95qiBlL3ecMO3faUhL9RyC28%2F0HUTsediXRa3FSQ2ruGV44BYj8scLTiwPkzB%2B42PGPERRmlrU1brYGVITMv8ZramJcPfamF0xumH6ahXQFWPHdGhK6gKiCfL1YAg9xYm3ujXtcs1Tth7yylnQozuc5SRG12YGwg%3D%3D",
           price,
         });
-        await user.addTrack(track);
+
+        const genresToAdd = await Genre.findAll({
+          where: {
+            name: {
+              [Op.in]: Array.isArray(genres) ? genres : []
+            },
+          },
+        })
+
+        await Promise.all([user.addTrack(track), track.addGenres(genresToAdd)]);
+        
         return track;
       })
     );
