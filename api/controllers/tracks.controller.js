@@ -14,25 +14,26 @@ const uploadTrack = catchAsync(async (req, res, next) => {
 
     const uuid = uuidv4();
 
-    const [audioResponse, imageResponse, user, genresToAdd] =
-      await Promise.all([      
-      saveFileToFirebase({ uuid, ...req.files.audio[0] }),
-      req.files.image
-        ? saveFileToFirebase({ uuid, ...req.files.image[0] })
-        : undefined,
-       User.findByPk(user_id),
+    const [audioResponse, imageResponse, user, genresToAdd] = await Promise.all(
+      [
+        saveFileToFirebase({ uuid, ...req.files.audio[0] }),
+        req.files.image
+          ? saveFileToFirebase({ uuid, ...req.files.image[0] })
+          : undefined,
+        User.findByPk(user_id),
         Genre.findAll({
           where: {
             name: {
-              [Op.in]: Array.isArray(genres) ? genres : []
+              [Op.in]: Array.isArray(genres) ? genres : [],
             },
           },
         }),
-      ]);
+      ]
+    );
 
     const track = await Track.create({
       id: uuid,
-      title: originalname.slice(0, -4),  
+      title: originalname.slice(0, -4),
       download_url: audioResponse,
       image_url: imageResponse,
       price,
@@ -50,7 +51,8 @@ const uploadTrack = catchAsync(async (req, res, next) => {
 
 const getTracks = catchAsync(async (req, res, next) => {
   try {
-    const { page, search, sortBy, sortDirection } = req.query;
+    const { page, search, sortBy, sortDirection, genres = [] } = req.query;
+
     const pageSize = 10;
 
     const offset = (page - 1) * pageSize;
@@ -73,6 +75,21 @@ const getTracks = catchAsync(async (req, res, next) => {
 
     const tracks = await Track.findAll({
       where: filter,
+      include: [
+        {
+          model: Genre,
+          as: "genres",
+          attributes: ["name"],
+          where:
+            genres.length > 0 && Array.isArray(genres)
+              ? {
+                  name: {
+                    [Op.in]: genres,
+                  },
+                }
+              : {},
+        },
+      ],
       offset,
       limit,
       order,
@@ -124,13 +141,13 @@ const uploadTracksTest = catchAsync(async (req, res, next) => {
         const genresToAdd = await Genre.findAll({
           where: {
             name: {
-              [Op.in]: Array.isArray(genres) ? genres : []
+              [Op.in]: Array.isArray(genres) ? genres : [],
             },
           },
-        })
+        });
 
         await Promise.all([user.addTrack(track), track.addGenres(genresToAdd)]);
-        
+
         return track;
       })
     );
