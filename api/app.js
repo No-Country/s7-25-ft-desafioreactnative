@@ -5,6 +5,8 @@ const express = require("express");
 const { usersRouter } = require("./routes/users.routes");
 const { tracksRouter } = require("./routes/tracks.routes");
 const { profilesRouter } = require('./routes/profiles.routes');
+const { genresRouter } = require('./routes/genres.routes');
+
 // Controllers
 const { globalErrorHandler } = require("./controllers/error.controller");
 const cors = require("cors");
@@ -23,6 +25,7 @@ app.use(express.json());
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/profiles', profilesRouter);
 app.use("/api/v1/tracks", tracksRouter);
+app.use("/api/v1/genres", genresRouter);
 
 // Global error handler
 app.use(globalErrorHandler);

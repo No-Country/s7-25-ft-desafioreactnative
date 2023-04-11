@@ -1,26 +1,35 @@
 const {
   saveFileToFirebase,
-} = require("../firebase/functions/saveAudioToFirebase");
+} = require("../firebase/functions/saveFileToFirebase");
 const { catchAsync } = require("../utils/catchAsync.util");
 const { AppError } = require("../utils/appError.util");
-const { User, Track } = require("../models/initModels");
+const { User, Track, Genre } = require("../models/initModels");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 
 const uploadTrack = catchAsync(async (req, res, next) => {
   try {
     const { originalname } = req.files.audio[0];
-    const { user_id, price } = JSON.parse(req.body.trackData);
+    const { user_id, price, genres } = JSON.parse(req.body.trackData);
 
     const uuid = uuidv4();
 
-    const [audioResponse, imageResponse, user] = await Promise.all([
-      saveFileToFirebase({ uuid, ...req.files.audio[0] }),
-      req.files.image
-        ? saveFileToFirebase({ uuid, ...req.files.image[0] })
-        : undefined,
-      User.findByPk(user_id),
-    ]);
+    const [audioResponse, imageResponse, user, genresToAdd] = await Promise.all(
+      [
+        saveFileToFirebase({ uuid, ...req.files.audio[0] }),
+        req.files.image
+          ? saveFileToFirebase({ uuid, ...req.files.image[0] })
+          : undefined,
+        User.findByPk(user_id),
+        Genre.findAll({
+          where: {
+            name: {
+              [Op.in]: Array.isArray(genres) ? genres : [],
+            },
+          },
+        }),
+      ]
+    );
 
     const track = await Track.create({
       id: uuid,
@@ -30,7 +39,7 @@ const uploadTrack = catchAsync(async (req, res, next) => {
       price,
     });
 
-    await user.addTrack(track);
+    await Promise.all([user.addTrack(track), track.addGenres(genresToAdd)]);
 
     res.status(200).json({
       status: "success",
@@ -42,7 +51,8 @@ const uploadTrack = catchAsync(async (req, res, next) => {
 
 const getTracks = catchAsync(async (req, res, next) => {
   try {
-    const { page, search, sortBy, sortDirection } = req.query;
+    const { page, search, sortBy, sortDirection, genres = [] } = req.query;
+
     const pageSize = 10;
 
     const offset = (page - 1) * pageSize;
@@ -65,12 +75,46 @@ const getTracks = catchAsync(async (req, res, next) => {
 
     const tracks = await Track.findAll({
       where: filter,
+      include: [
+        {
+          model: Genre,
+          as: "genres",
+          attributes: ["name"],
+          where:
+            genres.length > 0 && Array.isArray(genres)
+              ? {
+                  name: {
+                    [Op.in]: genres,
+                  },
+                }
+              : {},
+        },
+      ],
       offset,
       limit,
-      order
+      order,
     });
 
-    const count = await Track.findAndCountAll({ where: filter });
+    const count = await Track.findAndCountAll({
+      where: filter,
+      distinct: true,
+      include: [
+        {
+          model: Genre,
+          as: "genres",
+          attributes: ["name"],
+          where:
+            genres.length > 0 && Array.isArray(genres)
+              ? {
+                  name: {
+                    [Op.in]: genres,
+                  },
+                }
+              : {},
+        },
+      ],
+    });
+
     const totalTracks = count.count;
     const totalPages = Math.ceil(totalTracks / pageSize);
     const remainingPages = totalPages - page;
@@ -102,7 +146,8 @@ const uploadTracksTest = catchAsync(async (req, res, next) => {
     // Crear las pistas y asociarlas al usuario
     const createdTracks = await Promise.all(
       tracksData.map(async (trackData) => {
-        const { title, price } = trackData;
+        const { title, price, genres } = trackData;
+
         const track = await Track.create({
           title: title.slice(0, -4),
           download_url:
@@ -111,7 +156,17 @@ const uploadTracksTest = catchAsync(async (req, res, next) => {
             "https://storage.googleapis.com/soundscaleapp-15d98.appspot.com/images/041322b4-ccef-4de0-9b58-7eb8fc025aedimagenSmokeMusic.jpg?GoogleAccessId=firebase-adminsdk-dmobp%40soundscaleapp-15d98.iam.gserviceaccount.com&Expires=4102455600&Signature=W26vXvBZGbBFlwRQsf0g7%2Bm5RXlOWfsuUPUEdmIiD0r01KjyASmiTiUEoO2jGzra0JXa5okss6OK3TThfdlGuQxE4hg7z2W0nWHI7gwCZaYbLbKr%2Bv6yGguIbMxbDK2h0M1UQBAdLeakk%2BTq%2Fif2VoK0SXfUFY%2F3dxXeGyqpy%2FM8WUyVaP3xMr95qiBlL3ecMO3faUhL9RyC28%2F0HUTsediXRa3FSQ2ruGV44BYj8scLTiwPkzB%2B42PGPERRmlrU1brYGVITMv8ZramJcPfamF0xumH6ahXQFWPHdGhK6gKiCfL1YAg9xYm3ujXtcs1Tth7yylnQozuc5SRG12YGwg%3D%3D",
           price,
         });
-        await user.addTrack(track);
+
+        const genresToAdd = await Genre.findAll({
+          where: {
+            name: {
+              [Op.in]: Array.isArray(genres) ? genres : [],
+            },
+          },
+        });
+
+        await Promise.all([user.addTrack(track), track.addGenres(genresToAdd)]);
+
         return track;
       })
     );

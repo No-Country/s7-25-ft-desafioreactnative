@@ -97,21 +97,22 @@ const TrackUpButton = () => {
             data: image,
           });
         }
-        // cambiar los literales user_id y price
+        // cambiar los literales user_id, price y genres
         const trackData = {
-          user_id: "6323520c-46ab-4119-a68e-4f6c7b49c4fc",
+          user_id: "2d826a7d-4d57-4ee5-b7f4-7c2b327649a7",
           price: 20,
+          genres: ["rock", "folk", "soul"]
         };
 
         formData.append("trackData", JSON.stringify(trackData));
         
         const response = await axios.post(
-          "http://192.168.0.207:4000/api/v1/tracks/upload",
+          "/api/v1/tracks/upload",
           formData,
           { // cambiar literal de token
             headers: {
               "Content-Type": "multipart/form-data",
-              "Authorization": `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMjM1MjBjLTQ2YWItNDExOS1hNjhlLTRmNmM3YjQ5YzRmYyIsImlhdCI6MTY4MDY2NDEzOCwiZXhwIjoxNjgzMjU2MTM4fQ.IXG55h9tM5pGWREK37RsbMxILexZ2AxAa87PLUtTXeI"}`
+              "Authorization": `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkODI2YTdkLTRkNTctNGVlNS1iN2Y0LTdjMmIzMjc2NDlhNyIsImlhdCI6MTY4MTE4NzgyMiwiZXhwIjoxNjgzNzc5ODIyfQ.F_eIvtMPdNHlwluOcDD6rfV1UD5K0w3dbsbT6knaVxM"}`
             },
             onUploadProgress: function (progressEvent) {
               const percentCompleted = Math.round(

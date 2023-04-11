@@ -2,9 +2,6 @@ const { storage } = require("../services.js");
 
 async function saveFileToFirebase({uuid, buffer, originalname, mimetype }) {
 
-  console.log(originalname)
-  console.log(mimetype.split("/")[0])
-
   try {
     const fileName = `${mimetype.split("/")[0]}s/${uuid + originalname}`;
 
