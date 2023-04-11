@@ -24,32 +24,6 @@ const initModels = async () => {
     timestamps: false,
   });
 
-  const musicGenres = [
-    "rock",
-    "pop",
-    "jazz",
-    "hip hop",
-    "reggaeton",
-    "blues",
-    "country",
-    "folk",
-    "electronic",
-    "classical",
-    "rap",
-    "r&b",
-    "metal",
-    "salsa",
-    "merengue",
-    "bachata",
-    "cumbia",
-    "funk",
-    "soul",
-    "disco"
-  ];
-
-  const promises = musicGenres.map((genreName) => Genre.findOrCreate({where: {name: genreName}}))
-  await Promise.all(promises);
-
 };
 
 module.exports = { initModels, User, Track, Genre };
