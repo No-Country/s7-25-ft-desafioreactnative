@@ -17,6 +17,29 @@ const Home = () => {
         return null;
       }
 
+      const Songs = [
+        {
+            id: 1,
+            title: "Heartless",
+            artist: "The Weeknd",
+            price:3500,
+            artwork: "https://res.cloudinary.com/jsxclan/image/upload/v1623984884/GitHub/Projects/Musicont/mock/images/heartless_du9yxe.jpg",
+            url: "https://res.cloudinary.com/jsxclan/video/upload/v1623987046/GitHub/Projects/Musicont/mock/audios/heartless_u7exot.mp3",
+            duration: 249740,
+          
+        },
+        {
+            id: 2,
+            title: "Heartless",
+            artist: "The Weeknd",
+            price:3500,
+            artwork: "https://res.cloudinary.com/jsxclan/image/upload/v1623984884/GitHub/Projects/Musicont/mock/images/heartless_du9yxe.jpg",
+            url: "https://res.cloudinary.com/jsxclan/video/upload/v1623987046/GitHub/Projects/Musicont/mock/audios/heartless_u7exot.mp3",
+            duration: 249740,
+          
+        }
+      ]
+
     return (
         <SafeAreaView className='flex-1 bg-brandBlue'>
             <View style={styles.header} className='flex-row items-center justify-between'>
@@ -53,7 +76,7 @@ const Home = () => {
             <View style={styles.RecomendadosContainer}>
                 <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
                 <ScrollView>
-                    <MusicCard/>
+                    {Songs.map((e) => { return(<MusicCard key={e.id} id={e.id} artist={e.artist} title={e.title} price={e.price} artwork={e.artwork}/>)})}
                 </ScrollView>
             </View>
         </SafeAreaView>
