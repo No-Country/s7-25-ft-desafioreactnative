@@ -48,7 +48,7 @@ const TrackUpButton = () => {
     try {
       let result = await DocumentPicker.getDocumentAsync({
         type: "image/*",
-        copyToCacheDirectory: false
+        copyToCacheDirectory: false,
       });
 
       if (result.type === "success") {
@@ -64,9 +64,8 @@ const TrackUpButton = () => {
           uri,
         });
       }
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -89,7 +88,7 @@ const TrackUpButton = () => {
           const image = await FileSystem.readAsStringAsync(imageData.uri, {
             encoding: FileSystem.EncodingType.Base64,
           });
-          
+
           formData.append("image", {
             uri: imageData.uri,
             name: `${imageData.name}`,
@@ -104,24 +103,25 @@ const TrackUpButton = () => {
         };
 
         formData.append("trackData", JSON.stringify(trackData));
-        
+
         const response = await axios.post(
           "http://192.168.0.207:4000/api/v1/tracks/upload",
           formData,
-          { // cambiar literal de token
+          {
+            // cambiar literal de token
             headers: {
               "Content-Type": "multipart/form-data",
-              "Authorization": `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMjM1MjBjLTQ2YWItNDExOS1hNjhlLTRmNmM3YjQ5YzRmYyIsImlhdCI6MTY4MDY2NDEzOCwiZXhwIjoxNjgzMjU2MTM4fQ.IXG55h9tM5pGWREK37RsbMxILexZ2AxAa87PLUtTXeI"}`
+              Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMjM1MjBjLTQ2YWItNDExOS1hNjhlLTRmNmM3YjQ5YzRmYyIsImlhdCI6MTY4MDY2NDEzOCwiZXhwIjoxNjgzMjU2MTM4fQ.IXG55h9tM5pGWREK37RsbMxILexZ2AxAa87PLUtTXeI"}`,
             },
             onUploadProgress: function (progressEvent) {
               const percentCompleted = Math.round(
                 (progressEvent.loaded * 100) / progressEvent.total
               );
-              console.log(percentCompleted)
+              console.log(percentCompleted);
             },
           }
-        )
-          console.log(response.data)
+        );
+        console.log(response.data);
       } catch (error) {
         console.log(error);
       }
