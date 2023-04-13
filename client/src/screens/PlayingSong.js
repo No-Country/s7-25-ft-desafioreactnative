@@ -108,7 +108,7 @@ export default function PlayingSong({ route }) {
             <PreviousIcon />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => play(soundObj)}
+            onPress={() => resume(soundObj)}
             style={{
               width: width * 0.16,
               height: height * 0.08,

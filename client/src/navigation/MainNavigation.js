@@ -8,6 +8,5 @@ const Stack = createNativeStackNavigator();
 export default function MainNavigation() {
   const { loggedInUser } = userInfo();
   return loggedInUser ? <AuthNavigation /> : <StackNavigation />;
-  // return loggedInUser ? <BottomTabNavigator /> : <StackNavigation />;
-  return <BottomTabNavigator />;
+  // return loggedInUser ? <AuthNavigation /> : <StackNavigation />;
 }

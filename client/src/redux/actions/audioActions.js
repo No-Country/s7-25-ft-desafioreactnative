@@ -21,7 +21,7 @@ let baseAPI = "/api/v1/tracks";
 } */
 
 export const playSong = createAsyncThunk(
-  "musicPlayer/playSong",
+  "audios/playSong",
   async (song, { dispatch, getState }) => {
     const state = getState();
     const { soundObject } = state.audios;
