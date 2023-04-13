@@ -24,6 +24,7 @@ export default function PlayingSong({ route }) {
   const soundObj = route?.params.soundObj;
   const { height, width } = useWindowDimensions();
   const [playing, setPlaying] = useState(false);
+  const [PauseButton, setPauseButton] = useState(false);
   console.log("SOUND=>", soundObj);
 
   return (
@@ -107,26 +108,32 @@ export default function PlayingSong({ route }) {
           <TouchableOpacity /* onPress={handlePrev} */>
             <PreviousIcon />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => resume(soundObj)}
+            
+            {PauseButton
+            ?
+            <TouchableOpacity
+            onPress={() => {play(soundObj),setPauseButton(false)}}
             style={{
               width: width * 0.16,
               height: height * 0.08,
             }}
-            className="bg-brandGreen rounded-full items-center justify-center shadow-2xl shadow-brandGreen"
-          >
-            <PauseIcon color={"#000"} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => play(soundObj)}
-            style={{
-              width: width * 0.16,
-              height: height * 0.08,
-            }}
-            className="bg-brandGreen rounded-full items-center justify-center shadow-2xl shadow-brandGreen"
+            className="bg-brandGreen rounded-full items-center justify-center"
           >
             <PlayIcon />
           </TouchableOpacity>
+          :
+          <TouchableOpacity
+            onPress={() => {resume(soundObj), setPauseButton(true)}}
+            style={{
+              width: width * 0.16,
+              height: height * 0.08,
+            }}
+            className="bg-brandGreen rounded-full items-center justify-center"
+          >
+            <PauseIcon color={"#000"} />
+          </TouchableOpacity>
+          }
+    
 
           <TouchableOpacity
           /*  onPress={() =>
