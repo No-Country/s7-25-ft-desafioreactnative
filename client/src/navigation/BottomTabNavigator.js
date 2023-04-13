@@ -45,7 +45,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Explore"
-        component={Explore}
+        component={MusicPlayer}
         options={({ route }) => ({
           tabBarLabel: "Explorar",
           tabBarIcon: (props) => <ExploreIcon color={props.color} />,

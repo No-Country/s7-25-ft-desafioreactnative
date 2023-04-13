@@ -596,12 +596,12 @@ export const ShuffleIcon = () => {
 export const PlayIcon = () => {
   return (
     <Svg
-      height="32px"
+      height="32"
       id="Layer_1"
       style="enable-background:new 0 0 512 512;"
       version="1.1"
-      viewBox="0 0 512 512"
-      width="32px"
+      viewBox="0 0 475 512"
+      width="32"
       fill="#0E0B1F"
     >
       <G>
