@@ -2,13 +2,13 @@ import { useState } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 
 const COLORS = {
-  white: "#fff",
+  white: "#ffffff",
   black: "#1A1A1A",
   blue: "#5D5FEE",
   grey: "rgb(75 85 99)",
   light: "#d8d8d8",
   darkBlue: "#7978B5",
-  red: "#ff0000",
+  red: "#F6006C",
 };
 const InputField = ({
   label,
@@ -25,7 +25,7 @@ const InputField = ({
     <View className="mb-3">
       <Text className="text-sm font-bold mb-1">{label}</Text>
       <View
-        className="w-full overflow-hidden"
+        className="w-full overflow-hidden border"
         style={[
           style.inputContainer,
           {
@@ -59,7 +59,7 @@ const InputField = ({
       </View>
 
       {error && (
-        <Text className="absolute bottom-[-20] text-xs color-[#ff0000]">
+        <Text className="absolute bottom-[-20] text-xs color-[#F6006C]">
           {error}
         </Text>
       )}

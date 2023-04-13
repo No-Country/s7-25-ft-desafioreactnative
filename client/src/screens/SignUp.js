@@ -115,7 +115,7 @@ const SignUp = () => {
           <KeyboardAvoidingView keyboardShouldPersistTaps={true}>
             <ScrollView>
               <Text className="text-4xl mb-10 font-bold text-left text-[#FFFFFF]">
-                Registrarse
+                Regístrate
               </Text>
 
               <View>
@@ -203,7 +203,7 @@ const SignUp = () => {
                   </Pressable>
                   <InputField
                     className=" text-[#FFFFFF] placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
-                    placeholder="Contraseña"
+                    placeholder="Repetir contraseña"
                     onChangeText={(text) => {
                       setFormData({ ...formData, confirmPassword: text });
                       if (errors.password) {
@@ -224,7 +224,7 @@ const SignUp = () => {
                     onPress={handleValidation}
                     className="p-3 rounded-full"
                   >
-                    <Text className="text-black text-center font-bold text-lg">
+                    <Text className="text-black text-center font-bold text-lg uppercase">
                       Registrarme
                     </Text>
                   </Pressable>
@@ -235,7 +235,7 @@ const SignUp = () => {
                     onPress={() => navigation.navigate("SignIn")}
                     className=" p-3 rounded-md"
                   >
-                    <Text className="text-[#FFFFFF] text-center font-bold text-lg">
+                    <Text className="text-[#FFFFFF] text-center font-bold text-lg uppercase">
                       Iniciar sesión
                     </Text>
                   </Pressable>

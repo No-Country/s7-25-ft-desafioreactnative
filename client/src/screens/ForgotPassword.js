@@ -8,6 +8,7 @@ import {
   StatusBar,
   ActivityIndicator,
   Alert,
+  Dimensions,
 } from "react-native";
 import InputField from "../components/InputField";
 import { useState } from "react";
@@ -19,6 +20,10 @@ import userInfo from "../redux/utils/userInfo";
 import ValidateEmail from "../utils/validateEmail";
 
 export default function ForgotPassword() {
+
+  const height = Dimensions.get('window').height;
+  const width = Dimensions.get('window').width;
+
   const [errors, setErrors] = useState("");
   const [valid, setValid] = useState(false);
   const [email, setEmail] = useState("");
@@ -69,7 +74,7 @@ export default function ForgotPassword() {
   return (
     <>
       <View
-        className="flex-1 gap-y-6 px-6 pb-8 lg:px-8 lg:py-8 w-full bg-brandBlue opacity-85"
+        className="flex-1 gap-y-6 px-6 pb-8 lg:px-8 lg:py-8 w-full bg-brandBlue"
         style={{ paddingTop: StatusBar.currentHeight }}
       >
         <ActivityIndicator
@@ -79,21 +84,21 @@ export default function ForgotPassword() {
           size="large"
         />
         <KeyboardAvoidingView>
-          <ScrollView className="gap-4">
-            <Text className="text-2xl mb-6 font-bold text-left text-[#FFFFFF]">
+          <ScrollView>
+            <Text style={{fontSize:height*0.036,marginVertical:height*0.015}} className=" mb-6 font-bold text-[#FFFFFF] self-start">
               ¿Olvidaste tu contraseña?
             </Text>
-            <Text className="text-1xl mb-10 text-left text-[#FFFFFF] w-80 self-center">
-              Si necesitas ayuda para restablecer tu contraseña, podemos
-              ayudarte enviandote un enlace.
+            <Text style={{fontSize:height*0.017,lineHeight:height*0.027,marginVertical:height*0.023}} className=" text-[#FFFFFF] self-start">
+              Si necesitas ayuda para restablecer tu contraseña,{'\n'}podemos
+              ayudarte enviandote un enlace para{'\n'}restablecerla.
             </Text>
             <View>
-              <View className="flex-1 flex-row items-center my-2">
+              <View style={{marginVertical:height*0.015,width:width*0.85}} className="flex-1 flex-row self-center items-center">
                 <View className="flex-1 flex-row items-center">
                   <AtIcon />
                 </View>
-                <InputField
-                  className=" text-[#FFFFFF]  placeholder:py-0 placeholder:mb-3 placeholder:pl-10  "
+                <InputField 
+                  className=" text-[#FFFFFF]  placeholder:py-0 placeholder:mb-2 placeholder:pl-10  "
                   placeholder="E-Mail"
                   onChangeText={(text) => {
                     setEmail(text);
@@ -107,16 +112,14 @@ export default function ForgotPassword() {
                 />
               </View>
 
-              <View className="bg-brandGreen rounded-full mt-14 mb-16">
-                <Pressable
+                <Pressable style={{marginVertical:height*0.045,height:height*0.055,width:width*0.8}}
                   onPress={handleValidation}
-                  className="p-3 rounded-full"
+                  className="bg-brandGreen rounded-full justify-center self-center"
                 >
-                  <Text className="text-black text-center font-bold text-lg">
+                  <Text style={{fontSize:height*0.020}} className="text-neutralMarineBlue text-center font-bold">
                     ENVIAR
                   </Text>
                 </Pressable>
-              </View>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

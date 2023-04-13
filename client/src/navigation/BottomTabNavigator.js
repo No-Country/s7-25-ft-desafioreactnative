@@ -1,19 +1,20 @@
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../screens/HomeScreenPrueba";
+import Home from "../screens/Home";
 import Explore from "../screens/Explore";
 import Radio from "../screens/Radio";
 import Account from "../screens/Account";
 import {
-  AccountIcon,
+  MenuIcon,
   ExploreIcon,
   HomeIcon,
-  RadioIcon,
+  FavouritesIcon,
 } from "../components/Icons";
 import MusicPlayer from "../screens/MusicPlayer";
 
 const Tab = createBottomTabNavigator();
+const Height = Dimensions.get('window').height;
 
 const BottomTabNavigator = () => {
   return (
@@ -21,22 +22,26 @@ const BottomTabNavigator = () => {
       initialRouteName="Home"
       screenOptions={{
         tabBarActiveTintColor: "#CBFB5E",
-        tabBarInactiveTintColor: "#EEEEEE",
-        tabBarLabelStyle: { fontWeight: "bold" },
+        tabBarInactiveTintColor: "#71737B",
+        tabBarLabelStyle: { fontWeight: "bold", },
         headerStyle: {
           backgroundColor: "#0E0B1F",
           borderBottomWidth: 0,
         },
         headerTintColor: "#EEEEEE",
-        tabBarStyle: { backgroundColor: "#0E0B1F" },
+        tabBarStyle: { backgroundColor: "#0E0B1F",borderTopWidth:0,height:Height*0.08 },
+        tabBarItemStyle:{marginVertical:Height*0.019}
       }}
     >
       <Tab.Screen
         options={() => ({
-          tabBarIcon: (props) => <HomeIcon color={props.color} />,
+          tabBarLabel: "Inicio",
+          tabBarIcon: (props) => <HomeIcon color={props.color} />, 
+          headerShown:false,
+          
         })}
         name="Inicio"
-        component={HomeScreen}
+        component={Home}
       />
       <Tab.Screen
         name="Explore"
@@ -50,16 +55,16 @@ const BottomTabNavigator = () => {
         name="Radio"
         component={Radio}
         options={({ route }) => ({
-          tabBarLabel: "Radio",
-          tabBarIcon: (props) => <RadioIcon color={props.color} />,
+          tabBarLabel: "Favoritos",
+          tabBarIcon: (props) => <FavouritesIcon color={props.color} />,
         })}
       />
       <Tab.Screen
         name="Account"
         component={Account}
         options={({ route }) => ({
-          tabBarLabel: "Perfil",
-          tabBarIcon: (props) => <AccountIcon color={props.color} />,
+          tabBarLabel: "Menu",
+          tabBarIcon: (props) => <MenuIcon color={props.color} />,
         })}
       />
     </Tab.Navigator>

@@ -3,9 +3,12 @@ import Svg, {
   Ellipse,
   Mask,
   G,
-  ClipPath,
   Rect,
   Defs,
+  Pattern,
+  ClipPath,
+  Use,
+  Image,
 } from "react-native-svg";
 
 export const AtIcon = () => {
@@ -187,11 +190,11 @@ export const PhoneIcon = () => {
   );
 };
 
-export const SearchIcon = () => {
+export const SearchIcon = ({ size }) => {
   return (
     <Svg
-      width="20"
-      height="20"
+      width={size}
+      height={size}
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -209,16 +212,16 @@ export const SearchIcon = () => {
 export const HomeIcon = ({ color }) => {
   return (
     <Svg
-      width="24"
-      height="26"
-      viewBox="0 0 24 26"
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="20"
+      viewBox="0 0 18 20"
+      fill="none"
     >
       <Path
         fill-rule="evenodd"
         clip-rule="evenodd"
-        d="M2 12.28V24.4519H9.8V18.3659H14.48V24.4519H22.28V12.28L12.14 1.62964L2 12.28Z"
+        d="M1.8844 9.32352V18.2412H7.55569V13.7824H10.9585V18.2412H16.6298V9.32352L9.25708 1.52051L1.8844 9.32352Z"
         stroke={color}
         stroke-width="2.5"
         stroke-linecap="round"
@@ -231,29 +234,15 @@ export const HomeIcon = ({ color }) => {
 export const ExploreIcon = ({ color }) => {
   return (
     <Svg
-      width="18"
-      height="21"
-      viewBox="0 0 18 21"
+      xmlns="http://www.w3.org/200Svg"
+      width="13"
+      height="18"
+      viewBox="0 0 13 18"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
     >
       <Path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M8.91016 19.6281C8.91016 19.6281 2.03516 13.5324 2.03516 8.04631C2.03516 4.34311 5.1132 1.34106 8.91016 1.34106C12.7071 1.34106 15.7852 4.34311 15.7852 8.04631C15.7852 13.5324 8.91016 19.6281 8.91016 19.6281Z"
-        stroke={color}
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <Path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M12.0352 8.04637C12.0352 6.3631 10.636 4.99854 8.91016 4.99854C7.18427 4.99854 5.78516 6.3631 5.78516 8.04637C5.78516 9.72965 7.18427 11.0942 8.91016 11.0942C10.636 11.0942 12.0352 9.72965 12.0352 8.04637Z"
-        stroke={color}
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        d="M6.40591 0.132568L6.41536 10.1809C5.85769 9.85705 5.21494 9.65704 4.52493 9.65704C2.42655 9.65704 0.734619 11.3619 0.734619 13.4668C0.734619 15.5717 2.42655 17.2766 4.52493 17.2766C6.62331 17.2766 8.29634 15.5717 8.29634 13.4668V3.94236H12.0772V0.132568H6.40591ZM4.52493 15.3717C3.4852 15.3717 2.6345 14.5145 2.6345 13.4668C2.6345 12.4191 3.4852 11.5619 4.52493 11.5619C5.56467 11.5619 6.41536 12.4191 6.41536 13.4668C6.41536 14.5145 5.56467 15.3717 4.52493 15.3717Z"
+        fill={color}
       />
     </Svg>
   );
@@ -272,6 +261,25 @@ export const RadioIcon = ({ color }) => {
         fill-rule="evenodd"
         clip-rule="evenodd"
         d="M21.5672 7.89238V19.2726C21.5672 20.3158 20.7517 21.1693 19.7347 21.1693H5.0749C4.05788 21.1693 3.24243 20.3158 3.24243 19.2726V7.89238C3.24243 7.10525 3.70971 6.40346 4.37856 6.13793L15.9598 1.25391L16.5828 2.82817L9.01472 5.99567H19.7347C20.7517 5.99567 21.5672 6.83971 21.5672 7.89238ZM5.07495 7.8924V10.7366H16.0698V8.84048H17.9023V10.7366H19.7347V7.8924H5.07495ZM19.7347 19.2726V12.6341H5.07495V19.2726H19.7347ZM6.44922 15.9344C6.44922 14.625 7.47475 13.5635 8.73981 13.5635C10.0049 13.5635 11.0304 14.625 11.0304 15.9344C11.0304 17.2438 10.0049 18.3052 8.73981 18.3052C7.47475 18.3052 6.44922 17.2438 6.44922 15.9344Z"
+        fill={color}
+      />
+    </Svg>
+  );
+};
+
+export const FavouritesIcon = ({ color }) => {
+  return (
+    <Svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="19"
+      height="17"
+      viewBox="0 0 19 17"
+      fill="none"
+    >
+      <Path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M9.65658 2.62924C8.70555 1.50389 7.24846 0.791748 5.7303 0.791748C3.04298 0.791748 0.931519 2.91937 0.931519 5.62725C0.931519 8.95056 3.89804 11.6584 8.39144 15.773L9.65658 16.9247L10.9217 15.7642C15.4151 11.6584 18.3816 8.95056 18.3816 5.62725C18.3816 2.91937 16.2702 0.791748 13.5829 0.791748C12.0647 0.791748 10.6076 1.50389 9.65658 2.62924ZM9.65657 14.5509L9.56932 14.463C5.41619 10.6738 2.67651 8.16809 2.67651 5.62725C2.67651 3.86888 3.98527 2.55011 5.73029 2.55011C7.07395 2.55011 8.38271 3.4205 8.84514 4.62498H10.4767C10.9304 3.4205 12.2392 2.55011 13.5829 2.55011C15.3279 2.55011 16.6366 3.86888 16.6366 5.62725C16.6366 8.16809 13.897 10.6738 9.74382 14.463L9.65657 14.5509Z"
         fill={color}
       />
     </Svg>
@@ -304,6 +312,23 @@ export const AccountIcon = ({ color }) => {
         stroke-width="2.5"
         stroke-linecap="round"
         stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};
+
+export const MenuIcon = ({ color }) => {
+  return (
+    <Svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="17"
+      height="11"
+      viewBox="0 0 17 11"
+      fill="none"
+    >
+      <Path
+        d="M0.265747 10.9796H16.6708V9.22126H0.265747V10.9796ZM0.265747 6.58372H16.6708V4.82535H0.265747V6.58372ZM0.265747 0.429443V2.18781H16.6708V0.429443H0.265747Z"
+        fill={color}
       />
     </Svg>
   );
@@ -634,6 +659,42 @@ export const PauseIcon = ({ color, width, height }) => {
       fill={color ? color : "#EEEEEE"}
     >
       <Path d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z" />
+    </Svg>
+  );
+};
+export const ShopIcon = ({ color, size }) => {
+  return (
+    <Svg
+      width={size}
+      height={size}
+      fill="none"
+      viewBox="0 0 20 20"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M14 4h-2c0-2.21-1.79-4-4-4S4 1.79 4 4H2C.9 4 0 4.9 0 6v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM8 2c1.1 0 2 .9 2 2H6c0-1.1.9-2 2-2zm6 16H2V6h2v2c0 .55.45 1 1 1s1-.45 1-1V6h4v2c0 .55.45 1 1 1s1-.45 1-1V6h2v12z"
+        fill={color}
+      />
+    </Svg>
+  );
+};
+export const ThreePoints = ({ color, size }) => {
+  return (
+    <Svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 17 4"
+      fill="none"
+    >
+      <Path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M0.719849 2C0.719849 3.1 1.58385 4 2.63985 4C3.69585 4 4.55985 3.1 4.55985 2C4.55985 0.9 3.69585 0 2.63985 0C1.58385 0 0.719849 0.9 0.719849 2ZM12.2399 2C12.2399 3.1 13.1039 4 14.1599 4C15.2159 4 16.0799 3.1 16.0799 2C16.0799 0.9 15.2159 0 14.1599 0C13.1039 0 12.2399 0.9 12.2399 2ZM6.47989 2C6.47989 3.1 7.34389 4 8.39989 4C9.45589 4 10.3199 3.1 10.3199 2C10.3199 0.9 9.45589 0 8.39989 0C7.34389 0 6.47989 0.9 6.47989 2Z"
+        fill={color}
+      />
     </Svg>
   );
 };

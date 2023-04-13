@@ -27,6 +27,7 @@ import { signInUser } from "../redux/actions/userActions";
 import userInfo from "../redux/utils/userInfo";
 import ValidateEmail from "../utils/validateEmail";
 
+
 const SignIn = () => {
   const [errors, setErrors] = useState({});
   const [valid, setValid] = useState(false);
@@ -86,6 +87,7 @@ const SignIn = () => {
 
   return (
     <>
+    
       <ImageBackground
         source={backgroundImage}
         style={{ flex: 1 }}
