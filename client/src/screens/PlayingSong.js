@@ -93,10 +93,10 @@ export default function PlayingSong({ route }) {
             className="flex-row justify-between self-center"
           >
             <Text className="text-[#fff]">
-              {/* convertToMin(soundObj?.status?.positionMillis || 0) */ 0}
+              {convertToMin(soundObj?.soundObj?.positionMillis || 0)}
             </Text>
             <Text className="text-[#fff]">
-              {convertToMin(/* soundObj?.status?.durationMillis */ 3000)}
+              {convertToMin(soundObj?.soundObj?.durationMillis)}
             </Text>
           </View>
         </View>

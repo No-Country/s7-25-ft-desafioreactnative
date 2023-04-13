@@ -1,25 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Audio } from "expo-av";
-
-export const playSong = createAsyncThunk(
-  "audios/playSong",
-  async (song, { getState }) => {
-    const state = getState();
-    const { soundObj } = state.audios;
-
-    if (soundObj) {
-      await soundObj.stopAsync();
-      await soundObj.unloadAsync();
-    }
-
-    const { sound } = await Audio.Sound.createAsync(
-      { uri: song.url },
-      { shouldPlay: true }
-    );
-
-    return sound;
-  }
-);
+import { playSong } from "../actions/audioActions";
 
 const initialState = {
   currentAudio: {},

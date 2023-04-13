@@ -1,11 +1,11 @@
 import { View, Text, FlatList } from "react-native";
 import React, { useCallback, useRef, useState } from "react";
 import songs from "../database/songs";
-import PlayingSong from "./PlayingSong";
 import AudioList from "../components/AudioList";
 import { useNavigation } from "@react-navigation/native";
-import { Audio, AVPlaybackStatus } from "expo-av";
-import { play } from "../redux/actions/audioActions";
+import { Audio } from "expo-av";
+import { playSong } from "../redux/actions/audioActions";
+import { useSelector } from "react-redux";
 
 export default function MusicPlayer({ currentUser }) {
   const navigation = useNavigation();
@@ -20,16 +20,14 @@ export default function MusicPlayer({ currentUser }) {
     );
   }, []);
 
+  const soundObj = useSelector((state) => state.audios);
   async function handlePlay(song) {
     try {
-      const soundObj = await sound.current.loadAsync(
+      /* const soundObj = await sound.current.loadAsync(
         { uri: song.url },
         { shouldPlay: true }
-      );
-
-      if (soundObj.isLoaded) {
-        await sound.current.playAsync();
-      }
+      ); */
+      await playSong(song);
 
       navigation.navigate("PlayingSong", {
         song: song,

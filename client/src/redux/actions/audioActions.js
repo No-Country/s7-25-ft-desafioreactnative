@@ -51,19 +51,20 @@ export const playSong = createAsyncThunk(
   }
 );
 
-export const play = async (playbackObj) => {
+export const play = createAsyncThunk("audios/play", async (playbackObj) => {
   console.log("play=>", playbackObj);
   try {
     return await playbackObj.sound.current.playAsync();
   } catch (error) {
     console.log("error inside pause helper method", error.message);
   }
-};
-export const resume = async (playbackObj) => {
+});
+
+export const resume = createAsyncThunk("audios/resume", async (playbackObj) => {
   console.log("resume=>", playbackObj);
   try {
     return await playbackObj.sound.current.pauseAsync();
   } catch (error) {
     console.log("error inside pause helper method", error.message);
   }
-};
+});
