@@ -25,11 +25,11 @@ const initModels = async () => {
   });
 
   Track.belongsToMany(User, {
-    through: "purchased_tracks",
+    through: "purchased_track",
     foreignKey: "track_id",
   });
   User.belongsToMany(Track, {
-    through: "purchased_tracks",
+    through: "purchased_track",
     foreignKey: "user_id",
   });
 };
