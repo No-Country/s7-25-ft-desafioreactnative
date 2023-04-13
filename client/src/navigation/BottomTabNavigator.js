@@ -11,6 +11,7 @@ import {
   HomeIcon,
   FavouritesIcon,
 } from "../components/Icons";
+import MusicPlayer from "../screens/MusicPlayer";
 
 const Tab = createBottomTabNavigator();
 const Height = Dimensions.get('window').height;

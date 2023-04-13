@@ -60,6 +60,7 @@ const SignIn = () => {
       setValid(false);
     }
     if (valid) {
+      setErrors({});
       dispatch(signInUser(formData));
     }
     if (valid === true && loggedInUser === true) {

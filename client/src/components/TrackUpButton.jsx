@@ -48,7 +48,7 @@ const TrackUpButton = () => {
     try {
       let result = await DocumentPicker.getDocumentAsync({
         type: "image/*",
-        copyToCacheDirectory: false
+        copyToCacheDirectory: false,
       });
 
       if (result.type === "success") {
@@ -64,9 +64,8 @@ const TrackUpButton = () => {
           uri,
         });
       }
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -89,7 +88,7 @@ const TrackUpButton = () => {
           const image = await FileSystem.readAsStringAsync(imageData.uri, {
             encoding: FileSystem.EncodingType.Base64,
           });
-          
+
           formData.append("image", {
             uri: imageData.uri,
             name: `${imageData.name}`,
@@ -101,28 +100,25 @@ const TrackUpButton = () => {
         const trackData = {
           user_id: "2d826a7d-4d57-4ee5-b7f4-7c2b327649a7",
           price: 20,
-          genres: ["rock", "folk", "soul"]
+          genres: ["rock", "folk", "soul"],
         };
 
         formData.append("trackData", JSON.stringify(trackData));
-        
-        const response = await axios.post(
-          "/api/v1/tracks/upload",
-          formData,
-          { // cambiar literal de token
-            headers: {
-              "Content-Type": "multipart/form-data",
-              "Authorization": `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkODI2YTdkLTRkNTctNGVlNS1iN2Y0LTdjMmIzMjc2NDlhNyIsImlhdCI6MTY4MTE4NzgyMiwiZXhwIjoxNjgzNzc5ODIyfQ.F_eIvtMPdNHlwluOcDD6rfV1UD5K0w3dbsbT6knaVxM"}`
-            },
-            onUploadProgress: function (progressEvent) {
-              const percentCompleted = Math.round(
-                (progressEvent.loaded * 100) / progressEvent.total
-              );
-              console.log(percentCompleted)
-            },
-          }
-        )
-          console.log(response.data)
+
+        const response = await axios.post("/api/v1/tracks/upload", formData, {
+          // cambiar literal de token
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJkODI2YTdkLTRkNTctNGVlNS1iN2Y0LTdjMmIzMjc2NDlhNyIsImlhdCI6MTY4MTE4NzgyMiwiZXhwIjoxNjgzNzc5ODIyfQ.F_eIvtMPdNHlwluOcDD6rfV1UD5K0w3dbsbT6knaVxM"}`,
+          },
+          onUploadProgress: function (progressEvent) {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            console.log(percentCompleted);
+          },
+        });
+        console.log(response.data);
       } catch (error) {
         console.log(error);
       }

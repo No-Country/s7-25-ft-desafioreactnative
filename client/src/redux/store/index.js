@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { getDefaultMiddleware } from "@reduxjs/toolkit";
 import usersReducer from "../reducers/users";
+import audiosReducer from "../reducers/audios";
 import { combineReducers } from "@reduxjs/toolkit";
 import persistReducer from "redux-persist/es/persistReducer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,6 +15,7 @@ let persistConfig = {
 
 let rootReducer = combineReducers({
   users: usersReducer,
+  audios: audiosReducer,
 });
 
 let persistedReducer = persistReducer(persistConfig, rootReducer);
