@@ -8,13 +8,13 @@ import { NativeWindStyleSheet } from "nativewind";
 import { NavigationContainer } from "@react-navigation/native";
 import StackNavigation from "./src/navigation/StackNavigation";
 
-import SignIn from "./src/screens/SignIn";
 import GenresSelect from "./src/screens/GenresSelect";
 
 import axios from "axios";
 import { api } from "@env";
 import MainNavigation from "./src/navigation/MainNavigation";
 import { StatusBar } from "expo-status-bar";
+
 
 
 let persistorStore = persistStore(store);
