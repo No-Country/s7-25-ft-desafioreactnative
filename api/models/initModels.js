@@ -9,7 +9,7 @@ const initModels = async () => {
   Profile.belongsTo(User);
 
   User.hasMany(Track, { foreignKey: "user_id" });
-  Track.belongsTo(User, { as: 'artist', foreignKey: 'user_id' });
+  Track.belongsTo(User, { as: "artist", foreignKey: "user_id" });
 
   Track.belongsToMany(Genre, {
     through: "track_genre",
@@ -24,6 +24,14 @@ const initModels = async () => {
     timestamps: false,
   });
 
+  Track.belongsToMany(User, {
+    through: "purchased_tracks",
+    foreignKey: "track_id",
+  });
+  User.belongsToMany(Track, {
+    through: "purchased_tracks",
+    foreignKey: "user_id",
+  });
 };
 
 module.exports = { initModels, User, Track, Genre };
