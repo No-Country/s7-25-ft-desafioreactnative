@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, useWindowDimensions } from "react-native";
 import { View, Modal, Text, TouchableWithoutFeedback } from "react-native";
-import { CartIcon, HeartIcon, ShareIcon } from "./Icons";
+import { CartIcon, HeartIcon, ShareIcon,ExploreIcon } from "./Icons";
 
 const OptionsModal = ({
   visible,
@@ -18,15 +18,15 @@ const OptionsModal = ({
       <Modal animationType="slide" transparent visible={visible}>
         <View
           style={{
-            borderTopRightRadius: 20,
-            borderTopLeftRadius: 20,
+            borderTopRightRadius: 30,
+            borderTopLeftRadius: 30,
             zIndex: 1000,
             position: "absolute",
             bottom: 0,
             right: 0,
             left: 0,
           }}
-          className="rounded-tl-lg rounded-tr-lg bg-[#25232A] z-10"
+          className="rounded-tl-lg rounded-tr-lg bg-[#27262b] z-10"
         >
           <View
             style={{ marginLeft: width * 0.05 }}
@@ -43,7 +43,7 @@ const OptionsModal = ({
               borderRadius={6}
             />
             <View
-              className="border-b border-[#1f2937] flex-row items-center flex-1 gap-x-1"
+              className="border-b border-[#424242] flex-row items-center flex-1 gap-x-1"
               style={{
                 paddingBottom: height * 0.03,
                 paddingTop: height * 0.03,
@@ -66,7 +66,7 @@ const OptionsModal = ({
             </View>
           </View>
 
-          <View className="bg-[#25232A]" style={{ padding: width * 0.05 }}>
+          <View className="bg-[#27262b]" style={{ padding: width * 0.05 }}>
             <TouchableWithoutFeedback onPress={onPlayPress}>
               <View
                 className="flex-row items-center"
@@ -124,15 +124,16 @@ const OptionsModal = ({
             <TouchableWithoutFeedback onPress={onPlayPress}>
               <View
                 className="flex-row items-center"
-                style={{ marginBottom: height * 0.02 }}
+                style={{ marginBottom: height * 0.02,marginLeft: width * 0.01  }}
               >
-                <HeartIcon
-                  style={{ marginRight: width * 0.1 }}
-                  width={width * 0.05}
-                  height={height * 0.05}
+                <ExploreIcon 
+                  style={{marginRight: width * 0.1}}
+                  width={width * 0.03}
+                  height={height * 0.03}
+                  color={'white'}
                 />
                 <Text
-                  style={{ marginLeft: width * 0.02 }}
+                  style={{ marginLeft: width * 0.03 }}
                   className="text-[#FFFFFF] font-bold text-md"
                 >
                   Ver Pista
