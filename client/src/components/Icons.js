@@ -231,12 +231,12 @@ export const HomeIcon = ({ color }) => {
   );
 };
 
-export const ExploreIcon = ({ color }) => {
+export const ExploreIcon = ({ color,width, height }) => {
   return (
     <Svg
       xmlns="http://www.w3.org/200Svg"
-      width="13"
-      height="18"
+      width={width ? width : "13"}
+      height={height ? height : "18"}
       viewBox="0 0 13 18"
       fill="none"
     >

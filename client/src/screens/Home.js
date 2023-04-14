@@ -3,6 +3,7 @@ import React from 'react';
 import {View, StyleSheet, SafeAreaView, Image, Text, Dimensions, ScrollView, ImageBackground} from 'react-native';
 import { SearchIcon,ShopIcon, } from '../components/Icons';
 import MusicCard from '../components/MusicCard';
+import songs from '../database/songs';
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
@@ -16,29 +17,6 @@ const Home = () => {
       if (!loaded) {
         return null;
       }
-
-      const Songs = [
-        {
-            id: 1,
-            title: "Heartless",
-            artist: "The Weeknd",
-            price:3500,
-            artwork: "https://res.cloudinary.com/jsxclan/image/upload/v1623984884/GitHub/Projects/Musicont/mock/images/heartless_du9yxe.jpg",
-            url: "https://res.cloudinary.com/jsxclan/video/upload/v1623987046/GitHub/Projects/Musicont/mock/audios/heartless_u7exot.mp3",
-            duration: 249740,
-          
-        },
-        {
-            id: 2,
-            title: "Heartless",
-            artist: "The Weeknd",
-            price:3500,
-            artwork: "https://res.cloudinary.com/jsxclan/image/upload/v1623984884/GitHub/Projects/Musicont/mock/images/heartless_du9yxe.jpg",
-            url: "https://res.cloudinary.com/jsxclan/video/upload/v1623987046/GitHub/Projects/Musicont/mock/audios/heartless_u7exot.mp3",
-            duration: 249740,
-          
-        }
-      ]
 
     return (
         <SafeAreaView className='flex-1 bg-brandBlue'>
@@ -75,8 +53,8 @@ const Home = () => {
             </View>
             <View style={styles.RecomendadosContainer}>
                 <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
-                <ScrollView>
-                    {Songs.map((e) => { return(<MusicCard key={e.id} id={e.id} artist={e.artist} title={e.title} price={e.price} artwork={e.artwork}/>)})}
+                <ScrollView overScrollMode='never'>
+                    {songs.map((e) => { return (<MusicCard key={e.id} id={e.id} artist={e.artist} title={e.title} price={3000} artwork={e.artwork} url={e.url} duration={e.duration}/>)})}
                 </ScrollView>
             </View>
         </SafeAreaView>
