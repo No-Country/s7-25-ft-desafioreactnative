@@ -95,8 +95,8 @@ const getTracks = catchAsync(async (req, res, next) => {
         {
           model: User,
           as: "artist",
-          attributes: ['userName', "email"]
-        }
+          attributes: ["userName", "email"],
+        },
       ],
       offset,
       limit,
@@ -162,7 +162,7 @@ const uploadTracksTest = catchAsync(async (req, res, next) => {
           artwork:
             "https://storage.googleapis.com/soundscaleapp-15d98.appspot.com/images/041322b4-ccef-4de0-9b58-7eb8fc025aedimagenSmokeMusic.jpg?GoogleAccessId=firebase-adminsdk-dmobp%40soundscaleapp-15d98.iam.gserviceaccount.com&Expires=4102455600&Signature=W26vXvBZGbBFlwRQsf0g7%2Bm5RXlOWfsuUPUEdmIiD0r01KjyASmiTiUEoO2jGzra0JXa5okss6OK3TThfdlGuQxE4hg7z2W0nWHI7gwCZaYbLbKr%2Bv6yGguIbMxbDK2h0M1UQBAdLeakk%2BTq%2Fif2VoK0SXfUFY%2F3dxXeGyqpy%2FM8WUyVaP3xMr95qiBlL3ecMO3faUhL9RyC28%2F0HUTsediXRa3FSQ2ruGV44BYj8scLTiwPkzB%2B42PGPERRmlrU1brYGVITMv8ZramJcPfamF0xumH6ahXQFWPHdGhK6gKiCfL1YAg9xYm3ujXtcs1Tth7yylnQozuc5SRG12YGwg%3D%3D",
           price,
-          duration: 204.4030,
+          duration: 204.403,
         });
 
         const genresToAdd = await Genre.findAll({
@@ -194,4 +194,50 @@ const uploadTracksTest = catchAsync(async (req, res, next) => {
   }
 });
 
-module.exports = { uploadTrack, getTracks, uploadTracksTest };
+const purchaseTrack = catchAsync(async (req, res, next) => {
+  const { userId, trackId } = req.body;
+
+  try {
+    // Verificar que el usuario y la pista existan en la base de datos
+    const [user, track] = await Promise.all([
+      User.findByPk(userId),
+      Track.findByPk(trackId),
+    ]);
+
+    console.log(user.userName)
+    console.log(track.title)
+
+    if (!user || !track) {
+      return res.status(404).json({ error: "Usuario o pista no encontrado" });
+    }
+
+    // Verificar que el usuario no es el dueño de la pista
+    if (user.id === track.user_id) {
+      return res
+        .status(400)
+        .json({ error: "No puedes comprar tu propia pista" });
+    }
+
+    // Procesar el pago utilizando una pasarela de pago, como Stripe o PayPal
+    // ...
+
+    // Agregar el registro en la tabla intermedia de compras
+    await track.addUser(user);
+
+    // Actualizar el contador de la pista
+    await track.increment("sales_accountant");
+
+    // Devolver una respuesta exitosa
+    return res
+      .status(200)
+      .json({ status: "success", message: "Compra exitosa" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      error,
+    });
+  }
+});
+
+module.exports = { uploadTrack, getTracks, uploadTracksTest, purchaseTrack };
