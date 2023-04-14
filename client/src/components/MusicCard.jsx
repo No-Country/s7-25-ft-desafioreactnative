@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/core';
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
 
-const MusicCard = ({id,title,artist,price,artwork,url}) => {
+const MusicCard = ({id,title,artist,price,artwork,url,duration}) => {
 
     const [Favourites, setFavourites] = useState(false);
     const [moreOptionsModal, setMoreOptionsModal] = useState(false);
@@ -29,6 +29,11 @@ const MusicCard = ({id,title,artist,price,artwork,url}) => {
 
      async function handlePlay(song) {
         try {
+          console.log(`LA DURACION DE ${title} DE ${artist} ES DE ${duration}`)
+          navigation.navigate("PlayingSong", {
+            song: song,
+            soundObj: { soundObj, sound },
+          });
           const soundObj = await sound.current.loadAsync(
             { uri: url },
             { shouldPlay: true }
@@ -37,11 +42,6 @@ const MusicCard = ({id,title,artist,price,artwork,url}) => {
           if (soundObj.isLoaded) {
             await sound.current.playAsync();
           }
-    
-          navigation.navigate("PlayingSong", {
-            song: song,
-            soundObj: { soundObj, sound },
-          });
         } catch (error) {
           // An error occurred!
           console.log(error);
@@ -88,7 +88,8 @@ const MusicCard = ({id,title,artist,price,artwork,url}) => {
         visible={moreOptionsModal}
         currentItem={{title:title,artist:artist,artwork:artwork}}   
         onClose={() => setMoreOptionsModal(false)}
-      />
+        />
+
       </>
     );
 }
