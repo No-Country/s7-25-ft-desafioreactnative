@@ -36,7 +36,12 @@ const Track = db.define("track", {
   sales_accountant: {
     type: DataTypes.INTEGER,
     defaultValue: 0
-  }
+  },
+  on_sale: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
+  },
 });
 
 module.exports = { Track };
