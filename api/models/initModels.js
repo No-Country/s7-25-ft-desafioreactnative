@@ -4,6 +4,7 @@ const { User } = require("./user.model");
 const { Profile } = require("./profile.model");
 const { Track } = require("./track.model");
 const { Genre } = require("./genre.model");
+const { Purchase } = require("./purchase.model");
 const initModels = async () => {
   User.hasOne(Profile);
   Profile.belongsTo(User);
@@ -25,13 +26,13 @@ const initModels = async () => {
   });
 
   Track.belongsToMany(User, {
-    through: "purchased_track",
-    foreignKey: "track_id",
+    through: Purchase,
+    foreignKey: "trackId",
   });
   User.belongsToMany(Track, {
-    through: "purchased_track",
-    foreignKey: "user_id",
+    through: Purchase,
+    foreignKey: "userId",
   });
 };
 
-module.exports = { initModels, User, Track, Genre };
+module.exports = { initModels, User, Track, Genre, Purchase };

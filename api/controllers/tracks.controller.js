@@ -3,10 +3,15 @@ const {
 } = require("../firebase/functions/saveFileToFirebase");
 const { catchAsync } = require("../utils/catchAsync.util");
 const { AppError } = require("../utils/appError.util");
-const { User, Track, Genre } = require("../models/initModels");
+const { User, Track, Genre, Purchase } = require("../models/initModels");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const { formatDuration, getMetadata } = require("../utils/metadata.util");
+const mercadopago = require("mercadopago");
+
+mercadopago.configure({
+  access_token: "TEST-3277109332043666-041218-12fc1920124eaad215c3c47400c172d8-1351347836",
+});
 
 const uploadTrack = catchAsync(async (req, res, next) => {
   try {
@@ -198,36 +203,28 @@ const purchaseTrack = catchAsync(async (req, res, next) => {
   const { userId, trackId } = req.body;
 
   try {
-    // Verificar que el usuario y la pista existan en la base de datos
     const [user, track] = await Promise.all([
       User.findByPk(userId),
       Track.findByPk(trackId),
     ]);
 
-    console.log(user.userName)
-    console.log(track.title)
-
     if (!user || !track) {
       return res.status(404).json({ error: "Usuario o pista no encontrado" });
     }
 
-    // Verificar que el usuario no es el dueño de la pista
     if (user.id === track.user_id) {
       return res
         .status(400)
-        .json({ error: "No puedes comprar tu propia pista" });
+        .json({ error: "El usuario es el propietario de la pista" });
     }
 
-    // Procesar el pago utilizando una pasarela de pago, como Stripe o PayPal
-    // ...
+    const purchase = await Purchase.create({
+      userId: user.id,
+      trackId: track.id,
+    });
 
-    // Agregar el registro en la tabla intermedia de compras
-    await track.addUser(user);
-
-    // Actualizar el contador de la pista
     await track.increment("sales_accountant");
-
-    // Devolver una respuesta exitosa
+    
     return res
       .status(200)
       .json({ status: "success", message: "Compra exitosa" });
