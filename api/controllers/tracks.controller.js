@@ -7,11 +7,9 @@ const { User, Track, Genre, Purchase } = require("../models/initModels");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const { formatDuration, getMetadata } = require("../utils/metadata.util");
-const mercadopago = require("mercadopago");
-
-mercadopago.configure({
-  access_token: "TEST-3277109332043666-041218-12fc1920124eaad215c3c47400c172d8-1351347836",
-});
+const stripe = require("stripe")(
+  ""
+);
 
 const uploadTrack = catchAsync(async (req, res, next) => {
   try {
@@ -199,7 +197,22 @@ const uploadTracksTest = catchAsync(async (req, res, next) => {
   }
 });
 
-const purchaseTrack = catchAsync(async (req, res, next) => {
+const generatePayment = catchAsync(async (req, res, next) => {
+  const { amount } = req.body;
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount,
+      currency: "usd",
+    });
+    
+    res.json({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    res.status(500).json({error: error.message});
+  }
+});
+
+const completePayment = catchAsync(async (req, res, next) => {
   const { userId, trackId } = req.body;
 
   try {
@@ -224,7 +237,7 @@ const purchaseTrack = catchAsync(async (req, res, next) => {
     });
 
     await track.increment("sales_accountant");
-    
+
     return res
       .status(200)
       .json({ status: "success", message: "Compra exitosa" });
@@ -237,4 +250,10 @@ const purchaseTrack = catchAsync(async (req, res, next) => {
   }
 });
 
-module.exports = { uploadTrack, getTracks, uploadTracksTest, purchaseTrack };
+module.exports = {
+  uploadTrack,
+  getTracks,
+  uploadTracksTest,
+  generatePayment,
+  completePayment,
+};
