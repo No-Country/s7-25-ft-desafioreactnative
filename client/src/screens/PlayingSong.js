@@ -33,8 +33,8 @@ export default function PlayingSong({ route }) {
   /* let soundObjStatus = JSON.parse(route?.params.soundObjStatus);
   let soundObjSound = JSON.parse(route?.params.soundObjSound); */
   const { height, width } = useWindowDimensions();
-  const [playing, setPlaying] = useState(false);
-  const [PauseButton, setPauseButton] = useState(false);
+  const [position, setPosition] = useState(0);
+  const [duration, setDuration] = useState(0);
   const {
     soundObj,
     soundObjStatus,
@@ -42,22 +42,26 @@ export default function PlayingSong({ route }) {
     playbackPosition,
     playbackDuration,
     isPlaying,
+    playbackObj,
   } = audioInfo();
   const dispatch = useDispatch();
+  const { audioFiles } = audioInfo();
 
+  function handlePosition() {
+    setPosition(playbackPosition);
+    setDuration(playbackDuration);
+  }
   /*   useLayoutEffect(() => {
     soundObjSound = JSON.parse(route?.params.soundObjSound);
   }, [route]); */
 
   useEffect(() => {
+    handlePosition();
     /*  console.log("HERE=>", playbackPosition);
     console.log("PLAYBACK DURATION=>", playbackDuration);
     console.log("is it Playing=>", isPlaying); */
     //console.log("SEEKBAR POSITION?=>", playbackDuration / playbackPosition);
-    console.log("SOUND OBJECT", soundObj);
-    console.log("SOUND OBJECT STATUS", soundObjStatus);
-    console.log("CURRENT AUDIO", currentAudio);
-  }, [soundObj]);
+  }, [playbackPosition, playbackDuration]);
 
   return (
     <View className="flex-1 bg-brandBlue">
@@ -104,11 +108,11 @@ export default function PlayingSong({ route }) {
           <View>
             <Slider
               minimumValue={0}
-              maximumValue={playbackDuration}
+              maximumValue={duration}
               minimumTrackTintColor="#CBFB5E"
               thumbTintColor="#CBFB5E"
               maximumTrackTintColor="#CBFB5E"
-              value={playbackPosition}
+              value={position}
             />
           </View>
           <View
@@ -118,11 +122,9 @@ export default function PlayingSong({ route }) {
             }}
             className="flex-row justify-between self-center"
           >
+            <Text className="text-[#fff]">{convertToMin(position || 0)}</Text>
             <Text className="text-[#fff]">
-              {convertToMin(playbackPosition || 0)}
-            </Text>
-            <Text className="text-[#fff]">
-              {convertToMin(playbackDuration - playbackPosition)}
+              {convertToMin(duration - position)}
             </Text>
           </View>
         </View>
@@ -136,7 +138,7 @@ export default function PlayingSong({ route }) {
 
           {isPlaying === true ? (
             <TouchableOpacity
-              onPress={() => dispatch(pauseSong(currentAudio))}
+              onPress={() => dispatch(pauseSong(soundObj))}
               style={{
                 width: width * 0.16,
                 height: height * 0.08,
@@ -147,7 +149,7 @@ export default function PlayingSong({ route }) {
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              onPress={() => dispatch(resumeSong(currentAudio))}
+              onPress={() => dispatch(resumeSong(soundObj))}
               style={{
                 width: width * 0.16,
                 height: height * 0.08,
