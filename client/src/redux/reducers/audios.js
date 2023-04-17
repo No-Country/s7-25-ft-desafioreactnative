@@ -7,11 +7,10 @@ import {
   resetAudioState,
   resumeSong,
 } from "../actions/audioActions";
-import songs from "../../database/songs";
 
 const initialState = {
   currentAudio: null,
-  audioFiles: [...songs],
+  audioFiles: null,
   playLists: [],
   addToPlayList: null,
   permissionError: false,
@@ -36,34 +35,31 @@ const audiosReducer = createSlice({
   name: "audios",
   initialState,
   reducers: {
-    setIsPlaying: (state, action) => {
-      state.isPlaying = action.payload;
-      console.log("IS PLAYING?", action.payload);
-    },
-    setPlaybackPosition: (state, action) => {
-      state.isPlaying = action.payload;
-      console.log("Playback position?", action.payload);
-    },
-    setPlaybackDuration: (state, action) => {
-      state.isPlaying = action.payload;
-      console.log("Playback duration?", action.payload);
+    setAudioFiles: (state, action) => {
+      state.audioFiles = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(playSong.fulfilled, (state, action) => {
-      state.soundObj = action.payload?.sound;
-      state.soundObjStatus = action.payload?.status;
-      playbackError = null;
-      state.isPlaying = true;
-      state.currentAudio = action.payload?.sound;
-      console.log("PLAYING", action.payload.status?.isPlaying);
-      console.log("currentAudio", action.payload.sound);
-      console.log("soundObjStatus", action.payload.sound);
+      /*
+      state.currentAudio = action.payload?.sound; */
+      state.playbackError = null;
+      state.soundObj = action.payload.sound;
+      state.soundObjStatus = action.payload.status;
+      //state.currentAudio = action.payload.song;
+      console.log("soundObjStatus===>", action.payload.status);
+      console.log("currentAudio===>", action.payload.sound);
+      console.log("PLAYING===>", action.payload.song);
+
+      /*  console.log("PLAYING===>", action.payload);
+      console.log("currentAudio===>", action.payload.sound);
+      console.log("soundObjStatus===>", action.payload.status); */
     });
     builder.addCase(playSong.rejected, (state, action) => {
       state.isPlaying = false;
       playbackError = action.error.message;
       state.soundObj = null;
+      state.currentAudio = null;
       console.log("NOT PLAYING=====>", "ACTION", action.error.message);
     });
     builder.addCase(resumeSong.fulfilled, (state, action) => {
@@ -85,10 +81,12 @@ const audiosReducer = createSlice({
       console.log("NOT PAUSED=====>", "ACTION", action.error.message);
     });
     builder.addCase(playbackStatusUpdate.fulfilled, (state, action) => {
-      state.playbackPosition = action.payload?.positionMillis;
-      state.playbackDuration = action.payload?.durationMillis;
+      if (action.payload?.positionMillis && action.payload?.durationMillis) {
+        state.playbackPosition = action.payload?.positionMillis;
+        state.playbackDuration = action.payload?.durationMillis;
+        //console.log(action.payload?.isPlaying);
+      }
       state.isPlaying = action.payload?.isPlaying;
-      //console.log("REDUCER PLAYBACKSTATUS=====>", action.payload);
     });
     builder.addCase(playbackStatusUpdate.rejected, (state, action) => {
       state.isPlaying = false;
@@ -107,9 +105,16 @@ const audiosReducer = createSlice({
       playbackError = action.error.message;
       console.log("NOT RESET", action.error.message);
     });
+    /*     builder.addCase(fetchTracks.fulfilled, (state, action) => {
+  
+      console.log("TRACKS==>", action);
+    });
+    builder.addCase(fetchTracks.rejected, (state, action) => {
+      console.log("ERROR==>", action.error.message);
+    }); */
   },
 });
 
-export const { setIsPlaying } = audiosReducer.actions;
+export const { setAudioFiles } = audiosReducer.actions;
 
 export default audiosReducer.reducer;
