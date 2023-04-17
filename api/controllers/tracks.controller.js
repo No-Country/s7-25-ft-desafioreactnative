@@ -3,7 +3,13 @@ const {
 } = require("../firebase/functions/saveFileToFirebase");
 const { catchAsync } = require("../utils/catchAsync.util");
 const { AppError } = require("../utils/appError.util");
-const { User, Track, Genre, Purchase } = require("../models/initModels");
+const {
+  User,
+  Track,
+  Genre,
+  Purchase,
+  FavoriteTrack,
+} = require("../models/initModels");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const { formatDuration, getMetadata } = require("../utils/metadata.util");
@@ -197,7 +203,7 @@ const uploadTracksTest = catchAsync(async (req, res, next) => {
 });
 
 const makePayment = catchAsync(async (req, res, next) => {
-  const { amount, paymentMethodId } = req.body
+  const { amount, paymentMethodId } = req.body;
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
@@ -208,11 +214,9 @@ const makePayment = catchAsync(async (req, res, next) => {
       confirm: true,
     });
 
-    res.status(200).json({ status: "success",
-      paymentIntent });
+    res.status(200).json({ status: "success", paymentIntent });
   } catch (error) {
-    res.status(500).json({ status: "error",
-      error: error.message });
+    res.status(500).json({ status: "error", error: error.message });
   }
 });
 
@@ -254,10 +258,80 @@ const completePurchase = catchAsync(async (req, res, next) => {
   }
 });
 
+const addToFavorite = catchAsync(async (req, res, next) => {
+  const { userId, trackId } = req.body;
+
+  try {
+    const [user, track] = await Promise.all([
+      User.findByPk(userId),
+      Track.findByPk(trackId),
+    ]);
+
+    if (!user || !track) {
+      return res.status(404).json({ error: "User or track not found" });
+    }
+
+    if (user.id === track.user_id) {
+      return res
+        .status(400)
+        .json({ error: "The user is the owner of the track" });
+    }
+
+    const favorite = await FavoriteTrack.create({
+      userId: user.id,
+      trackId: track.id,
+    });
+
+    await track.increment("favorites_counter");
+
+    return res.status(200).json({
+      status: "success",
+      message: "Track added to favorites successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      error,
+    });
+  }
+});
+
+const removeFavorite = catchAsync(async (req, res, next) => {
+  const { userId, trackId } = req.body;
+
+  try {
+    const deleted = await FavoriteTrack.destroy({
+      where: {
+        userId,
+        trackId,
+      },
+    });
+
+    if (deleted === 1) {
+      const track = await Track.findByPk(trackId);
+
+      await track.decrement("favorites_counter");
+
+      return res.status(200).json({
+        status: "success",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      error,
+    });
+  }
+});
+
 module.exports = {
   uploadTrack,
   getTracks,
   uploadTracksTest,
   makePayment,
   completePurchase,
+  addToFavorite,
+  removeFavorite,
 };
