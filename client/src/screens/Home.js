@@ -1,14 +1,17 @@
 import { useFonts } from 'expo-font';
 import React from 'react';
-import {View, StyleSheet, SafeAreaView, Image, Text, Dimensions, ScrollView, ImageBackground} from 'react-native';
+import {View, StyleSheet, SafeAreaView, Image, Text, Dimensions, ScrollView, ImageBackground, TouchableOpacity, FlatList} from 'react-native';
 import { SearchIcon,ShopIcon, } from '../components/Icons';
 import MusicCard from '../components/MusicCard';
 import songs from '../database/songs';
+import { useNavigation } from '@react-navigation/native';
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
 
 const Home = () => {
+    const navigation = useNavigation();
+    
     const [loaded] = useFonts({
         'Roboto-Bold': require('../../assets/fonts/Roboto-Bold.ttf'),
         'Roboto-Regular': require('../../assets/fonts/Roboto-Regular.ttf'),
@@ -17,13 +20,15 @@ const Home = () => {
       if (!loaded) {
         return null;
       }
-      
+
       const convertirMilisegundos = (milisegundos) => {
         const segundos = Math.floor(milisegundos / 1000);
         const minutos = Math.floor(segundos / 60);
         const segundosRestantes = String(segundos % 60).padStart(2, '0');
-        return  (`${minutos}:${segundosRestantes}`) ; // retornar objeto con los valores de minutos y segundosRestantes
+        return  (`${minutos}:${segundosRestantes}`) ; // retorna objeto con los valores de minutos y segundosRestantes
       };
+
+      
 
     return (
         <SafeAreaView className='flex-1 bg-brandBlue'>
@@ -33,12 +38,12 @@ const Home = () => {
                     <Text style={styles.soundScaleTitle} className='text-brandGreen w-fit'>SoundScale</Text>
                 </View> 
                 <View className='flex-row gap-x-5 mr-5'>
-                    <View>
+                    <TouchableOpacity onPress={()=>{navigation.navigate('Search')}}>
                         <SearchIcon size={Height*0.035}/>
-                    </View>
-                    <View>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
                     <ShopIcon size={Height*0.030} color={'white'}/>
-                    </View>    
+                    </TouchableOpacity>    
                 </View>
             </View>
             <View style={styles.nuevasPistasContainer}>
@@ -60,9 +65,11 @@ const Home = () => {
             </View>
             <View style={styles.RecomendadosContainer}>
                 <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
-                <ScrollView overScrollMode='never'>
-                    {songs.map((e) => { return (<MusicCard key={e.id} id={e.id} artist={e.artist} title={e.title} price={3000} artwork={e.artwork} url={e.url} duration={convertirMilisegundos(e.duration)}/>)})}
-                </ScrollView>
+                <FlatList overScrollMode='never' 
+                data={songs} 
+                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist} title={item.title} price={3000} artwork={item.artwork} url={item.url} duration={convertirMilisegundos(item.duration)} />}
+                keyExtractor={(e) => e.id}
+                />                  
             </View>
         </SafeAreaView>
     );

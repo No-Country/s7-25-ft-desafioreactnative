@@ -714,3 +714,39 @@ export const ThreePoints = ({ color, size }) => {
     </Svg>
   );
 };
+
+export const ArrowBackIcon = ({color,size}) =>{
+  return(
+    <Svg xmlns="http://www.w3.org/2000/svg" 
+    width={size} 
+    height={size} 
+    viewBox="0 0 16 16" 
+    fill="none"
+    >
+  <Path 
+  fill-rule="evenodd" 
+  clip-rule="evenodd" 
+  d="M3.83 7L9.42 1.41L8 0L0 8L8 16L9.41 14.59L3.83 9H16V7H3.83Z" 
+  fill={color}
+  />
+</Svg>
+  )
+}
+
+export const ArrowDownIcon = ({color,size}) => {
+  return(
+    <Svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width={size} 
+    height={size} 
+    viewBox="0 0 12 9" 
+    fill="none">
+      <Path 
+      fill-rule="evenodd" 
+      clip-rule="evenodd" 
+      d="M6 5.17253L10.59 0.592529L12 2.00253L6 8.00253L0 2.00253L1.41 0.592529L6 5.17253Z" 
+      fill={color}
+      />
+    </Svg>
+  )
+}
