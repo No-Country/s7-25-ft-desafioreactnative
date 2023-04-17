@@ -78,10 +78,13 @@ const getTracks = catchAsync(async (req, res, next) => {
       : {};
 
     let order = [["createdAt", sortDirection || "DESC"]];
-    if (sortBy === "price") {
+    if (sortBy === "price" || sortBy === "title") {
       order = [[sortBy, sortDirection || "ASC"]];
-    } else if (sortBy === "title") {
-      order = [[sortBy, sortDirection || "ASC"]];
+    } else if (
+      sortBy === "sales_accountant" ||
+      sortBy === "favorites_counter"
+    ) {
+      order = [[sortBy, sortDirection || "DESC"]];
     }
 
     const tracks = await Track.findAll({
