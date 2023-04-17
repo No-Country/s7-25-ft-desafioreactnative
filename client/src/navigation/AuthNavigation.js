@@ -3,6 +3,7 @@ import BottomTabNavigator from "./BottomTabNavigator";
 import { useNavigation } from "@react-navigation/native";
 import MusicPlayer from "../screens/MusicPlayer";
 import PlayingSong from "../screens/PlayingSong";
+import Search from "../screens/Search";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ function StackNavigation() {
     >
       <Stack.Group>
         <Stack.Screen name="Home" component={BottomTabNavigator} />
+        
         <Stack.Screen
           options={{
             headerBackButtonMenuEnabled: true,
@@ -36,6 +38,13 @@ function StackNavigation() {
           name="PlayingSong"
           component={PlayingSong}
         />
+        <Stack.Screen options={{
+            headerMode: "modal",
+            title: "",
+          }} 
+          name={'Search'} component={Search}  
+          />
+          
       </Stack.Group>
     </Stack.Navigator>
   );
