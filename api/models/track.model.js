@@ -42,6 +42,10 @@ const Track = db.define("track", {
     allowNull: false,
     defaultValue: true
   },
+  favorites_counter : {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  }
 });
 
 module.exports = { Track };
