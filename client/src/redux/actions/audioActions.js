@@ -21,47 +21,39 @@ export const playbackStatusUpdate = createAsyncThunk(
 export const playSong = createAsyncThunk(
   "audios/playSong",
   async ({ song, lastPosition = 2000 }, { getState, dispatch }) => {
-    const playbackObj = await playbackObject.createAsync(
-      { uri: song.url },
-      { shouldPlay: true, progressUpdateIntervalMillis: 1000 }
-    );
     const { isPlaying } = await getState().audios;
+
     try {
-      if (isPlaying) {
-        playbackObj.sound.stopAsync();
-        playbackObj.sound.unloadAsync();
-      }
-
-      if (!playbackObj.status.isBuffering) {
-        await playbackObj.sound.playFromPositionAsync(lastPosition);
-      }
-
-      playbackObj.sound.setOnPlaybackStatusUpdate((status) =>
-        dispatch(playbackStatusUpdate(status))
-      );
-
       if (!lastPosition) {
-        await playbackObj.sound.loadAsync(
+        const playbackObj = await playbackObject.createAsync(
           { uri: song.url },
           { shouldPlay: true, progressUpdateIntervalMillis: 1000 }
         );
-        playbackObj.sound.setOnPlaybackStatusUpdate((status) =>
+        playbackObj?.sound.setOnPlaybackStatusUpdate((status) =>
           dispatch(playbackStatusUpdate(status))
         );
         return playbackObj;
       }
 
-      /* await playbackObj.sound.loadAsync(
+      const playbackObj = await playbackObject.createAsync(
         { uri: song.url },
-        { progressUpdateIntervalMillis: 1000 }
-      ); */
+        { shouldPlay: true, progressUpdateIntervalMillis: 1000 }
+      );
 
-      /*     navigation.navigate("PlayingSong", {
-        song: song,
-        playbackObj: playbackObj.sound,
-      }); */
+      if (isPlaying) {
+        playbackObj?.sound.stopAsync();
+        playbackObj?.sound.unloadAsync();
+      }
 
-      return playbackObject;
+      if (!playbackObj?.status.isBuffering) {
+        await playbackObj?.sound.playFromPositionAsync(lastPosition);
+      }
+
+      playbackObj?.sound.setOnPlaybackStatusUpdate((status) =>
+        dispatch(playbackStatusUpdate(status))
+      );
+
+      return playbackObj;
     } catch (error) {
       console.log("error inside play action function =>", error.message);
     }
@@ -71,12 +63,9 @@ export const playSong = createAsyncThunk(
 export const resumeSong = createAsyncThunk(
   "audios/resumeSong",
   async (playbackObj) => {
-    console.log(playbackObj);
     console.log("play=>", playbackObj);
     try {
-      return await playbackObj.setStatusAsync({
-        shouldPlay: true,
-      });
+      return await playbackObj?.playAsync();
     } catch (error) {
       console.log("error inside pause helper method", error.message);
     }
@@ -85,13 +74,24 @@ export const resumeSong = createAsyncThunk(
 
 export const pauseSong = createAsyncThunk(
   "audios/pauseSong",
-  async (playbackObj) => {
-    console.log(playbackObj);
+  async (playbackObj, { getState }) => {
+    const { soundObj } = getState().audios;
     console.log("resume=>", playbackObj);
     try {
-      return await playbackObj.setStatusAsync({
-        shouldPlay: false,
-      });
+      return await soundObj?.pauseAsync();
+    } catch (error) {
+      console.log("error inside pause helper method", error.message);
+    }
+  }
+);
+
+export const nextSong = createAsyncThunk(
+  "audios/nextSong",
+  async (playbackObj, { getState }) => {
+    const { currentAudioIndex } = getState().audios;
+    console.log("resume=>", playbackObj);
+    try {
+      return await soundObj?.pauseAsync();
     } catch (error) {
       console.log("error inside pause helper method", error.message);
     }
