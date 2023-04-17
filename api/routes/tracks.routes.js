@@ -5,6 +5,8 @@ const {
   uploadTrack,
   getTracks,
   uploadTracksTest,
+  makePayment,
+  completePurchase
 } = require("../controllers/tracks.controller");
 
 const { protectSession } = require("../middlewares/auth.middlewares");
@@ -12,6 +14,9 @@ const { protectSession } = require("../middlewares/auth.middlewares");
 const tracksRouter = express.Router();
 
 tracksRouter.post("/uploadForTests", uploadTracksTest);
+
+tracksRouter.post("/makePayment", makePayment);
+tracksRouter.post("/completePurchase", completePurchase);
 
 tracksRouter.use(protectSession);
 
