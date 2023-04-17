@@ -1,16 +1,23 @@
 import { View, Text, FlatList } from "react-native";
-import React, { useCallback, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import songs from "../database/songs";
 import AudioList from "../components/AudioList";
 import { useNavigation } from "@react-navigation/native";
 import { Audio } from "expo-av";
+import { useDispatch, useSelector } from "react-redux";
 import { playSong } from "../redux/actions/audioActions";
-import { useSelector } from "react-redux";
+import audioInfo from "../redux/utils/audioInfo";
 
-export default function MusicPlayer({ currentUser }) {
-  const navigation = useNavigation();
+export default function MusicPlayer({ navigation }) {
   const [position, setPosition] = useState();
-  const sound = useRef(new Audio.Sound());
+  const { audioFiles } = audioInfo();
+  const dispatch = useDispatch();
 
   const renderSongs = useCallback(({ item }) => {
     return (
@@ -20,21 +27,14 @@ export default function MusicPlayer({ currentUser }) {
     );
   }, []);
 
-  const soundObj = useSelector((state) => state.audios);
   async function handlePlay(song) {
     try {
-      /* const soundObj = await sound.current.loadAsync(
-        { uri: song.url },
-        { shouldPlay: true }
-      ); */
-      await playSong(song);
+      dispatch(playSong({ song }));
 
-      navigation.navigate("PlayingSong", {
+      return navigation.navigate("PlayingSong", {
         song: song,
-        soundObj: { soundObj, sound },
       });
     } catch (error) {
-      // An error occurred!
       console.log(error);
     }
   }
@@ -43,7 +43,7 @@ export default function MusicPlayer({ currentUser }) {
     <View className="flex-1 bg-brandBlue pt-4">
       {/* <PlayingSong /> */}
       <FlatList
-        data={songs}
+        data={audioFiles}
         renderItem={renderSongs}
         keyExtractor={(item) => item.id}
       />

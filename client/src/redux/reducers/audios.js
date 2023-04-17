@@ -1,22 +1,30 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Audio } from "expo-av";
-import { playSong } from "../actions/audioActions";
+import {
+  pauseSong,
+  playSong,
+  playbackStatusUpdate,
+  resetAudioState,
+  resumeSong,
+} from "../actions/audioActions";
+import songs from "../../database/songs";
 
 const initialState = {
-  currentAudio: {},
-  audioFiles: [],
+  currentAudio: null,
+  audioFiles: [...songs],
   playLists: [],
   addToPlayList: null,
   permissionError: false,
   playbackObj: null,
   playbackError: null,
   soundObj: null,
+  soundObjStatus: null,
   isPlaying: false,
   isPlayListRunning: false,
   activePlayList: [],
   currentAudioIndex: null,
-  playbackPosition: null,
-  playbackDuration: null,
+  playbackPosition: 0,
+  playbackDuration: 0,
   favorites: [],
   recentActivity: [],
   loading: false,
@@ -32,34 +40,76 @@ const audiosReducer = createSlice({
       state.isPlaying = action.payload;
       console.log("IS PLAYING?", action.payload);
     },
-    setPositionMillis: (state, action) => {
-      state.positionMillis = action.payload;
-      console.log("POSITION", action.payload);
+    setPlaybackPosition: (state, action) => {
+      state.isPlaying = action.payload;
+      console.log("Playback position?", action.payload);
     },
-    setDurationMillis: (state, action) => {
-      state.durationMillis = action.payload;
-      console.log("DURATION", action.payload);
+    setPlaybackDuration: (state, action) => {
+      state.isPlaying = action.payload;
+      console.log("Playback duration?", action.payload);
     },
   },
   extraReducers: (builder) => {
     builder.addCase(playSong.fulfilled, (state, action) => {
-      state.soundObj = action.payload;
-      state.isPlaying = true;
+      state.soundObj = action.payload?.sound;
+      state.soundObjStatus = action.payload?.status;
       playbackError = null;
-      console.log("PLAYING", action.payload);
+      state.isPlaying = true;
+      state.currentAudio = action.payload?.sound;
+      console.log("PLAYING", action.payload.status?.isPlaying);
+      console.log("currentAudio", action.payload.sound);
+      console.log("soundObjStatus", action.payload.sound);
     });
     builder.addCase(playSong.rejected, (state, action) => {
-      //state.soundObject = action.payload;
-      state.soundObj = null;
       state.isPlaying = false;
-      playbackError = action.error;
-      console.log("NOT PLAYING=====>", "ACTION", action);
-      console.log("NOT PLAYING=====>", "STATE", state);
+      playbackError = action.error.message;
+      state.soundObj = null;
+      console.log("NOT PLAYING=====>", "ACTION", action.error.message);
+    });
+    builder.addCase(resumeSong.fulfilled, (state, action) => {
+      state.isPlaying = true;
+      console.log("RESUMED=====>", state.isPlaying);
+    });
+    builder.addCase(resumeSong.rejected, (state, action) => {
+      state.isPlaying = false;
+      playbackError = action.error.message;
+      console.log("NOT RESUMED=====>", "ACTION", action.error.message);
+    });
+    builder.addCase(pauseSong.fulfilled, (state, action) => {
+      state.isPlaying = false;
+      console.log("PAUSED=====>", (state.isPlaying = false));
+    });
+    builder.addCase(pauseSong.rejected, (state, action) => {
+      state.isPlaying = true;
+      playbackError = action.error.message;
+      console.log("NOT PAUSED=====>", "ACTION", action.error.message);
+    });
+    builder.addCase(playbackStatusUpdate.fulfilled, (state, action) => {
+      state.playbackPosition = action.payload?.positionMillis;
+      state.playbackDuration = action.payload?.durationMillis;
+      state.isPlaying = action.payload?.isPlaying;
+      //console.log("REDUCER PLAYBACKSTATUS=====>", action.payload);
+    });
+    builder.addCase(playbackStatusUpdate.rejected, (state, action) => {
+      state.isPlaying = false;
+      state.playbackDuration = null;
+      state.playbackPosition = null;
+      playbackError = action.error.message;
+      console.log("NOT PLAYING=====>", "ACTION", action.error.message);
+    });
+    builder.addCase(resetAudioState.fulfilled, (state, action) => {
+      console.log("BEFORE STATE RESET", state);
+      state = initialState;
+      console.log("Audio State Reset from extra reducer");
+      console.log("AFTER STATE RESET", state);
+    });
+    builder.addCase(resetAudioState.rejected, (state, action) => {
+      playbackError = action.error.message;
+      console.log("NOT RESET", action.error.message);
     });
   },
 });
 
-export const { setIsPlaying, setPositionMillis, setDurationMillis } =
-  audiosReducer.actions;
+export const { setIsPlaying } = audiosReducer.actions;
 
 export default audiosReducer.reducer;

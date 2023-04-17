@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import songs from "../database/songs";
 import Slider from "@react-native-community/slider";
 import { useWindowDimensions } from "react-native";
@@ -17,15 +17,47 @@ import {
 } from "../components/Icons";
 import currencyFormat from "../utils/currencyFormat";
 import convertToMin from "../utils/minutesFormat";
-import { play, resume } from "../redux/actions/audioActions";
+import {
+  pauseSong,
+  play,
+  playSong,
+  resume,
+  resumeSong,
+} from "../redux/actions/audioActions";
+import audioInfo from "../redux/utils/audioInfo";
+import { setPlaybackPosition } from "../redux/reducers/audios";
+import { useDispatch } from "react-redux";
 
 export default function PlayingSong({ route }) {
   const song = route?.params.song;
-  const soundObj = route?.params.soundObj;
+  /* let soundObjStatus = JSON.parse(route?.params.soundObjStatus);
+  let soundObjSound = JSON.parse(route?.params.soundObjSound); */
   const { height, width } = useWindowDimensions();
   const [playing, setPlaying] = useState(false);
   const [PauseButton, setPauseButton] = useState(false);
-  console.log("SOUND=>", soundObj);
+  const {
+    soundObj,
+    soundObjStatus,
+    currentAudio,
+    playbackPosition,
+    playbackDuration,
+    isPlaying,
+  } = audioInfo();
+  const dispatch = useDispatch();
+
+  /*   useLayoutEffect(() => {
+    soundObjSound = JSON.parse(route?.params.soundObjSound);
+  }, [route]); */
+
+  useEffect(() => {
+    /*  console.log("HERE=>", playbackPosition);
+    console.log("PLAYBACK DURATION=>", playbackDuration);
+    console.log("is it Playing=>", isPlaying); */
+    //console.log("SEEKBAR POSITION?=>", playbackDuration / playbackPosition);
+    console.log("SOUND OBJECT", soundObj);
+    console.log("SOUND OBJECT STATUS", soundObjStatus);
+    console.log("CURRENT AUDIO", currentAudio);
+  }, [soundObj]);
 
   return (
     <View className="flex-1 bg-brandBlue">
@@ -72,18 +104,11 @@ export default function PlayingSong({ route }) {
           <View>
             <Slider
               minimumValue={0}
-              //maximumValue={soundObj?.status.durationMillis}
+              maximumValue={playbackDuration}
               minimumTrackTintColor="#CBFB5E"
               thumbTintColor="#CBFB5E"
               maximumTrackTintColor="#CBFB5E"
-              /*   value={
-                soundObj?.status?.positionMillis /
-                  soundObj?.status.durationMillis || 0
-              }
-              onValueChange={(value) => {
-                value * soundObj?.status.durationMillis;
-              }} */
-              //onSlidingComplete={handleSeek}
+              value={playbackPosition}
             />
           </View>
           <View
@@ -94,10 +119,10 @@ export default function PlayingSong({ route }) {
             className="flex-row justify-between self-center"
           >
             <Text className="text-[#fff]">
-              {convertToMin(soundObj?.soundObj?.positionMillis || 0)}
+              {convertToMin(playbackPosition || 0)}
             </Text>
             <Text className="text-[#fff]">
-              {convertToMin(soundObj?.soundObj?.durationMillis)}
+              {convertToMin(playbackDuration - playbackPosition)}
             </Text>
           </View>
         </View>
@@ -108,32 +133,30 @@ export default function PlayingSong({ route }) {
           <TouchableOpacity /* onPress={handlePrev} */>
             <PreviousIcon />
           </TouchableOpacity>
-            
-            {PauseButton
-            ?
+
+          {isPlaying === true ? (
             <TouchableOpacity
-            onPress={() => {play(soundObj),setPauseButton(false)}}
-            style={{
-              width: width * 0.16,
-              height: height * 0.08,
-            }}
-            className="bg-brandGreen rounded-full items-center justify-center"
-          >
-            <PlayIcon />
-          </TouchableOpacity>
-          :
-          <TouchableOpacity
-            onPress={() => {resume(soundObj), setPauseButton(true)}}
-            style={{
-              width: width * 0.16,
-              height: height * 0.08,
-            }}
-            className="bg-brandGreen rounded-full items-center justify-center"
-          >
-            <PauseIcon color={"#000"} />
-          </TouchableOpacity>
-          }
-    
+              onPress={() => dispatch(pauseSong(currentAudio))}
+              style={{
+                width: width * 0.16,
+                height: height * 0.08,
+              }}
+              className="bg-brandGreen rounded-full items-center justify-center"
+            >
+              <PauseIcon color={"#000"} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => dispatch(resumeSong(currentAudio))}
+              style={{
+                width: width * 0.16,
+                height: height * 0.08,
+              }}
+              className="bg-brandGreen rounded-full items-center justify-center"
+            >
+              <PlayIcon />
+            </TouchableOpacity>
+          )}
 
           <TouchableOpacity
           /*  onPress={() =>

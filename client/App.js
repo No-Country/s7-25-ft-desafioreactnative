@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import persistStore from "redux-persist/es/persistStore";
@@ -14,8 +14,7 @@ import axios from "axios";
 import { api } from "@env";
 import MainNavigation from "./src/navigation/MainNavigation";
 import { StatusBar } from "expo-status-bar";
-
-
+import { init } from "./src/helpers/audioControllers";
 
 let persistorStore = persistStore(store);
 
@@ -28,11 +27,14 @@ NativeWindStyleSheet.setOutput({
 axios.defaults.baseURL = api;
 
 export default function App() {
+  useEffect(() => {
+    init();
+  }, []);
   return (
     <Provider store={store}>
       <PersistGate persistor={persistorStore}>
+        <StatusBar style="light" />
         <View className="flex-1 bg-white">
-          <StatusBar style="light" />
           <NavigationContainer>
             <MainNavigation />
           </NavigationContainer>
