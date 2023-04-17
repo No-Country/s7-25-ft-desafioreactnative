@@ -2,50 +2,46 @@ import React, { useState } from "react";
 import { View, Button } from "react-native";
 import axios from "axios";
 import {
-  CardField,
-  useConfirmPayment,
+  CardForm,
+  confirmPayment,
+  useStripe,
   createPaymentMethod,
-  useStripe
 } from "@stripe/stripe-react-native";
 
 const GeneratePayment = () => {
   const [card, setCard] = useState();
   const { createPaymentMethod, handleNextAction } = useStripe();
-  /* const { confirmPayment, loading } = useConfirmPayment(); */
 
   const handlePayPress = async () => {
     try {
       const { paymentMethod, error } = await createPaymentMethod({
-        /* card, */
-        billingDetails: {
-          email: "johndoe@example.com",
+        paymentMethodType: "Card",
+        paymentMethodData: {
+          card,
+          billingDetails: {
+            email: "prueba@gmail.com",
+          },
         },
       });
-
-      /* const { data } = await axios.post("/api/v1/tracks/generatePayment", {
-      amount: 200,
-    });
- */
-
-    console.log(paymentMethod)
 
       if (error) {
         console.log("Payment method creation failed", error);
       } else {
-        /* console.log("Payment method created successfully", paymentMethod);
-        const { paymentIntent, error } = await confirmPayment(
-          // data.clientSecret
-          "pi_3Mxg2BEKcgSZKCjS0Agry3kb_secret_CFSqkNbGRnMBGrHWIrVIIv3ds",
-          {
-            paymentMethodId: paymentMethod?.id,
-          }
-        );
+        const { data } = await axios.post("/api/v1/tracks/makePayment", {
+          amount: 200,
+          paymentMethodId: paymentMethod.id,
+        });
 
-        if (error) {
-          console.log("Payment confirmation failed", error);
+        if (data.status === "success") {
+          console.log("Payment made successfully");
+          const res = await axios.post("/api/v1/tracks/completePurchase", {
+            userId : "8422f820-b70a-4937-8642-141f25a42856",
+            trackId: "1f26cdf8-ff78-4be1-a75b-adf14eb29289"
+          })
+          console.log(res.data)
         } else {
-          console.log("Payment confirmed successfully");
-        } */
+          console.log("Payment declined");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -56,7 +52,7 @@ const GeneratePayment = () => {
     <View
       style={{ height: "100%", alignSelf: "center", justifyContent: "center" }}
     >
-      <CardField
+      <CardForm
         postalCodeEnabled={false}
         autofocus
         cardStyle={{
@@ -64,7 +60,7 @@ const GeneratePayment = () => {
           backgroundColor: "#FFFFFF",
           borderColor: "#000000",
           borderRadius: 8,
-          fontSize: 14,
+          fontSize: 16,
           fontFamily: "Roboto",
           placeholderColor: "#BBBBBB",
           textColor: "#777777",
@@ -74,16 +70,10 @@ const GeneratePayment = () => {
           expiration: "Fecha expirar",
           cvc: "CVC",
         }}
-        style={{ width: 360, height: 80 }}
-        onCardChange={(cardDetails) => {
-          setCard(cardDetails);
-        }}
+        style={{ width: 360, height: 300 }}
+        onFormComplete={(cardDetails) => setCard(cardDetails)}
       />
-      <Button
-        onPress={handlePayPress}
-        title="Pay"
-        disabled={!card?.complete}
-      />
+      <Button onPress={handlePayPress} title="Pay" disabled={!card?.complete} />
     </View>
   );
 };

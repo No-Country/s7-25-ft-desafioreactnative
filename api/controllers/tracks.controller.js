@@ -196,22 +196,27 @@ const uploadTracksTest = catchAsync(async (req, res, next) => {
   }
 });
 
-const generatePayment = catchAsync(async (req, res, next) => {
-  const { amount } = req.body;
+const makePayment = catchAsync(async (req, res, next) => {
+  const { amount, paymentMethodId } = req.body
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount,
+      payment_method: paymentMethodId,
+      amount: amount,
       currency: "usd",
+      confirmation_method: "manual",
+      confirm: true,
     });
-    
-    res.json({ clientSecret: paymentIntent.client_secret});
+
+    res.status(200).json({ status: "success",
+      paymentIntent });
   } catch (error) {
-    res.status(500).json({error: error.message});
+    res.status(500).json({ status: "error",
+      error: error.message });
   }
 });
 
-const completePayment = catchAsync(async (req, res, next) => {
+const completePurchase = catchAsync(async (req, res, next) => {
   const { userId, trackId } = req.body;
 
   try {
@@ -221,13 +226,13 @@ const completePayment = catchAsync(async (req, res, next) => {
     ]);
 
     if (!user || !track) {
-      return res.status(404).json({ error: "Usuario o pista no encontrado" });
+      return res.status(404).json({ error: "User or track not found" });
     }
 
     if (user.id === track.user_id) {
       return res
         .status(400)
-        .json({ error: "El usuario es el propietario de la pista" });
+        .json({ error: "The user is the owner of the track" });
     }
 
     const purchase = await Purchase.create({
@@ -239,7 +244,7 @@ const completePayment = catchAsync(async (req, res, next) => {
 
     return res
       .status(200)
-      .json({ status: "success", message: "Compra exitosa" });
+      .json({ status: "success", message: "Successful purchase" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -253,6 +258,6 @@ module.exports = {
   uploadTrack,
   getTracks,
   uploadTracksTest,
-  generatePayment,
-  completePayment,
+  makePayment,
+  completePurchase,
 };
