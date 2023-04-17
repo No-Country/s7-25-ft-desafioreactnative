@@ -1,35 +1,51 @@
 import React, { useState } from "react";
-import { View, Text, Button, TextInput } from "react-native";
+import { View, Button } from "react-native";
 import axios from "axios";
-import { CardField, CardForm, useStripe } from "@stripe/stripe-react-native";
+import {
+  CardField,
+  useConfirmPayment,
+  createPaymentMethod,
+  useStripe
+} from "@stripe/stripe-react-native";
 
 const GeneratePayment = () => {
-  const { confirmPayment } = useStripe();
   const [card, setCard] = useState();
+  const { createPaymentMethod, handleNextAction } = useStripe();
+  /* const { confirmPayment, loading } = useConfirmPayment(); */
 
   const handlePayPress = async () => {
-    /* const { data } = await axios.post("/api/v1/tracks/generatePayment", {
-      amount: 200,
-    }); */
-
     try {
-      const { paymentIntent, error } = await confirmPayment("", {
-        type: "Card",
+      const { paymentMethod, error } = await createPaymentMethod({
+        /* card, */
         billingDetails: {
-          name: "Jenny Rosen",
-        },
-        card: {
-          number: "4242 4242 4242 4242",
-          expMonth: "12",
-          expYear: "36",
-          cvc: "567",
+          email: "johndoe@example.com",
         },
       });
 
+      /* const { data } = await axios.post("/api/v1/tracks/generatePayment", {
+      amount: 200,
+    });
+ */
+
+    console.log(paymentMethod)
+
       if (error) {
-        console.log("Payment confirmation failed", error);
+        console.log("Payment method creation failed", error);
       } else {
-        console.log("Payment confirmed successfully");
+        /* console.log("Payment method created successfully", paymentMethod);
+        const { paymentIntent, error } = await confirmPayment(
+          // data.clientSecret
+          "pi_3Mxg2BEKcgSZKCjS0Agry3kb_secret_CFSqkNbGRnMBGrHWIrVIIv3ds",
+          {
+            paymentMethodId: paymentMethod?.id,
+          }
+        );
+
+        if (error) {
+          console.log("Payment confirmation failed", error);
+        } else {
+          console.log("Payment confirmed successfully");
+        } */
       }
     } catch (error) {
       console.log(error);
@@ -40,26 +56,34 @@ const GeneratePayment = () => {
     <View
       style={{ height: "100%", alignSelf: "center", justifyContent: "center" }}
     >
-       <CardForm
+      <CardField
+        postalCodeEnabled={false}
+        autofocus
         cardStyle={{
-          backgroundColor: "white",
-          borderColor: "black",
-          borderWidth: 3,
-          borderRadius: 2,
-          cursorColor: "gray",
-          placeholderColor: "gray",
-          textColor: "black",
-          textErrorColor: "red",
-          fontFamily: "roboto",
+          borderWidth: 1,
+          backgroundColor: "#FFFFFF",
+          borderColor: "#000000",
+          borderRadius: 8,
+          fontSize: 14,
+          fontFamily: "Roboto",
+          placeholderColor: "#BBBBBB",
+          textColor: "#777777",
         }}
         placeholders={{
-          number: "424242424242",
-          expiration: "12/36",
-          cvc: "354",
+          number: "Numero de tarjeta",
+          expiration: "Fecha expirar",
+          cvc: "CVC",
         }}
-        style={{ width: 380, height: 200 }}
+        style={{ width: 360, height: 80 }}
+        onCardChange={(cardDetails) => {
+          setCard(cardDetails);
+        }}
       />
-      <Button onPress={handlePayPress} title="Pay" />
+      <Button
+        onPress={handlePayPress}
+        title="Pay"
+        disabled={!card?.complete}
+      />
     </View>
   );
 };

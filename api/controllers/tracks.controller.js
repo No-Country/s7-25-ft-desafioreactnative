@@ -7,9 +7,8 @@ const { User, Track, Genre, Purchase } = require("../models/initModels");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
 const { formatDuration, getMetadata } = require("../utils/metadata.util");
-const stripe = require("stripe")(
-  ""
-);
+const env = require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const uploadTrack = catchAsync(async (req, res, next) => {
   try {
@@ -206,7 +205,7 @@ const generatePayment = catchAsync(async (req, res, next) => {
       currency: "usd",
     });
     
-    res.json({ clientSecret: paymentIntent.client_secret });
+    res.json({ clientSecret: paymentIntent.client_secret});
   } catch (error) {
     res.status(500).json({error: error.message});
   }
