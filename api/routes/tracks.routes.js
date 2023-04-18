@@ -5,6 +5,10 @@ const {
   uploadTrack,
   getTracks,
   uploadTracksTest,
+  makePayment,
+  completePurchase,
+  addToFavorite,
+  removeFavorite
 } = require("../controllers/tracks.controller");
 
 const { protectSession } = require("../middlewares/auth.middlewares");
@@ -25,5 +29,11 @@ tracksRouter.post(
   upload.fields([{ name: "audio" }, { name: "image" }]),
   uploadTrack
 );
+
+tracksRouter.post("/makePayment", makePayment);
+tracksRouter.post("/completePurchase", completePurchase);
+
+tracksRouter.post("/addToFavorite", addToFavorite);
+tracksRouter.delete("/removeFavorite", removeFavorite);
 
 module.exports = { tracksRouter };
