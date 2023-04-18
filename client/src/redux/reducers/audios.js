@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Audio } from "expo-av";
 import {
+  nextSong,
   pauseSong,
   playSong,
   playbackStatusUpdate,
+  previousSong,
   resetAudioState,
   resumeSong,
 } from "../actions/audioActions";
@@ -46,10 +48,11 @@ const audiosReducer = createSlice({
       state.playbackError = null;
       state.soundObj = action.payload.sound;
       state.soundObjStatus = action.payload.status;
+      state.currentAudioIndex = action.payload.index;
       //state.currentAudio = action.payload.song;
-      console.log("soundObjStatus===>", action.payload.status);
+      /*  console.log("soundObjStatus===>", action.payload.status);
       console.log("currentAudio===>", action.payload.sound);
-      console.log("PLAYING===>", action.payload.song);
+      console.log("PLAYING===>", action.payload.song); */
 
       /*  console.log("PLAYING===>", action.payload);
       console.log("currentAudio===>", action.payload.sound);
@@ -59,7 +62,7 @@ const audiosReducer = createSlice({
       state.isPlaying = false;
       playbackError = action.error.message;
       state.soundObj = null;
-      state.currentAudio = null;
+      state.currentAudioIndex = null;
       console.log("NOT PLAYING=====>", "ACTION", action.error.message);
     });
     builder.addCase(resumeSong.fulfilled, (state, action) => {
@@ -82,6 +85,7 @@ const audiosReducer = createSlice({
     });
     builder.addCase(playbackStatusUpdate.fulfilled, (state, action) => {
       if (action.payload?.positionMillis && action.payload?.durationMillis) {
+        state.soundObjStatus = action.payload;
         state.playbackPosition = action.payload?.positionMillis;
         state.playbackDuration = action.payload?.durationMillis;
         //console.log(action.payload?.isPlaying);
@@ -104,6 +108,36 @@ const audiosReducer = createSlice({
     builder.addCase(resetAudioState.rejected, (state, action) => {
       playbackError = action.error.message;
       console.log("NOT RESET", action.error.message);
+    });
+    builder.addCase(nextSong.fulfilled, (state, action) => {
+      state.soundObj = action.payload.sound;
+      state.soundObjStatus = action.payload.status;
+      state.currentAudioIndex = action.payload.index;
+      state.playbackError = null;
+      console.log("NEXT SONG PLAYING===>", action.payload);
+    });
+    builder.addCase(nextSong.rejected, (state, action) => {
+      state.isPlaying = false;
+      playbackError = action.error.message;
+      state.soundObj = null;
+      state.currentAudio = null;
+      state.currentAudioIndex = null;
+      console.log("NEXT SONG NOT PLAYING===>", action.error.message);
+    });
+    builder.addCase(previousSong.fulfilled, (state, action) => {
+      state.soundObj = action.payload.sound;
+      state.soundObjStatus = action.payload.status;
+      state.currentAudioIndex = action.payload.index;
+      state.playbackError = null;
+      console.log("PREVIOUS SONG PLAYING===>", action.payload);
+    });
+    builder.addCase(previousSong.rejected, (state, action) => {
+      state.isPlaying = false;
+      playbackError = action.error.message;
+      state.soundObj = null;
+      state.currentAudio = null;
+      state.currentAudioIndex = null;
+      console.log("PREVIOUS SONG NOT PLAYING===>", action.error.message);
     });
     /*     builder.addCase(fetchTracks.fulfilled, (state, action) => {
   

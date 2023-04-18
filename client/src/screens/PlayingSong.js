@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import songs from "../database/songs";
 import Slider from "@react-native-community/slider";
@@ -18,9 +24,11 @@ import {
 import currencyFormat from "../utils/currencyFormat";
 import convertToMin from "../utils/minutesFormat";
 import {
+  nextSong,
   pauseSong,
   play,
   playSong,
+  previousSong,
   resume,
   resumeSong,
 } from "../redux/actions/audioActions";
@@ -28,13 +36,15 @@ import audioInfo from "../redux/utils/audioInfo";
 import { setPlaybackPosition } from "../redux/reducers/audios";
 import { useDispatch } from "react-redux";
 
-export default function PlayingSong({ route }) {
+export default function PlayingSong({ route, navigation }) {
   const song = route?.params.song;
   /* let soundObjStatus = JSON.parse(route?.params.soundObjStatus);
   let soundObjSound = JSON.parse(route?.params.soundObjSound); */
   const { height, width } = useWindowDimensions();
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isBuffering, setIsBuffering] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(0);
   const {
     soundObj,
     soundObjStatus,
@@ -45,23 +55,50 @@ export default function PlayingSong({ route }) {
     playbackObj,
   } = audioInfo();
   const dispatch = useDispatch();
-  const { audioFiles } = audioInfo();
+  const { audioFiles, currentAudioIndex } = audioInfo();
+  let nextSongToPlay =
+    audioFiles[currentAudioIndex + 1] >= audioFiles.length - 1
+      ? audioFiles[0]
+      : audioFiles[currentAudioIndex + 1];
+
+  let previousSongToPlay =
+    audioFiles[currentAudioIndex - 1] <= 0
+      ? audioFiles[audioFiles.length - 1]
+      : audioFiles[currentAudioIndex - 1];
 
   function handlePosition() {
-    setPosition(playbackPosition);
-    setDuration(playbackDuration);
+    setPosition(soundObjStatus.positionMillis);
+    setDuration(soundObjStatus.durationMillis);
+    setIsBuffering(soundObjStatus.isBuffering);
+    setIsLoaded(soundObjStatus.isLoaded);
+  }
+
+  async function playNextSong(song) {
+    dispatch(nextSong(song));
+    console.log("INSIDE PLAY NEXT SONG===>", song);
+    return navigation.navigate("PlayingSong", {
+      song: song,
+    });
+  }
+
+  async function playPreviousSong(song) {
+    dispatch(previousSong(song));
+    console.log("INSIDE PLAY PREVIOUS SONG===>", song);
+    return navigation.navigate("PlayingSong", {
+      song: song,
+    });
   }
   /*   useLayoutEffect(() => {
     soundObjSound = JSON.parse(route?.params.soundObjSound);
   }, [route]); */
 
-  useEffect(() => {
+  /*   useEffect(() => {
     handlePosition();
-    /*  console.log("HERE=>", playbackPosition);
+    console.log("HERE=>", playbackPosition);
     console.log("PLAYBACK DURATION=>", playbackDuration);
-    console.log("is it Playing=>", isPlaying); */
-    //console.log("SEEKBAR POSITION?=>", playbackDuration / playbackPosition);
-  }, [playbackPosition, playbackDuration]);
+    console.log("is it Playing=>", isPlaying); 
+    console.log("SEEKBAR POSITION?=>", playbackDuration / playbackPosition);
+  }, [soundObjStatus]); */
 
   return (
     <View className="flex-1 bg-brandBlue">
@@ -104,8 +141,7 @@ export default function PlayingSong({ route }) {
             <HeartIcon />
             <CartIcon />
           </View>
-
-          <View>
+          <View className="relative">
             <Slider
               minimumValue={0}
               maximumValue={duration}
@@ -122,55 +158,94 @@ export default function PlayingSong({ route }) {
             }}
             className="flex-row justify-between self-center"
           >
-            <Text className="text-[#fff]">{convertToMin(position || 0)}</Text>
             <Text className="text-[#fff]">
-              {convertToMin(duration - position)}
+              {soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded
+                ? "- : -"
+                : convertToMin(soundObjStatus?.positionMillis || 0)}
+            </Text>
+            <Text className="text-[#fff]">
+              {soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded
+                ? "- : -"
+                : convertToMin(
+                    soundObjStatus?.durationMillis -
+                      soundObjStatus?.positionMillis
+                  )}
             </Text>
           </View>
         </View>
-        <View className="flex-row w-full justify-evenly items-center">
-          <TouchableOpacity /* onPress={handlePrev} */>
-            <ShuffleIcon />
-          </TouchableOpacity>
-          <TouchableOpacity /* onPress={handlePrev} */>
-            <PreviousIcon />
-          </TouchableOpacity>
-
-          {isPlaying === true ? (
-            <TouchableOpacity
-              onPress={() => dispatch(pauseSong(soundObj))}
-              style={{
-                width: width * 0.16,
-                height: height * 0.08,
-              }}
-              className="bg-brandGreen rounded-full items-center justify-center"
-            >
-              <PauseIcon color={"#000"} />
-            </TouchableOpacity>
+        <View className="flex-row w-full justify-evenly items-center relative">
+          {soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded ? (
+            <ActivityIndicator
+              animating={
+                soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded
+                  ? true
+                  : false
+              }
+              color="#CBFB5E"
+              className="self-center absolute left-0 right-0 z-10"
+              size="large"
+            />
           ) : (
-            <TouchableOpacity
-              onPress={() => dispatch(resumeSong(soundObj))}
-              style={{
-                width: width * 0.16,
-                height: height * 0.08,
-              }}
-              className="bg-brandGreen rounded-full items-center justify-center"
-            >
-              <PlayIcon />
-            </TouchableOpacity>
-          )}
+            <>
+              <TouchableOpacity /* onPress={handlePrev} */>
+                <ShuffleIcon />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={async () => await playPreviousSong(previousSongToPlay)}
+              >
+                <PreviousIcon />
+              </TouchableOpacity>
 
-          <TouchableOpacity
-          /*  onPress={() =>
-              song?.soundObj?.isPlaying ? handleStop(() => {}) : () => {}
-            }
-            disabled={actions?.stop} */
-          >
-            <NextIcon />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <LoopIcon />
-          </TouchableOpacity>
+              {isPlaying ? (
+                <TouchableOpacity
+                  onPress={() => dispatch(pauseSong(soundObj))}
+                  style={{
+                    width: width * 0.16,
+                    height: height * 0.08,
+                  }}
+                  className="bg-brandGreen rounded-full items-center justify-center"
+                >
+                  <PauseIcon color={"#000"} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => dispatch(resumeSong(soundObj))}
+                  style={{
+                    width: width * 0.16,
+                    height: height * 0.08,
+                  }}
+                  className="bg-brandGreen rounded-full items-center justify-center"
+                  disabled={
+                    soundObjStatus?.isBuffering && !soundObjStatus?.isLoaded
+                      ? true
+                      : false
+                  }
+                >
+                  <PlayIcon />
+                </TouchableOpacity>
+              )}
+
+              <TouchableOpacity
+                onPress={async () => await playNextSong(nextSongToPlay)}
+                disabled={
+                  soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded
+                    ? true
+                    : false
+                }
+              >
+                <NextIcon />
+              </TouchableOpacity>
+              <TouchableOpacity
+                disabled={
+                  soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded
+                    ? true
+                    : false
+                }
+              >
+                <LoopIcon />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
     </View>
