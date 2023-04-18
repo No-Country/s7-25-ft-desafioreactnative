@@ -74,13 +74,13 @@ const MusicCard = ({id,title,artist,price,artwork,url,duration}) => {
                 </View>
             </View>
             <View style={{height:'100%',marginTop:Height*0.089,flexDirection:'row'}}>
-                <Text style={styles.Price}>ARS${price}</Text>
+                <Text style={styles.Price}>US$ {price}</Text>
                 <View style={{marginTop:Height*0.002}}>
                 <ShopIcon color={'#CBFB5E'} size={Height*0.02}/>
                 </View>
             </View>
             <TouchableHighlight style={{marginLeft:Width*0.05}}  onPress={() => setMoreOptionsModal(true)}>
-                <ThreePoints color={'white'} size={Height*0.035}/>
+                <ThreePoints color={'white'} size={Height*0.030}/>
             </TouchableHighlight>
         </TouchableOpacity>
 
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     Container:{height:Height*0.08, flexDirection:'row', alignItems:'center',borderBottomWidth:0.2,borderBottomColor:'#FFFFFF', },
     favArtistContainer:{flexDirection:'row', gap:Width*0.02,},
     Image:{height:Height*0.06, width:Height*0.06},
-    Title:{fontFamily:'Roboto-Regular', fontSize:Height*0.019, color:'white'},
+    Title:{fontFamily:'Roboto-Regular', fontSize:Height*0.016, color:'white'},
     Artist:{fontFamily:'Roboto-Regular', fontSize:Height*0.0145,color:'#817A7A'},
     Price:{fontFamily:'Roboto-Regular', fontSize:Height*0.017, color:'#CBFB5E',width:Width*0.2}
 })
