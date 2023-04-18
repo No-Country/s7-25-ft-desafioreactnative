@@ -62,7 +62,14 @@ const uploadTrack = catchAsync(async (req, res, next) => {
 
 const getTracks = catchAsync(async (req, res, next) => {
   try {
-    const { page, searchByTitle, searchByArtist, sortBy, sortDirection, genres = [] } = req.query;
+    const {
+      page,
+      searchByTitle,
+      searchByArtist,
+      sortBy,
+      sortDirection,
+      genres = [],
+    } = req.query;
 
     const pageSize = 10;
 
@@ -107,11 +114,13 @@ const getTracks = catchAsync(async (req, res, next) => {
           model: User,
           as: "artist",
           attributes: ["userName", "email"],
-          where: searchByArtist? {
-            userName: {
-              [Op.iLike]: `%${searchByArtist}%`,
-            },
-          } : {},
+          where: searchByArtist
+            ? {
+                userName: {
+                  [Op.iLike]: `%${searchByArtist}%`,
+                },
+              }
+            : {},
         },
       ],
       offset,
@@ -140,12 +149,14 @@ const getTracks = catchAsync(async (req, res, next) => {
           model: User,
           as: "artist",
           attributes: ["userName", "email"],
-          where: searchByArtist? {
-            userName: {
-              [Op.iLike]: `%${searchByArtist}%`,
-            },
-          } : {},
-        }
+          where: searchByArtist
+            ? {
+                userName: {
+                  [Op.iLike]: `%${searchByArtist}%`,
+                },
+              }
+            : {},
+        },
       ],
     });
 
@@ -344,6 +355,42 @@ const removeFavorite = catchAsync(async (req, res, next) => {
   }
 });
 
+const getFavoriteTracks = catchAsync(async (req, res, next) => {
+  const userId = req.params.id;
+  const limit = req.query.limit || 10;
+
+  try {
+    const tracks = await Track.findAll({
+      include: [{
+        model: User,
+        where: { id: userId },
+        attributes: [],
+        as: 'favoritedBy',
+      }],
+      limit,
+      order: [["createdAt", "ASC"]]
+    });
+
+    const totalFavorites = await FavoriteTrack.count({ 
+      where: { 
+        userId 
+      } 
+    })
+
+    return res.status(200).json({
+      status: "success",
+      tracks,
+      limit: totalFavorites <= parseInt(limit)
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      error,
+    });
+  }
+});
+
 module.exports = {
   uploadTrack,
   getTracks,
@@ -352,4 +399,5 @@ module.exports = {
   completePurchase,
   addToFavorite,
   removeFavorite,
+  getFavoriteTracks,
 };
