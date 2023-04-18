@@ -6,35 +6,14 @@ import { ArrowBackIcon, ArrowDownIcon, SearchIcon } from '../components/Icons';
 import OptionsModal from '../components/OptionsModal';
 import songs from '../database/songs';
 import MusicCard from '../components/MusicCard';
-import axios from 'axios';
-import { useEffect } from 'react';
-import OptionsModalGenres from '../components/OptionsModalGenres';
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
-
-const BaseURL = 'http://192.168.0.12:4000';
 
 const Search = () => {
 
     const navigation = useNavigation();
     const [moreOptionsModal, setMoreOptionsModal] = useState(false);
-    const [moreOptionsModalGenres, setMoreOptionsModalGenres] = useState(false);
-    const [songs, setsongs] = useState([]);
-
-    useEffect(() => {
-        
-        axios.get(`${BaseURL}/api/v1/tracks?page=1&genres=hip hop`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs"}})
-
-        .then((response) => {
-          setsongs(response.data.data.tracks);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      }, []);
-
-      console.log(songs)
     
     const [loaded] = useFonts({
         'Roboto-Bold': require('../../assets/fonts/Roboto-Bold.ttf'),
@@ -63,7 +42,7 @@ const Search = () => {
              </View>
              <View style={{height:Height*0.10}} className='flex-row items-center'>
                 <Text style={styles.Generos}>Generos :</Text>
-                <TouchableOpacity className='flex-row items-center' activeOpacity={0.8} onPress={() => setMoreOptionsModalGenres(true)}>
+                <TouchableOpacity className='flex-row items-center' activeOpacity={0.8} onPress={() => setMoreOptionsModal(true)}>
                     <Text style={styles.Seleccion}>Todos</Text>
                     <View style={{marginTop:Height*0.005,marginLeft:Width*0.018}}>
                         <ArrowDownIcon color={'white'} size={Height*0.015}/>
@@ -74,7 +53,7 @@ const Search = () => {
              <View style={styles.SearchContainer}>
                 <FlatList overScrollMode='never' 
                 data={songs} 
-                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist.userName} title={item.title} price={item.price} artwork={item.artwork} url={item.url} duration={item.duration} />}
+                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist} title={item.title} price={3000} artwork={item.artwork} url={item.url} duration={item.duration} />}
                 keyExtractor={(e) => e.id}   
                 />
              </View>
@@ -83,11 +62,6 @@ const Search = () => {
         visible={moreOptionsModal}
         currentItem={{}}   
         onClose={() => setMoreOptionsModal(false)}
-        />
-         <OptionsModalGenres
-        visible={moreOptionsModalGenres}
-        currentItem={{}}   
-        onClose={() => setMoreOptionsModalGenres(false)}
         />
         </>
     );
