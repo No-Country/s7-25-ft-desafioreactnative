@@ -1,11 +1,13 @@
 import { View, FlatList } from "react-native";
 import React, { useCallback } from "react";
 import AudioList from "../components/AudioList";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { playSong } from "../redux/actions/audioActions";
+import audioInfo from "../redux/utils/audioInfo";
 
 export default function MusicPlayer({ navigation }) {
   const dispatch = useDispatch();
+  const { audioFiles } = audioInfo();
 
   const renderSongs = useCallback(({ item }) => {
     return (
