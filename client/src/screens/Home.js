@@ -1,32 +1,16 @@
 import { useFonts } from 'expo-font';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {View, StyleSheet, SafeAreaView, Image, Text, Dimensions, ScrollView, ImageBackground, TouchableOpacity, FlatList} from 'react-native';
 import { SearchIcon,ShopIcon, } from '../components/Icons';
 import MusicCard from '../components/MusicCard';
+import songs from '../database/songs';
 import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
-
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
 
-const BaseURL = 'http://192.168.0.12:4000';
-
 const Home = () => {
     const navigation = useNavigation();
-    const [songs, setsongs] = useState([]);
-    console.log(songs)
-    
-    useEffect(() => {
-        
-      axios.get(`${BaseURL}/api/v1/tracks?page=1`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs"}})
-      .then((response) => {
-        setsongs(response.data.data.tracks);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    }, []);
     
     const [loaded] = useFonts({
         'Roboto-Bold': require('../../assets/fonts/Roboto-Bold.ttf'),
@@ -83,7 +67,7 @@ const Home = () => {
                 <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
                 <FlatList overScrollMode='never' 
                 data={songs} 
-                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist.userName} title={item.title} price={item.price} artwork={item.artwork} url={item.url} duration={convertirMilisegundos(item.duration)} />}
+                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist} title={item.title} price={3000} artwork={item.artwork} url={item.url} duration={convertirMilisegundos(item.duration)} />}
                 keyExtractor={(e) => e.id}
                 />                  
             </View>
