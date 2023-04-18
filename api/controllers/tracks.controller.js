@@ -62,17 +62,17 @@ const uploadTrack = catchAsync(async (req, res, next) => {
 
 const getTracks = catchAsync(async (req, res, next) => {
   try {
-    const { page, search, sortBy, sortDirection, genres = [] } = req.query;
+    const { page, searchByTitle, searchByArtist, sortBy, sortDirection, genres = [] } = req.query;
 
     const pageSize = 10;
 
     const offset = (page - 1) * pageSize;
     const limit = pageSize;
 
-    const filter = search
+    const filter = searchByTitle
       ? {
           title: {
-            [Op.iLike]: `%${search}%`,
+            [Op.iLike]: `%${searchByTitle}%`,
           },
         }
       : {};
@@ -107,6 +107,11 @@ const getTracks = catchAsync(async (req, res, next) => {
           model: User,
           as: "artist",
           attributes: ["userName", "email"],
+          where: searchByArtist? {
+            userName: {
+              [Op.iLike]: `%${searchByArtist}%`,
+            },
+          } : {},
         },
       ],
       offset,
@@ -131,6 +136,16 @@ const getTracks = catchAsync(async (req, res, next) => {
                 }
               : {},
         },
+        {
+          model: User,
+          as: "artist",
+          attributes: ["userName", "email"],
+          where: searchByArtist? {
+            userName: {
+              [Op.iLike]: `%${searchByArtist}%`,
+            },
+          } : {},
+        }
       ],
     });
 
