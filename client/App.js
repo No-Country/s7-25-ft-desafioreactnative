@@ -11,11 +11,10 @@ import StackNavigation from "./src/navigation/StackNavigation";
 import GenresSelect from "./src/screens/GenresSelect";
 
 import axios from "axios";
-import { api } from "@env";
+import { api, STRIPE_KEY } from "@env";
 import MainNavigation from "./src/navigation/MainNavigation";
 import { StatusBar } from "expo-status-bar";
-
-
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 let persistorStore = persistStore(store);
 
@@ -31,12 +30,14 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistorStore}>
-        <View className="flex-1 bg-white">
-          <StatusBar style="light" />
-          <NavigationContainer>
-              <MainNavigation /> 
-          </NavigationContainer>
-        </View>
+        <StripeProvider publishableKey={STRIPE_KEY} urlScheme="soundScale">
+          <View className="flex-1 bg-white">
+            <StatusBar style="light" />
+            <NavigationContainer>
+              <MainNavigation />
+            </NavigationContainer>
+          </View>
+        </StripeProvider>
       </PersistGate>
     </Provider>
   );
