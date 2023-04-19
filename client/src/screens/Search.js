@@ -32,6 +32,7 @@ const Search = () => {
         
         .then((response) => {
           setsongs(response.data.data.tracks);
+          
         })
         .catch((error) => {
           console.log(error);
