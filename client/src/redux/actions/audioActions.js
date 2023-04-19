@@ -35,7 +35,7 @@ export const playSong = createAsyncThunk(
         playbackObj?.sound.setOnPlaybackStatusUpdate((status) =>
           dispatch(playbackStatusUpdate(status))
         );
-        return { index, ...playbackObj };
+        return { index, song, ...playbackObj };
       }
 
       //Otherwise, play the audio starting from the given position
@@ -68,7 +68,7 @@ export const playSong = createAsyncThunk(
 
       const index = await audioFiles.findIndex(({ id }) => id === song?.id);
 
-      return { index, ...playbackObj };
+      return { index, song, ...playbackObj };
     } catch (error) {
       console.log("error inside play action function =>", error.message);
     }
@@ -102,15 +102,16 @@ export const pauseSong = createAsyncThunk(
 
 export const nextSong = createAsyncThunk(
   "audios/nextSong",
-  async (song, { getState, dispatch }) => {
+  async (_, { getState, dispatch }) => {
     try {
       const { audioFiles, isPlaying, soundObj, currentAudioIndex } =
         await getState().audios;
       let playbackObj;
       let index;
-      console.log(song);
+      let song;
+
       console.log("CURRENT INDEX===>", currentAudioIndex);
-      const isLastAudio = audioFiles.length === currentAudioIndex + 1;
+      const isLastAudio = currentAudioIndex + 1 >= audioFiles.length - 1;
       console.log("IS LAST AUDIO?===>", isLastAudio);
 
       if (!isLastAudio) {
@@ -120,6 +121,9 @@ export const nextSong = createAsyncThunk(
         }
 
         let index = currentAudioIndex + 1;
+        let song = audioFiles[index];
+        console.log("NEXT SONG TO PLAY===>", song);
+
         playbackObj = await playbackObject.createAsync(
           { uri: song.url },
           { shouldPlay: true }
@@ -128,7 +132,7 @@ export const nextSong = createAsyncThunk(
         playbackObj?.sound.setOnPlaybackStatusUpdate((status) =>
           dispatch(playbackStatusUpdate(status))
         );
-        return { index, ...playbackObj };
+        return { index, song, ...playbackObj };
       }
 
       if (isPlaying) {
@@ -136,18 +140,18 @@ export const nextSong = createAsyncThunk(
         await soundObj?.unloadAsync();
       }
 
-      let firstAudio = audioFiles[0];
-      console.log("FIRST AUDIO===>", firstAudio);
       index = 0;
+      song = audioFiles[index];
+      console.log("FIRST AUDIO===>", song);
       playbackObj = await playbackObject.createAsync(
-        { uri: firstAudio.url },
+        { uri: song.url },
         { shouldPlay: true }
       );
       playbackObj?.sound.setOnPlaybackStatusUpdate((status) =>
         dispatch(playbackStatusUpdate(status))
       );
 
-      return { index, ...playbackObj };
+      return { index, song, ...playbackObj };
     } catch (error) {
       console.log("error inside next song action function =>", error.message);
     }
@@ -156,15 +160,16 @@ export const nextSong = createAsyncThunk(
 
 export const previousSong = createAsyncThunk(
   "audios/previousSong",
-  async (song, { getState, dispatch }) => {
+  async (_, { getState, dispatch }) => {
     try {
       const { audioFiles, isPlaying, soundObj, currentAudioIndex } =
         await getState().audios;
       let playbackObj;
       let index;
+      let song;
       console.log(song);
       console.log("CURRENT INDEX===>", currentAudioIndex);
-      const isFirstAudio = currentAudioIndex - 1 === 0;
+      const isFirstAudio = currentAudioIndex <= 0;
       console.log("IS FIRST AUDIO?===>", isFirstAudio);
 
       if (!isFirstAudio) {
@@ -174,6 +179,7 @@ export const previousSong = createAsyncThunk(
         }
 
         let index = currentAudioIndex - 1;
+        let song = audioFiles[index];
         playbackObj = await playbackObject.createAsync(
           { uri: song.url },
           { shouldPlay: true }
@@ -182,26 +188,26 @@ export const previousSong = createAsyncThunk(
         playbackObj?.sound.setOnPlaybackStatusUpdate((status) =>
           dispatch(playbackStatusUpdate(status))
         );
-        return { index, ...playbackObj };
+        return { index, song, ...playbackObj };
       }
 
       if (isPlaying) {
         await soundObj?.stopAsync();
         await soundObj?.unloadAsync();
       }
-
-      let lastAudio = audioFiles[audioFiles.length - 1];
-      console.log("FIRST AUDIO===>", lastAudio);
       index = audioFiles.length - 1;
+      song = audioFiles[index];
+      console.log("LAST AUDIO TO PLAY===>", song);
+
       playbackObj = await playbackObject.createAsync(
-        { uri: lastAudio.url },
+        { uri: song.url },
         { shouldPlay: true }
       );
       playbackObj?.sound.setOnPlaybackStatusUpdate((status) =>
         dispatch(playbackStatusUpdate(status))
       );
 
-      return { index, ...playbackObj };
+      return { index, song, ...playbackObj };
     } catch (error) {
       console.log("error inside next song action function =>", error.message);
     }

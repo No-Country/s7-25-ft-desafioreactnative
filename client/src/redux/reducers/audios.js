@@ -31,6 +31,7 @@ const initialState = {
   loading: false,
   positionMillis: 0,
   durationMillis: null,
+  song: null,
 };
 
 const audiosReducer = createSlice({
@@ -42,13 +43,21 @@ const audiosReducer = createSlice({
     },
   },
   extraReducers: (builder) => {
+    /* Play */
+    builder.addCase(playSong.pending, (state, action) => {
+      state.loading = true;
+    });
     builder.addCase(playSong.fulfilled, (state, action) => {
       /*
       state.currentAudio = action.payload?.sound; */
+      state.loading = false;
       state.playbackError = null;
       state.soundObj = action.payload.sound;
       state.soundObjStatus = action.payload.status;
       state.currentAudioIndex = action.payload.index;
+      state.loading = false;
+      state.song = action.payload.song;
+      console.log("SONG FROM REDUCER===>", action.payload.song);
       //state.currentAudio = action.payload.song;
       /*  console.log("soundObjStatus===>", action.payload.status);
       console.log("currentAudio===>", action.payload.sound);
@@ -63,26 +72,88 @@ const audiosReducer = createSlice({
       playbackError = action.error.message;
       state.soundObj = null;
       state.currentAudioIndex = null;
+      state.loading = false;
+      state.song = null;
       console.log("NOT PLAYING=====>", "ACTION", action.error.message);
+    });
+    /* Resume */
+    builder.addCase(resumeSong.pending, (state, action) => {
+      state.loading = true;
     });
     builder.addCase(resumeSong.fulfilled, (state, action) => {
       state.isPlaying = true;
+      state.loading = false;
       console.log("RESUMED=====>", state.isPlaying);
     });
     builder.addCase(resumeSong.rejected, (state, action) => {
       state.isPlaying = false;
       playbackError = action.error.message;
+      state.loading = false;
       console.log("NOT RESUMED=====>", "ACTION", action.error.message);
+    });
+    /* Pause */
+    builder.addCase(pauseSong.pending, (state, action) => {
+      state.loading = true;
     });
     builder.addCase(pauseSong.fulfilled, (state, action) => {
       state.isPlaying = false;
+      state.loading = false;
       console.log("PAUSED=====>", (state.isPlaying = false));
     });
     builder.addCase(pauseSong.rejected, (state, action) => {
       state.isPlaying = true;
       playbackError = action.error.message;
+      state.loading = false;
       console.log("NOT PAUSED=====>", "ACTION", action.error.message);
     });
+    /* Next song */
+    builder.addCase(nextSong.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(nextSong.fulfilled, (state, action) => {
+      state.soundObj = action.payload.sound;
+      state.soundObjStatus = action.payload.status;
+      state.currentAudioIndex = action.payload.index;
+      state.playbackError = null;
+      state.song = action.payload.song;
+      state.loading = false;
+      console.log("NEXT SONG PLAYING===>", action.payload);
+    });
+    builder.addCase(nextSong.rejected, (state, action) => {
+      state.isPlaying = false;
+      playbackError = action.error.message;
+      state.soundObj = null;
+      state.currentAudio = null;
+      state.currentAudioIndex = null;
+      state.song = null;
+      state.loading = false;
+      console.log("NEXT SONG NOT PLAYING===>", action.error.message);
+    });
+    /* Previous Song*/
+    builder.addCase(previousSong.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(previousSong.fulfilled, (state, action) => {
+      state.soundObj = action.payload.sound;
+      state.soundObjStatus = action.payload.status;
+      state.currentAudioIndex = action.payload.index;
+      state.playbackError = null;
+      state.song = action.payload.song;
+      state.loading = false;
+      console.log("PREVIOUS SONG PLAYING===>", action.payload);
+    });
+    builder.addCase(previousSong.rejected, (state, action) => {
+      state.isPlaying = false;
+      playbackError = action.error.message;
+      state.soundObj = null;
+      state.currentAudio = null;
+      state.currentAudioIndex = null;
+      state.song = null;
+      state.loading = false;
+      console.log("PREVIOUS SONG NOT PLAYING===>", action.error.message);
+    });
+
+    /* Playback status update */
     builder.addCase(playbackStatusUpdate.fulfilled, (state, action) => {
       if (action.payload?.positionMillis && action.payload?.durationMillis) {
         state.soundObjStatus = action.payload;
@@ -99,6 +170,7 @@ const audiosReducer = createSlice({
       playbackError = action.error.message;
       console.log("NOT PLAYING=====>", "ACTION", action.error.message);
     });
+    /* Reset audios state */
     builder.addCase(resetAudioState.fulfilled, (state, action) => {
       console.log("BEFORE STATE RESET", state);
       state = initialState;
@@ -109,36 +181,7 @@ const audiosReducer = createSlice({
       playbackError = action.error.message;
       console.log("NOT RESET", action.error.message);
     });
-    builder.addCase(nextSong.fulfilled, (state, action) => {
-      state.soundObj = action.payload.sound;
-      state.soundObjStatus = action.payload.status;
-      state.currentAudioIndex = action.payload.index;
-      state.playbackError = null;
-      console.log("NEXT SONG PLAYING===>", action.payload);
-    });
-    builder.addCase(nextSong.rejected, (state, action) => {
-      state.isPlaying = false;
-      playbackError = action.error.message;
-      state.soundObj = null;
-      state.currentAudio = null;
-      state.currentAudioIndex = null;
-      console.log("NEXT SONG NOT PLAYING===>", action.error.message);
-    });
-    builder.addCase(previousSong.fulfilled, (state, action) => {
-      state.soundObj = action.payload.sound;
-      state.soundObjStatus = action.payload.status;
-      state.currentAudioIndex = action.payload.index;
-      state.playbackError = null;
-      console.log("PREVIOUS SONG PLAYING===>", action.payload);
-    });
-    builder.addCase(previousSong.rejected, (state, action) => {
-      state.isPlaying = false;
-      playbackError = action.error.message;
-      state.soundObj = null;
-      state.currentAudio = null;
-      state.currentAudioIndex = null;
-      console.log("PREVIOUS SONG NOT PLAYING===>", action.error.message);
-    });
+
     /*     builder.addCase(fetchTracks.fulfilled, (state, action) => {
   
       console.log("TRACKS==>", action);

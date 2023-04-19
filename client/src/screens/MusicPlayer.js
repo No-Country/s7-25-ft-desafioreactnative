@@ -20,9 +20,7 @@ export default function MusicPlayer({ navigation }) {
   async function handlePlay(song) {
     try {
       dispatch(playSong({ song }));
-      return navigation.navigate("PlayingSong", {
-        song: song,
-      });
+      return navigation.navigate("PlayingSong");
     } catch (error) {
       console.log(error);
     }

@@ -19,6 +19,7 @@ export default audioInfo = () => {
     favorites = audioState.favorites,
     recentActivity = audioState.recentActivity,
     soundObj = audioState.soundObj,
+    song = audioState.song,
     soundObjStatus = audioState.soundObjStatus;
 
   return {
@@ -32,6 +33,7 @@ export default audioInfo = () => {
     isPlaying,
     soundObjStatus,
     soundObj,
+    song,
     isPlayListRunning,
     activePlayList,
     currentAudioIndex,

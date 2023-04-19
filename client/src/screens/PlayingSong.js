@@ -37,7 +37,7 @@ import { setPlaybackPosition } from "../redux/reducers/audios";
 import { useDispatch } from "react-redux";
 
 export default function PlayingSong({ route, navigation }) {
-  const song = route?.params.song;
+  // const song = route?.params.song;
   /* let soundObjStatus = JSON.parse(route?.params.soundObjStatus);
   let soundObjSound = JSON.parse(route?.params.soundObjSound); */
   const { height, width } = useWindowDimensions();
@@ -53,18 +53,23 @@ export default function PlayingSong({ route, navigation }) {
     playbackDuration,
     isPlaying,
     playbackObj,
+    song,
+    audioFiles,
+    currentAudioIndex,
+    loading,
   } = audioInfo();
   const dispatch = useDispatch();
-  const { audioFiles, currentAudioIndex } = audioInfo();
+
   let nextSongToPlay =
     audioFiles[currentAudioIndex + 1] >= audioFiles.length - 1
       ? audioFiles[0]
       : audioFiles[currentAudioIndex + 1];
 
   let previousSongToPlay =
-    audioFiles[currentAudioIndex - 1] <= 0
+    audioFiles[audioFiles.length - 1] <= 0
       ? audioFiles[audioFiles.length - 1]
-      : audioFiles[currentAudioIndex - 1];
+      : audioFiles[audioFiles.length - 1];
+  // console.log(audioFiles.length);
 
   function handlePosition() {
     setPosition(soundObjStatus.positionMillis);
@@ -73,20 +78,15 @@ export default function PlayingSong({ route, navigation }) {
     setIsLoaded(soundObjStatus.isLoaded);
   }
 
-  async function playNextSong(song) {
-    dispatch(nextSong(song));
-    console.log("INSIDE PLAY NEXT SONG===>", song);
-    return navigation.navigate("PlayingSong", {
-      song: song,
-    });
+  async function playNextSong() {
+    dispatch(nextSong());
+    return navigation.navigate("PlayingSong");
   }
 
   async function playPreviousSong(song) {
     dispatch(previousSong(song));
     console.log("INSIDE PLAY PREVIOUS SONG===>", song);
-    return navigation.navigate("PlayingSong", {
-      song: song,
-    });
+    return navigation.navigate("PlayingSong");
   }
   /*   useLayoutEffect(() => {
     soundObjSound = JSON.parse(route?.params.soundObjSound);
@@ -159,12 +159,16 @@ export default function PlayingSong({ route, navigation }) {
             className="flex-row justify-between self-center"
           >
             <Text className="text-[#fff]">
-              {soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded
+              {soundObjStatus?.isBuffering ||
+              !soundObjStatus?.isLoaded ||
+              loading
                 ? "- : -"
                 : convertToMin(soundObjStatus?.positionMillis || 0)}
             </Text>
             <Text className="text-[#fff]">
-              {soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded
+              {soundObjStatus?.isBuffering ||
+              !soundObjStatus?.isLoaded ||
+              loading
                 ? "- : -"
                 : convertToMin(
                     soundObjStatus?.durationMillis -
@@ -174,7 +178,9 @@ export default function PlayingSong({ route, navigation }) {
           </View>
         </View>
         <View className="flex-row w-full justify-evenly items-center relative">
-          {soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded ? (
+          {soundObjStatus?.isBuffering ||
+          !soundObjStatus?.isLoaded ||
+          loading ? (
             <ActivityIndicator
               animating={
                 soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded
@@ -216,7 +222,9 @@ export default function PlayingSong({ route, navigation }) {
                   }}
                   className="bg-brandGreen rounded-full items-center justify-center"
                   disabled={
-                    soundObjStatus?.isBuffering && !soundObjStatus?.isLoaded
+                    soundObjStatus?.isBuffering ||
+                    !soundObjStatus?.isLoaded ||
+                    loading
                       ? true
                       : false
                   }
@@ -226,9 +234,11 @@ export default function PlayingSong({ route, navigation }) {
               )}
 
               <TouchableOpacity
-                onPress={async () => await playNextSong(nextSongToPlay)}
+                onPress={async () => await playNextSong()}
                 disabled={
-                  soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded
+                  soundObjStatus?.isBuffering ||
+                  !soundObjStatus?.isLoaded ||
+                  loading
                     ? true
                     : false
                 }
