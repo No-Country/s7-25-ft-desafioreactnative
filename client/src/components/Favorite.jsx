@@ -10,7 +10,10 @@ import axios from "axios";
 import { Dimensions } from "react-native";
 import MusicCard from "./MusicCard";
 
-const Favorite = () => {
+const Favorite = ({route}) => {
+  
+  const ruteApi = route.params.type
+
   const [favoriteTracks, setFavoriteTracks] = useState([]);
   const [limit, setLimit] = useState(10);
   const [listLoading, setListLoading] = useState(true);
@@ -25,11 +28,11 @@ const Favorite = () => {
 
   const getFavoriteTracks = async () => {
     try {
-      const userId = "de89dec0-6228-41e6-8218-0beb27bd6c0b";
+      const userId = "55c22d42-c4e8-444f-acad-6b3c9025385d";
       const token =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRlODlkZWMwLTYyMjgtNDFlNi04MjE4LTBiZWIyN2JkNmMwYiIsImlhdCI6MTY4MTg1MjI0MSwiZXhwIjoxNjg0NDQ0MjQxfQ.ICVAcgjnGdo_Dc_fdHaDfwPfnBpqtpwcm0Hf_c2endU";
       const { data } = await axios.get(
-        `/api/v1/tracks/${userId}/favorites?limit=${limit}`,
+        `/api/v1/tracks/${userId}/getUserTracks?type=${ruteApi}&limit=${limit}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

@@ -6,7 +6,6 @@ import Favorite from "../components/Favorite.jsx";
 const Tab = createMaterialTopTabNavigator();
 
 const FavoriteTabs = () => {
-
   return (
     <View className="flex-1 bg-brandBlue pt-4">
       <Tab.Navigator
@@ -26,9 +25,8 @@ const FavoriteTabs = () => {
           },
         }}
       >
-        <Tab.Screen name="Pistas" component={Favorite} />
-        <Tab.Screen name="Música" component={Favorite} />
-        <Tab.Screen name="Álbumes" component={Favorite} />
+        <Tab.Screen name="Favoritos" component={Favorite} initialParams={{ type: "favorite"}} />
+        <Tab.Screen name="Compras" component={Favorite} initialParams={{ type: "buy"}}/>
       </Tab.Navigator>
     </View>
   );
