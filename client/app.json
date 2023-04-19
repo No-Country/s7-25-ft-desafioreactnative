@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "soundScale",
-    "slug": "soundScale",
+    "slug": "soundscale",
     "scheme": "soundScale",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -28,7 +28,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "307cf2a6-3e34-430b-9fcb-728324ddbf17"
+        "projectId": "e50b4fe6-894a-4eb4-9426-6e45542e8f25"
       }
     }
   }

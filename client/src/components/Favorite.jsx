@@ -9,6 +9,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Dimensions } from "react-native";
 import MusicCard from "./MusicCard";
+import userInfo from "../redux/utils/userInfo";
 
 const Favorite = ({route}) => {
   
@@ -19,6 +20,8 @@ const Favorite = ({route}) => {
   const [listLoading, setListLoading] = useState(true);
   const [itemsLoading, setItemsLoading] = useState(false);
 
+  const { token, user } = userInfo();
+  
   useEffect(() => {
     if (getFavoriteTracks()) {
       setListLoading(false);
@@ -28,9 +31,8 @@ const Favorite = ({route}) => {
 
   const getFavoriteTracks = async () => {
     try {
-      const userId = "55c22d42-c4e8-444f-acad-6b3c9025385d";
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRlODlkZWMwLTYyMjgtNDFlNi04MjE4LTBiZWIyN2JkNmMwYiIsImlhdCI6MTY4MTg1MjI0MSwiZXhwIjoxNjg0NDQ0MjQxfQ.ICVAcgjnGdo_Dc_fdHaDfwPfnBpqtpwcm0Hf_c2endU";
+      const userId = user.data.id;
+        
       const { data } = await axios.get(
         `/api/v1/tracks/${userId}/getUserTracks?type=${ruteApi}&limit=${limit}`,
         {
