@@ -27,8 +27,6 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "api": "https://api-soundscale.up.railway.app/",
-      "STRIPE_KEY": "pk_test_51Mx22MEKcgSZKCjSxbGhs73qZg6bJzelg7AN5joJyAX4qN9Nffvn2SsJJTQUdqxngRSNbf9tMNU3Gj1XSeleM3rd00pAEqNsPc",
       "eas": {
         "projectId": "307cf2a6-3e34-430b-9fcb-728324ddbf17"
       }

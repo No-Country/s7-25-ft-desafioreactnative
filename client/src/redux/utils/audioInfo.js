@@ -17,7 +17,10 @@ export default audioInfo = () => {
     playbackPosition = audioState.playbackPosition,
     playbackDuration = audioState.playbackDuration,
     favorites = audioState.favorites,
-    recentActivity = audioState.recentActivity;
+    recentActivity = audioState.recentActivity,
+    soundObj = audioState.soundObj,
+    song = audioState.song,
+    soundObjStatus = audioState.soundObjStatus;
 
   return {
     audio,
@@ -26,9 +29,11 @@ export default audioInfo = () => {
     playLists,
     permissionError,
     playbackObj,
-    soundObj,
     currentAudio,
     isPlaying,
+    soundObjStatus,
+    soundObj,
+    song,
     isPlayListRunning,
     activePlayList,
     currentAudioIndex,
