@@ -4,6 +4,8 @@ import { View, Modal, Text, TouchableWithoutFeedback } from "react-native";
 import { CartIcon, HeartIcon, ShareIcon,ExploreIcon } from "./Icons";
 
 const OptionsModalGenres = ({
+  onData,
+  onTitle,
   visible,
   currentItem,
   onClose,
