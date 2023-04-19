@@ -12,6 +12,7 @@ const {
 } = require("../models/initModels");
 const { v4: uuidv4 } = require("uuid");
 const { Op } = require("sequelize");
+const { db } = require("../utils/database.util");
 const { formatDuration, getMetadata } = require("../utils/metadata.util");
 const env = require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -62,17 +63,24 @@ const uploadTrack = catchAsync(async (req, res, next) => {
 
 const getTracks = catchAsync(async (req, res, next) => {
   try {
-    const { page, search, sortBy, sortDirection, genres = [] } = req.query;
+    const {
+      page,
+      searchByTitle,
+      searchByArtist,
+      sortBy,
+      sortDirection,
+      genres = [],
+    } = req.query;
 
     const pageSize = 10;
 
     const offset = (page - 1) * pageSize;
     const limit = pageSize;
 
-    const filter = search
+    const filter = searchByTitle
       ? {
           title: {
-            [Op.iLike]: `%${search}%`,
+            [Op.iLike]: `%${searchByTitle}%`,
           },
         }
       : {};
@@ -93,7 +101,7 @@ const getTracks = catchAsync(async (req, res, next) => {
         {
           model: Genre,
           as: "genres",
-          attributes: ["name"],
+          attributes: [],
           where:
             genres.length > 0 && Array.isArray(genres)
               ? {
@@ -107,12 +115,41 @@ const getTracks = catchAsync(async (req, res, next) => {
           model: User,
           as: "artist",
           attributes: ["userName", "email"],
+          where: searchByArtist
+            ? {
+                userName: {
+                  [Op.iLike]: `%${searchByArtist}%`,
+                },
+              }
+            : {},
         },
       ],
       offset,
       limit,
       order,
     });
+
+    const resArray = await Promise.all(
+      tracks.map(async (track) =>
+        Track.findByPk(track.id, {
+          include: [
+            {
+              model: Genre,
+              as: "genres",
+              attributes: ["name"],
+              through: {
+                attributes: [],
+              },
+            },
+            {
+              model: User,
+              as: "artist",
+              attributes: ["userName", "email"],
+            },
+          ],
+        })
+      )
+    );
 
     const count = await Track.findAndCountAll({
       where: filter,
@@ -131,6 +168,18 @@ const getTracks = catchAsync(async (req, res, next) => {
                 }
               : {},
         },
+        {
+          model: User,
+          as: "artist",
+          attributes: ["userName", "email"],
+          where: searchByArtist
+            ? {
+                userName: {
+                  [Op.iLike]: `%${searchByArtist}%`,
+                },
+              }
+            : {},
+        },
       ],
     });
 
@@ -141,7 +190,7 @@ const getTracks = catchAsync(async (req, res, next) => {
     res.status(200).json({
       status: "success",
       data: {
-        tracks,
+        tracks: resArray,
         pagination: {
           pageSize,
           page,
@@ -329,6 +378,50 @@ const removeFavorite = catchAsync(async (req, res, next) => {
   }
 });
 
+const getUserTracks = catchAsync(async (req, res, next) => {
+  const userId = req.params.id;
+  const limit = req.query.limit || 10;
+  const type = req.query.type
+
+  try {
+    const tracks = await Track.findAll({
+      include: [
+        {
+          model: User,
+          where: { id: userId },
+          attributes: [],
+          as: type === "buy"? "purchasedBy" : "favoritedBy",
+        },
+        {
+          model: User,
+          attributes: ["userName", "email"], // Selecciona solo los atributos necesarios del modelo User
+          as: "artist", // Alias para la relación
+        },
+      ],
+      limit,
+      order: [["createdAt", "ASC"]],
+    });
+
+    const totalFavorites = await FavoriteTrack.count({
+      where: {
+        userId,
+      },
+    });
+
+    return res.status(200).json({
+      status: "success",
+      tracks,
+      limit: totalFavorites <= parseInt(limit),
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      error,
+    });
+  }
+});
+
 module.exports = {
   uploadTrack,
   getTracks,
@@ -337,4 +430,5 @@ module.exports = {
   completePurchase,
   addToFavorite,
   removeFavorite,
+  getUserTracks,
 };

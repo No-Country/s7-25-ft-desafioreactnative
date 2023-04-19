@@ -13,8 +13,6 @@ import OptionsModalGenres from '../components/OptionsModalGenres';
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
 
-const BaseURL = 'http://192.168.0.12:4000';
-
 const Search = () => {
 
     const navigation = useNavigation();
@@ -86,7 +84,7 @@ const Search = () => {
              <View style={styles.SearchContainer}>
                 <FlatList overScrollMode='never' 
                 data={songs} 
-                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist.userName} title={item.title} price={item.price} artwork={item.artwork} url={item.url} duration={item.duration} />}
+                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist} title={item.title} price={3000} artwork={item.artwork} url={item.url} duration={item.duration} />}
                 keyExtractor={(e) => e.id}   
                 />
              </View>
