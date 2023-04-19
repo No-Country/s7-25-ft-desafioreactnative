@@ -9,7 +9,7 @@ const {
   completePurchase,
   addToFavorite,
   removeFavorite,
-  getFavoriteTracks
+  getUserTracks
 } = require("../controllers/tracks.controller");
 
 const { protectSession } = require("../middlewares/auth.middlewares");
@@ -21,7 +21,7 @@ tracksRouter.post("/uploadForTests", uploadTracksTest);
 tracksRouter.use(protectSession);
 
 tracksRouter.get("/", getTracks);
-tracksRouter.get("/:id/favorites", getFavoriteTracks);
+tracksRouter.get("/:id/getUserTracks", getUserTracks);
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });

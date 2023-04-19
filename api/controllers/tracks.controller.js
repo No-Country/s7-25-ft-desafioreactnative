@@ -378,9 +378,10 @@ const removeFavorite = catchAsync(async (req, res, next) => {
   }
 });
 
-const getFavoriteTracks = catchAsync(async (req, res, next) => {
+const getUserTracks = catchAsync(async (req, res, next) => {
   const userId = req.params.id;
   const limit = req.query.limit || 10;
+  const type = req.query.type
 
   try {
     const tracks = await Track.findAll({
@@ -389,7 +390,7 @@ const getFavoriteTracks = catchAsync(async (req, res, next) => {
           model: User,
           where: { id: userId },
           attributes: [],
-          as: "favoritedBy",
+          as: type === "buy"? "purchasedBy" : "favoritedBy",
         },
         {
           model: User,
@@ -429,5 +430,5 @@ module.exports = {
   completePurchase,
   addToFavorite,
   removeFavorite,
-  getFavoriteTracks,
+  getUserTracks,
 };
