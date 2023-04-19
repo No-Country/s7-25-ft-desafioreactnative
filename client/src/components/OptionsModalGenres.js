@@ -1,7 +1,10 @@
-import React from "react";
-import { Image, useWindowDimensions } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, Image, TouchableOpacity, useWindowDimensions } from "react-native";
 import { View, Modal, Text, TouchableWithoutFeedback } from "react-native";
-import { CartIcon, HeartIcon, ShareIcon,ExploreIcon } from "./Icons";
+import axios from "axios";
+
+
+const BaseURL = 'http://192.168.0.12:4000';
 
 const OptionsModalGenres = ({
   onData,
@@ -13,7 +16,39 @@ const OptionsModalGenres = ({
   onPlayPress,
   onPlayListPress,
 }) => {
-  const { title, artist, artwork } = currentItem;
+
+  const GenresCards = ({name,data}) =>{
+    return(
+      <TouchableOpacity onPress={()=>{onTitle(name); onData(data)}}>
+        <View className="flex-row items-center" style={{ marginBottom: height * 0.02 }}>
+          <Text style={{ marginLeft: width * 0.035, fontSize:height*0.018}} className="text-[#FFFFFF] font-bold">
+                 {name}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
+  const [genres, setgenres] = useState();
+
+  useEffect(() => {
+        
+    axios.get(`${BaseURL}/api/v1/genres`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs"}})
+    
+    .then((response) => {
+      const data = response.data.genres;
+      const dataMasTodos = [{id:0,name:"Todos",genere:""}].concat(data);
+      for (let i = 1; i < data.length; i++) {
+        data[i].genere = `&genres[]=${data[i].name}`;
+      }
+      setgenres(dataMasTodos);
+      
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }, []);
+
   const { width, height } = useWindowDimensions();
   return (
     <>
@@ -30,118 +65,20 @@ const OptionsModalGenres = ({
           }}
           className="rounded-tl-lg rounded-tr-lg bg-[#27262b] z-10"
         >
-          <View
-            style={{ marginLeft: width * 0.05 }}
-            className="flex-row items-center flex-1"
-          >
-            <Image
-              style={{
-                width: width * 0.1,
-                height: height * 0.05,
-                marginRight: width * 0.05,
-              }}
-              source={{ uri: artwork }}
-              resizeMode="cover"
-              borderRadius={6}
-            />
-            <View
-              className="border-b border-[#424242] flex-row items-center flex-1 gap-x-1"
-              style={{
-                paddingBottom: height * 0.03,
-                paddingTop: height * 0.03,
-              }}
-            >
-              <Text
-                className="text-md font-bold text-[#FFF] "
-                numberOfLines={2}
-              >
-                {title}
+          <View  className="flex-row items-center flex-1">
+            <View className="border-b border-[#424242] flex-row items-center flex-1" style={{ paddingBottom: height * 0.03, paddingTop: height * 0.02,}}>
+              <Text style={{fontSize:height*0.03,marginLeft:width*0.08}} className="font-bold text-[#FFF] ">
+                Generos
               </Text>
-              <Text
-                className="text-md font-bold text-[#FFF] "
-                numberOfLines={2}
-              >
-                {" "}
-                |{" "}
-              </Text>
-              <Text className="text-md font-bold text-[#FFF]">{artist}</Text>
             </View>
           </View>
 
-          <View className="bg-[#27262b]" style={{ padding: width * 0.05 }}>
-            <TouchableWithoutFeedback onPress={onPlayPress}>
-              <View
-                className="flex-row items-center"
-                style={{ marginBottom: height * 0.02 }}
-              >
-                <CartIcon
-                  style={{ marginRight: width * 0.1 }}
-                  width={width * 0.05}
-                  height={height * 0.05}
+          <View className="bg-[#27262b]" style={{ padding: width * 0.05 ,height:height*0.3}}>
+          <FlatList overScrollMode='never' 
+                data={genres} 
+                renderItem={({item}) => <GenresCards key={item.id} name={item.name} data={item.genere}/>}
+                keyExtractor={(e) => e.id}   
                 />
-                <Text
-                  style={{ marginLeft: width * 0.02 }}
-                  className="text-[#FFFFFF] font-bold text-md"
-                >
-                  Comprar
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={onPlayPress}>
-              <View
-                className="flex-row items-center"
-                style={{ marginBottom: height * 0.02 }}
-              >
-                <ShareIcon
-                  style={{ marginRight: width * 0.1 }}
-                  width={width * 0.04}
-                  height={height * 0.04}
-                />
-                <Text
-                  style={{ marginLeft: width * 0.02 }}
-                  className="text-[#FFFFFF] font-bold text-md"
-                >
-                  Compartir
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={onPlayPress}>
-              <View
-                className="flex-row items-center"
-                style={{ marginBottom: height * 0.02 }}
-              >
-                <HeartIcon
-                  style={{ marginRight: width * 0.1 }}
-                  width={width * 0.05}
-                  height={height * 0.05}
-                />
-                <Text
-                  style={{ marginLeft: width * 0.02 }}
-                  className="text-[#FFFFFF] font-bold text-md"
-                >
-                  Agregar a favoritos
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={onPlayPress}>
-              <View
-                className="flex-row items-center"
-                style={{ marginBottom: height * 0.02,marginLeft: width * 0.01  }}
-              >
-                <ExploreIcon 
-                  style={{marginRight: width * 0.1}}
-                  width={width * 0.03}
-                  height={height * 0.03}
-                  color={'white'}
-                />
-                <Text
-                  style={{ marginLeft: width * 0.03 }}
-                  className="text-[#FFFFFF] font-bold text-md"
-                >
-                  Ver Pista
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
           </View>
         </View>
         <TouchableWithoutFeedback onPress={onClose}>
