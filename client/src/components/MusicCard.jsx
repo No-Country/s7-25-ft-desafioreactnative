@@ -80,7 +80,7 @@ const MusicCard = ({id,title,artist,price,artwork,url,duration}) => {
                 </View>
             </View>
             <TouchableHighlight style={{marginLeft:Width*0.05}}  onPress={() => setMoreOptionsModal(true)}>
-                <ThreePoints color={'white'} size={Height*0.030}/>
+                <ThreePoints color={'white'} size={Height*0.035}/>
             </TouchableHighlight>
         </TouchableOpacity>
 

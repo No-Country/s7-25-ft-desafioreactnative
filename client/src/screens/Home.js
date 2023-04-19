@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {View, StyleSheet, SafeAreaView, Image, Text, Dimensions, ScrollView, ImageBackground, TouchableOpacity, FlatList} from 'react-native';
 import { SearchIcon,ShopIcon, } from '../components/Icons';
 import MusicCard from '../components/MusicCard';
+import songs from '../database/songs';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
@@ -11,8 +12,6 @@ import axios from 'axios';
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
-
-const BaseURL = 'http://192.168.0.12:4000';
 
 const Home = () => {
     const navigation = useNavigation();
@@ -86,7 +85,7 @@ const Home = () => {
                 <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
                 <FlatList overScrollMode='never' 
                 data={songs} 
-                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist.userName} title={item.title} price={item.price} artwork={item.artwork} url={item.url} duration={convertirMilisegundos(item.duration)} />}
+                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist} title={item.title} price={3000} artwork={item.artwork} url={item.url} duration={convertirMilisegundos(item.duration)} />}
                 keyExtractor={(e) => e.id}
                 />                  
             </View>
