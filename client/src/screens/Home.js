@@ -1,5 +1,5 @@
 import { useFonts } from "expo-font";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -9,10 +9,14 @@ import {
   Dimensions,
   ScrollView,
   ImageBackground,
+  TouchableOpacity,
+  FlatList,
 } from "react-native";
 import { SearchIcon, ShopIcon } from "../components/Icons";
 import MusicCard from "../components/MusicCard";
 import songs from "../database/songs";
+import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 import MinimizedMusicPlayer from "../components/MinimizedMusicPlayer";
 import audioInfo from "../redux/utils/audioInfo";
 
@@ -20,7 +24,27 @@ const Height = Dimensions.get("window").height;
 const Width = Dimensions.get("window").width;
 
 const Home = () => {
+  const navigation = useNavigation();
+  const [songs, setsongs] = useState([]);
   const { song } = audioInfo();
+
+  useEffect(() => {
+    axios
+      .get(`/api/v1/tracks?page=1`, {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs",
+        },
+      })
+
+      .then((response) => {
+        setsongs(response.data.data.tracks);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const [loaded] = useFonts({
     "Roboto-Bold": require("../../assets/fonts/Roboto-Bold.ttf"),
     "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
@@ -56,12 +80,16 @@ const Home = () => {
           </Text>
         </View>
         <View className="flex-row gap-x-5 mr-5">
-          <View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Search");
+            }}
+          >
             <SearchIcon size={Height * 0.035} />
-          </View>
-          <View>
+          </TouchableOpacity>
+          <TouchableOpacity>
             <ShopIcon size={Height * 0.03} color={"white"} />
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.nuevasPistasContainer}>
@@ -133,29 +161,24 @@ const Home = () => {
           </ImageBackground>
         </ScrollView>
       </View>
-      <View
-        style={[
-          [styles.RecomendadosContainer],
-          { paddingBottom: song ? Height * 0.05 : 0 },
-        ]}
-      >
+      <View style={styles.RecomendadosContainer}>
         <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
-        <ScrollView overScrollMode="never">
-          {songs.map((e) => {
-            return (
-              <MusicCard
-                key={e.id}
-                id={e.id}
-                artist={e.artist}
-                title={e.title}
-                price={3000}
-                artwork={e.artwork}
-                url={e.url}
-                duration={convertirMilisegundos(e.duration)}
-              />
-            );
-          })}
-        </ScrollView>
+        <FlatList
+          overScrollMode="never"
+          data={songs}
+          renderItem={({ item }) => (
+            <MusicCard
+              id={item.id}
+              artist={item.artist}
+              title={item.title}
+              price={3000}
+              artwork={item.artwork}
+              url={item.url}
+              duration={convertirMilisegundos(item.duration)}
+            />
+          )}
+          keyExtractor={(e) => e.id}
+        />
       </View>
       <MinimizedMusicPlayer />
     </SafeAreaView>

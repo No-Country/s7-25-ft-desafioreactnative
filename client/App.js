@@ -7,15 +7,14 @@ import store from "./src/redux/store";
 import { NativeWindStyleSheet } from "nativewind";
 import { NavigationContainer } from "@react-navigation/native";
 import StackNavigation from "./src/navigation/StackNavigation";
-
 import GenresSelect from "./src/screens/GenresSelect";
-
 import axios from "axios";
-import { api } from "@env";
+import { api, STRIPE_KEY } from "@env";
 import MainNavigation from "./src/navigation/MainNavigation";
 import { StatusBar } from "expo-status-bar";
 import { init } from "./src/helpers/audioControllers";
 import Constants from "expo-constants";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 let persistorStore = persistStore(store);
 
@@ -34,12 +33,14 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistorStore}>
-        <StatusBar style="light" />
-        <View className="flex-1 bg-white">
-          <NavigationContainer>
-            <MainNavigation />
-          </NavigationContainer>
-        </View>
+        <StripeProvider publishableKey={STRIPE_KEY} urlScheme="soundScale">
+          <StatusBar style="light" />
+          <View className="flex-1 bg-white">
+            <NavigationContainer>
+              <MainNavigation />
+            </NavigationContainer>
+          </View>
+        </StripeProvider>
       </PersistGate>
     </Provider>
   );

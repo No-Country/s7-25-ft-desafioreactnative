@@ -33,6 +33,19 @@ const Track = db.define("track", {
     defaultValue:
       "https://cdns.iconmonstr.com/wp-content/releases/preview/2012/240/iconmonstr-sound-wave-4.png",
   },
+  sales_accountant: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  on_sale: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
+  },
+  favorites_counter : {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  }
 });
 
 module.exports = { Track };
