@@ -16,6 +16,7 @@ const FavoriteTabs = () => {
             fontWeight: "700",
             fontFamily: "Roboto",
             textTransform: "capitalize",
+            marginTop:30
           },
           tabBarInactiveTintColor: "#ffffff",
           tabBarStyle: { backgroundColor: "transparent" },

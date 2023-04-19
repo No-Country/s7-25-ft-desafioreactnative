@@ -5,6 +5,8 @@ import Home from "../screens/Home";
 import Explore from "../screens/Explore";
 import Radio from "../screens/Radio";
 import Account from "../screens/Account";
+import FavoriteTabs from "../screens/FavoriteTabs";
+
 import {
   MenuIcon,
   ExploreIcon,
@@ -53,9 +55,10 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Radio"
-        component={Radio}
+        component={FavoriteTabs}
         options={({ route }) => ({
           tabBarLabel: "Favoritos",
+          headerShown:false,
           tabBarIcon: (props) => <FavouritesIcon color={props.color} />,
         })}
       />
