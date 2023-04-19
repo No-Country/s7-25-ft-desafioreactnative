@@ -1,16 +1,34 @@
 import { useFonts } from 'expo-font';
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import {View, StyleSheet, SafeAreaView, Image, Text, Dimensions, ScrollView, ImageBackground, TouchableOpacity, FlatList} from 'react-native';
 import { SearchIcon,ShopIcon, } from '../components/Icons';
 import MusicCard from '../components/MusicCard';
 import songs from '../database/songs';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+
+
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
 
 const Home = () => {
     const navigation = useNavigation();
+    const [songs, setsongs] = useState([]);
+
+    useEffect(() => {
+        
+      axios.get(`${BaseURL}/api/v1/tracks?page=1`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs"}})
+ 
+      .then((response) => {
+        setsongs(response.data.data.tracks);
+        
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }, []);
     
     const [loaded] = useFonts({
         'Roboto-Bold': require('../../assets/fonts/Roboto-Bold.ttf'),
