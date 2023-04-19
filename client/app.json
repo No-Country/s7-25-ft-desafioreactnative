@@ -2,7 +2,7 @@
   "expo": {
     "name": "soundScale",
     "slug": "soundScale",
-    "scheme": "soundScale",
+    "scheme": "soundscale",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
