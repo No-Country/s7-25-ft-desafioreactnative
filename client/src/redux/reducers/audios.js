@@ -55,8 +55,9 @@ const audiosReducer = createSlice({
       state.soundObj = action.payload.sound;
       state.soundObjStatus = action.payload.status;
       state.currentAudioIndex = action.payload.index;
-      state.loading = false;
       state.song = action.payload.song;
+      state.recentActivity = [action.payload.song, ...state.recentActivity];
+      state.loading = false;
       console.log("SONG FROM REDUCER===>", action.payload.song);
       //state.currentAudio = action.payload.song;
       /*  console.log("soundObjStatus===>", action.payload.status);
@@ -116,6 +117,7 @@ const audiosReducer = createSlice({
       state.currentAudioIndex = action.payload.index;
       state.playbackError = null;
       state.song = action.payload.song;
+      state.recentActivity = [action.payload.song, ...state.recentActivity];
       state.loading = false;
       console.log("NEXT SONG PLAYING===>", action.payload);
     });
@@ -139,6 +141,7 @@ const audiosReducer = createSlice({
       state.currentAudioIndex = action.payload.index;
       state.playbackError = null;
       state.song = action.payload.song;
+      state.recentActivity = [action.payload.song, ...state.recentActivity];
       state.loading = false;
       console.log("PREVIOUS SONG PLAYING===>", action.payload);
     });
