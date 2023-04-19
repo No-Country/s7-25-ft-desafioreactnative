@@ -25,10 +25,9 @@ NativeWindStyleSheet.setOutput({
 });
 
 // url base a partir de la cual axios va a realizar las llamadas al back
-axios.defaults.baseURL = api;
+axios.defaults.baseURL = Constants.expoConfig.extra.api;
 
 export default function App() {
-  console.log(Constants.expoConfig.extra.api);
   useEffect(() => {
     init();
   }, []);
