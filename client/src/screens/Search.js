@@ -32,14 +32,13 @@ const Search = () => {
         
         .then((response) => {
           setsongs(response.data.data.tracks);
-          
+
         })
         .catch((error) => {
           console.log(error);
         });
       }, [filtro,input]);
 
-      console.log(songs)
     
     const [loaded] = useFonts({
         'Roboto-Bold': require('../../assets/fonts/Roboto-Bold.ttf'),

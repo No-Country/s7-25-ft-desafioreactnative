@@ -21,7 +21,7 @@ const OptionsModalGenres = ({
     return(
       <TouchableOpacity onPress={()=>{onTitle(name); onData(data)}}>
         <View className="flex-row items-center" style={{ marginBottom: height * 0.02 }}>
-          <Text style={{ marginLeft: width * 0.035, fontSize:height*0.018}} className="text-[#FFFFFF] font-bold">
+          <Text style={{ marginLeft: width * 0.035, fontSize:height*0.018}} className="text-[#FFFFFF] font-bold capitalize">
                  {name}
           </Text>
         </View>
