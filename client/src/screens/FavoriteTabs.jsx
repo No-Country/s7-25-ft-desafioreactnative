@@ -25,8 +25,9 @@ const FavoriteTabs = () => {
           },
         }}
       >
-        <Tab.Screen name="Favoritos" component={Favorite} initialParams={{ type: "favorite"}} />
-        <Tab.Screen name="Compras" component={Favorite} initialParams={{ type: "buy"}}/>
+        <Tab.Screen name="Publicadas" component={Favorite} initialParams={{ type: "owner"}}/>
+        <Tab.Screen name="Compradas" component={Favorite} initialParams={{ type: "buy"}}/>
+        <Tab.Screen name="Favoritas" component={Favorite} initialParams={{ type: "favorite"}} />
       </Tab.Navigator>
     </View>
   );
