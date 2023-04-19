@@ -13,6 +13,8 @@ import OptionsModalGenres from '../components/OptionsModalGenres';
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
 
+const BaseURL = 'http://192.168.0.12:4000';
+
 const Search = () => {
 
     const navigation = useNavigation();
@@ -30,14 +32,13 @@ const Search = () => {
         
         .then((response) => {
           setsongs(response.data.data.tracks);
-          
+
         })
         .catch((error) => {
           console.log(error);
         });
       }, [filtro,input]);
 
-      console.log(songs)
     
     const [loaded] = useFonts({
         'Roboto-Bold': require('../../assets/fonts/Roboto-Bold.ttf'),
