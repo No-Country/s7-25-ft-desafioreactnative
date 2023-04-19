@@ -1,6 +1,5 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
-import axios from "axios";
+import { View, StyleSheet } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Favorite from "../components/Favorite.jsx";
 
