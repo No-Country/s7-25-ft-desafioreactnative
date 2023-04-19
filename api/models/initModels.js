@@ -38,6 +38,7 @@ const initModels = async () => {
   Track.belongsToMany(User, {
     through: FavoriteTrack,
     foreignKey: "trackId",
+    as: "favoritedBy"
   });
   User.belongsToMany(Track, {
     through: FavoriteTrack,

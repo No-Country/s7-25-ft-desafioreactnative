@@ -63,17 +63,24 @@ const uploadTrack = catchAsync(async (req, res, next) => {
 
 const getTracks = catchAsync(async (req, res, next) => {
   try {
-    const { page, search, sortBy, sortDirection, genres = [] } = req.query;
+    const {
+      page,
+      searchByTitle,
+      searchByArtist,
+      sortBy,
+      sortDirection,
+      genres = [],
+    } = req.query;
 
     const pageSize = 10;
 
     const offset = (page - 1) * pageSize;
     const limit = pageSize;
 
-    const filter = search
+    const filter = searchByTitle
       ? {
           title: {
-            [Op.iLike]: `%${search}%`,
+            [Op.iLike]: `%${searchByTitle}%`,
           },
         }
       : {};
@@ -103,7 +110,19 @@ const getTracks = catchAsync(async (req, res, next) => {
                   },
                 }
               : {},
-        }
+        },
+        {
+          model: User,
+          as: "artist",
+          attributes: ["userName", "email"],
+          where: searchByArtist
+            ? {
+                userName: {
+                  [Op.iLike]: `%${searchByArtist}%`,
+                },
+              }
+            : {},
+        },
       ],
       offset,
       limit,
@@ -148,6 +167,18 @@ const getTracks = catchAsync(async (req, res, next) => {
                   },
                 }
               : {},
+        },
+        {
+          model: User,
+          as: "artist",
+          attributes: ["userName", "email"],
+          where: searchByArtist
+            ? {
+                userName: {
+                  [Op.iLike]: `%${searchByArtist}%`,
+                },
+              }
+            : {},
         },
       ],
     });
@@ -347,6 +378,49 @@ const removeFavorite = catchAsync(async (req, res, next) => {
   }
 });
 
+const getFavoriteTracks = catchAsync(async (req, res, next) => {
+  const userId = req.params.id;
+  const limit = req.query.limit || 10;
+
+  try {
+    const tracks = await Track.findAll({
+      include: [
+        {
+          model: User,
+          where: { id: userId },
+          attributes: [],
+          as: "favoritedBy",
+        },
+        {
+          model: User,
+          attributes: ["userName", "email"], // Selecciona solo los atributos necesarios del modelo User
+          as: "artist", // Alias para la relación
+        },
+      ],
+      limit,
+      order: [["createdAt", "ASC"]],
+    });
+
+    const totalFavorites = await FavoriteTrack.count({
+      where: {
+        userId,
+      },
+    });
+
+    return res.status(200).json({
+      status: "success",
+      tracks,
+      limit: totalFavorites <= parseInt(limit),
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: "error",
+      error,
+    });
+  }
+});
+
 module.exports = {
   uploadTrack,
   getTracks,
@@ -355,4 +429,5 @@ module.exports = {
   completePurchase,
   addToFavorite,
   removeFavorite,
+  getFavoriteTracks,
 };
