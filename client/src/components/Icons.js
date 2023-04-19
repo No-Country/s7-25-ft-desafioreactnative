@@ -546,11 +546,11 @@ export const HeartIcon = ({ color, width, height }) => {
   );
 };
 
-export const NextIcon = () => {
+export const NextIcon = ({ color, width, height }) => {
   return (
     <Svg
-      width="24"
-      height="24"
+      width={width ? width : "24"}
+      height={height ? width : "24"}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -561,18 +561,18 @@ export const NextIcon = () => {
           fillRule="evenodd"
           clipRule="evenodd"
           d="M14.5 12L6 6V18L14.5 12ZM11.03 12.0001L8 14.1401V9.86011L11.03 12.0001ZM18 6V18H16V6H18Z"
-          fill="#EEEEEE"
+          fill={color ? color : "#EEEEEE"}
         />
       </G>
     </Svg>
   );
 };
 
-export const PreviousIcon = () => {
+export const PreviousIcon = ({ color, width, height }) => {
   return (
     <Svg
-      width="24"
-      height="24"
+      width={width ? width : "24"}
+      height={height ? width : "24"}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -583,7 +583,7 @@ export const PreviousIcon = () => {
           fillRule="evenodd"
           clipRule="evenodd"
           d="M8 6V18H6V6H8ZM18 18V6L9.5 12L18 18ZM12.97 12.0001L16 9.86011V14.1401L12.97 12.0001Z"
-          fill="#EEEEEE"
+          fill={color ? color : "#EEEEEE"}
         />
       </G>
     </Svg>

@@ -3,6 +3,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { resetAudioState } from "../redux/actions/audioActions";
 import TrackUpButton from "../components/TrackUpButton";
+import MinimizedMusicPlayer from "../components/MinimizedMusicPlayer";
 
 const Radio = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const Radio = ({ navigation }) => {
         <Text>Clear Audio State</Text>
       </Pressable>
       <TrackUpButton />
+      <MinimizedMusicPlayer />
     </View>
   );
 };

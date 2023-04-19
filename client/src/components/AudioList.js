@@ -75,11 +75,6 @@ const AudioList = ({
             </Pressable>
           </View>
         </View>
-        {/*  <View style={styles.right}>
-          <TouchableOpacity onPress={onPlayPress}>
-            <PlayIcon />
-          </TouchableOpacity>
-        </View> */}
       </TouchableOpacity>
       <OptionsModal
         visible={moreOptionsModal}

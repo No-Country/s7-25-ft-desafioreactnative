@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import songs from "../database/songs";
@@ -60,24 +61,6 @@ export default function PlayingSong({ route, navigation }) {
   } = audioInfo();
   const dispatch = useDispatch();
 
-  let nextSongToPlay =
-    audioFiles[currentAudioIndex + 1] >= audioFiles.length - 1
-      ? audioFiles[0]
-      : audioFiles[currentAudioIndex + 1];
-
-  let previousSongToPlay =
-    audioFiles[audioFiles.length - 1] <= 0
-      ? audioFiles[audioFiles.length - 1]
-      : audioFiles[audioFiles.length - 1];
-  // console.log(audioFiles.length);
-
-  function handlePosition() {
-    setPosition(soundObjStatus.positionMillis);
-    setDuration(soundObjStatus.durationMillis);
-    setIsBuffering(soundObjStatus.isBuffering);
-    setIsLoaded(soundObjStatus.isLoaded);
-  }
-
   async function playNextSong() {
     dispatch(nextSong());
     return navigation.navigate("PlayingSong");
@@ -85,7 +68,6 @@ export default function PlayingSong({ route, navigation }) {
 
   async function playPreviousSong(song) {
     dispatch(previousSong(song));
-    console.log("INSIDE PLAY PREVIOUS SONG===>", song);
     return navigation.navigate("PlayingSong");
   }
   /*   useLayoutEffect(() => {
@@ -121,14 +103,28 @@ export default function PlayingSong({ route, navigation }) {
             <Text className="text-[#FFF] text-3xl font-bold text-center">
               {song?.title}
             </Text>
-            <View className="flex-row justify-center items-center gap-x-2">
+            <View className="justify-center items-center gap-x-2">
               <Text className="text-[#FFF] text-md text-center mr-2">
                 {song?.artist}
               </Text>
-              <CartIcon color="#CBFB5E" width="16" height="16" />
-              <Text className="text-brandGreen text-xs text-center">
-                {currencyFormat(39)}
-              </Text>
+              <Pressable
+                className="flex-row justify-center items-center bg-brandGreen rounded-full"
+                style={{
+                  height: height * 0.06,
+                  width: width * 0.7,
+                  marginTop: width * 0.05,
+                }}
+              >
+                <CartIcon color="#000" width="16" height="16" />
+                <Text
+                  className="text-[#000] font-bold text-md text-center"
+                  style={{
+                    marginLeft: width * 0.02,
+                  }}
+                >
+                  Comprar a US{currencyFormat(song?.price)}
+                </Text>
+              </Pressable>
             </View>
           </View>
 
@@ -144,11 +140,14 @@ export default function PlayingSong({ route, navigation }) {
           <View className="relative">
             <Slider
               minimumValue={0}
-              maximumValue={duration}
+              maximumValue={soundObjStatus?.durationMillis}
               minimumTrackTintColor="#CBFB5E"
               thumbTintColor="#CBFB5E"
               maximumTrackTintColor="#CBFB5E"
-              value={position}
+              value={soundObjStatus?.positionMillis}
+              onValueChange={(value) => {
+                console.log("Track progress==>", value);
+              }}
             />
           </View>
           <View
@@ -193,12 +192,10 @@ export default function PlayingSong({ route, navigation }) {
             />
           ) : (
             <>
-              <TouchableOpacity /* onPress={handlePrev} */>
+              <TouchableOpacity>
                 <ShuffleIcon />
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={async () => await playPreviousSong(previousSongToPlay)}
-              >
+              <TouchableOpacity onPress={async () => await playPreviousSong()}>
                 <PreviousIcon />
               </TouchableOpacity>
 

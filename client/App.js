@@ -15,6 +15,7 @@ import { api } from "@env";
 import MainNavigation from "./src/navigation/MainNavigation";
 import { StatusBar } from "expo-status-bar";
 import { init } from "./src/helpers/audioControllers";
+import Constants from "expo-constants";
 
 let persistorStore = persistStore(store);
 
@@ -27,6 +28,7 @@ NativeWindStyleSheet.setOutput({
 axios.defaults.baseURL = api;
 
 export default function App() {
+  console.log(Constants.expoConfig.extra.api);
   useEffect(() => {
     init();
   }, []);
