@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Image,
   Pressable,
@@ -11,16 +11,19 @@ import {
 import convertToMin from "../utils/minutesFormat";
 import { MoreOptionsIcon, PlayIcon } from "./Icons";
 import OptionsModal from "./OptionsModal";
+import { useDispatch } from "react-redux";
+import { Audio } from "expo-av";
+import { playSong } from "../redux/actions/audioActions";
+import { useNavigation } from "@react-navigation/native";
 
 const AudioList = ({
   style = {},
+  handlePlay,
   duration = "03:22",
   onPlayPress,
-  handlePlay,
   song,
 }) => {
   const [moreOptionsModal, setMoreOptionsModal] = useState(false);
-
   const { width, height } = useWindowDimensions();
 
   return (
@@ -72,11 +75,6 @@ const AudioList = ({
             </Pressable>
           </View>
         </View>
-        {/*  <View style={styles.right}>
-          <TouchableOpacity onPress={onPlayPress}>
-            <PlayIcon />
-          </TouchableOpacity>
-        </View> */}
       </TouchableOpacity>
       <OptionsModal
         visible={moreOptionsModal}

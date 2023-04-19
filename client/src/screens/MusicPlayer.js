@@ -1,16 +1,15 @@
-import { View, Text, FlatList } from "react-native";
-import React, { useCallback, useRef, useState } from "react";
-import songs from "../database/songs";
-import PlayingSong from "./PlayingSong";
+import { View, FlatList, useWindowDimensions } from "react-native";
+import React, { useCallback } from "react";
 import AudioList from "../components/AudioList";
-import { useNavigation } from "@react-navigation/native";
-import { Audio, AVPlaybackStatus } from "expo-av";
-import { play } from "../redux/actions/audioActions";
+import { useDispatch } from "react-redux";
+import { playSong } from "../redux/actions/audioActions";
+import audioInfo from "../redux/utils/audioInfo";
+import MinimizedMusicPlayer from "../components/MinimizedMusicPlayer";
 
-export default function MusicPlayer({ currentUser }) {
-  const navigation = useNavigation();
-  const [position, setPosition] = useState();
-  const sound = useRef(new Audio.Sound());
+export default function MusicPlayer({ navigation }) {
+  const dispatch = useDispatch();
+  const { audioFiles, song } = audioInfo();
+  const { width, height } = useWindowDimensions();
 
   const renderSongs = useCallback(({ item }) => {
     return (
@@ -22,33 +21,24 @@ export default function MusicPlayer({ currentUser }) {
 
   async function handlePlay(song) {
     try {
-      const soundObj = await sound.current.loadAsync(
-        { uri: song.url },
-        { shouldPlay: true }
-      );
-
-      if (soundObj.isLoaded) {
-        await sound.current.playAsync();
-      }
-
-      navigation.navigate("PlayingSong", {
-        song: song,
-        soundObj: { soundObj, sound },
-      });
+      dispatch(playSong({ song }));
+      return navigation.navigate("PlayingSong");
     } catch (error) {
-      // An error occurred!
       console.log(error);
     }
   }
 
   return (
-    <View className="flex-1 bg-brandBlue pt-4">
-      {/* <PlayingSong /> */}
+    <View
+      className="flex-1 bg-brandBlue pt-4"
+      style={{ paddingBottom: song ? height * 0.06 : 0 }}
+    >
       <FlatList
-        data={songs}
+        data={audioFiles}
         renderItem={renderSongs}
         keyExtractor={(item) => item.id}
       />
+      <MinimizedMusicPlayer />
     </View>
   );
 }

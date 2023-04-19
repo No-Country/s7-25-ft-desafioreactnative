@@ -15,7 +15,7 @@ const initialState = {
   currentUser: "",
   isLogin: false,
   userById: "",
-  error: {},
+  error: null,
   reqStatus: null,
 };
 
@@ -28,11 +28,28 @@ const usersReducer = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(fetchUsers.pending, (state, action) => {
+      state.loading = true;
+      state.error = null;
+    });
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.users = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(fetchUsers.rejected, (state, action) => {
+      state.loading = false;
+      state.users = null;
+    });
+    builder.addCase(fetchUserById.pending, (state, action) => {
+      state.loading = true;
     });
     builder.addCase(fetchUserById.fulfilled, (state, action) => {
       state.userById = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(fetchUserById.rejected, (state, action) => {
+      state.userById = null;
+      state.loading = false;
     });
 
     builder.addCase(registerUser.pending, (state, action) => {
@@ -48,14 +65,14 @@ const usersReducer = createSlice({
     });
     builder.addCase(signInUser.pending, (state, action) => {
       state.loading = true;
-      state.error = {};
+      state.error = null;
     });
     builder.addCase(signInUser.fulfilled, (state, action) => {
       state.currentUser = action.payload;
       state.token = action.payload.token;
       state.loading = false;
       state.isLogin = true;
-      state.error = {};
+      state.error = null;
     });
     builder.addCase(signInUser.rejected, (state, action) => {
       state.loading = false;
@@ -72,7 +89,7 @@ const usersReducer = createSlice({
       state.users = "";
       state.loading = false;
       state.userById = "";
-      state.error = {};
+      state.error = null;
     });
     builder.addCase(logOutUser.rejected, (state) => {
       state.loading = false;

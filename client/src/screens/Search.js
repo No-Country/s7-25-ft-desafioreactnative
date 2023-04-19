@@ -13,6 +13,8 @@ import OptionsModalGenres from '../components/OptionsModalGenres';
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
 
+const BaseURL = 'http://192.168.0.12:4000';
+
 const Search = () => {
 
     const navigation = useNavigation();

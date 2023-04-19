@@ -5,7 +5,7 @@ import { logOutUser } from "../redux/actions/userActions";
 import { useDispatch } from "react-redux";
 
 const Account = () => {
-  const  user = userInfo();
+  const { user } = userInfo();
   const dispatch = useDispatch();
 
   const handleLogOut = () => {
@@ -14,10 +14,9 @@ const Account = () => {
   return (
     <View className="flex-1 bg-brandBlue justify-center items-center">
       <Text className="text-lg font-bold text-[#FFF]">
-        {user.user}
-        Jiao
+        {user.data.userName}
       </Text>
-      <Text className="text-lg font-bold text-[#FFF]">{user.userById}LoreIpsum@gmail.com</Text>
+      <Text className="text-lg font-bold text-[#FFF]">{user.data.email}</Text>
       <Pressable onPress={handleLogOut}>
         <Text className="text-lg font-bold text-[#FFF]">Log Out</Text>
       </Pressable>

@@ -381,37 +381,73 @@ const removeFavorite = catchAsync(async (req, res, next) => {
 const getUserTracks = catchAsync(async (req, res, next) => {
   const userId = req.params.id;
   const limit = req.query.limit || 10;
-  const type = req.query.type
+  const type = req.query.type;
+
+  if (type !== "owner" && type !== "favorite" && type !== "buy") {
+    return res.status(200).json({
+      status: "error",
+      message: "Invalid type",
+    });
+  }
 
   try {
     const tracks = await Track.findAll({
-      include: [
-        {
-          model: User,
-          where: { id: userId },
-          attributes: [],
-          as: type === "buy"? "purchasedBy" : "favoritedBy",
-        },
-        {
-          model: User,
-          attributes: ["userName", "email"], // Selecciona solo los atributos necesarios del modelo User
-          as: "artist", // Alias para la relación
-        },
-      ],
+      where:
+        type === "owner"
+          ? {
+              user_id: userId,
+            }
+          : {},
+      include:
+        type === "owner"
+          ? [
+              {
+                model: User,
+                attributes: ["userName", "email"],
+                as: "artist",
+              },
+            ]
+          : [
+              {
+                model: User,
+                where: { id: userId },
+                attributes: [],
+                as: type === "buy" ? "purchasedBy" : "favoritedBy",
+              },
+              {
+                model: User,
+                attributes: ["userName", "email"],
+                as: "artist",
+              },
+            ],
       limit,
       order: [["createdAt", "ASC"]],
     });
 
-    const totalFavorites = await FavoriteTrack.count({
-      where: {
-        userId,
-      },
-    });
+    const total = await Track.count({
+      where:
+        type === "owner"
+          ? {
+              user_id: userId,
+            }
+          : {},
+      include:
+        type === "owner"
+          ? []
+          : [
+              {
+                model: User,
+                where: { id: userId },
+                attributes: [],
+                as: type === "buy" ? "purchasedBy" : "favoritedBy",
+              }
+            ],});
 
     return res.status(200).json({
       status: "success",
       tracks,
-      limit: totalFavorites <= parseInt(limit),
+      remainingTracksDB: total - limit,
+      limit: total <= parseInt(limit),
     });
   } catch (error) {
     console.error(error);

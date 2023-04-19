@@ -5,6 +5,8 @@ import Home from "../screens/Home";
 import Explore from "../screens/Explore";
 import Radio from "../screens/Radio";
 import Account from "../screens/Account";
+import FavoriteTabs from "../screens/FavoriteTabs";
+
 import {
   MenuIcon,
   ExploreIcon,
@@ -14,7 +16,7 @@ import {
 import MusicPlayer from "../screens/MusicPlayer";
 
 const Tab = createBottomTabNavigator();
-const Height = Dimensions.get('window').height;
+const Height = Dimensions.get("window").height;
 
 const BottomTabNavigator = () => {
   return (
@@ -23,22 +25,25 @@ const BottomTabNavigator = () => {
       screenOptions={{
         tabBarActiveTintColor: "#CBFB5E",
         tabBarInactiveTintColor: "#71737B",
-        tabBarLabelStyle: { fontWeight: "bold", },
+        tabBarLabelStyle: { fontWeight: "bold" },
         headerStyle: {
           backgroundColor: "#0E0B1F",
           borderBottomWidth: 0,
         },
         headerTintColor: "#EEEEEE",
-        tabBarStyle: { backgroundColor: "#0E0B1F",borderTopWidth:0,height:Height*0.08 },
-        tabBarItemStyle:{marginVertical:Height*0.019}
+        tabBarStyle: {
+          backgroundColor: "#0E0B1F",
+          borderTopWidth: 0,
+          height: Height * 0.08,
+        },
+        tabBarItemStyle: { marginVertical: Height * 0.019 },
       }}
     >
       <Tab.Screen
         options={() => ({
           tabBarLabel: "Inicio",
-          tabBarIcon: (props) => <HomeIcon color={props.color} />, 
-          headerShown:false,
-          
+          tabBarIcon: (props) => <HomeIcon color={props.color} />,
+          headerShown: false,
         })}
         name="Inicio"
         component={Home}
@@ -53,9 +58,10 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Radio"
-        component={Radio}
+        component={FavoriteTabs}
         options={({ route }) => ({
           tabBarLabel: "Favoritos",
+          headerShown:false,
           tabBarIcon: (props) => <FavouritesIcon color={props.color} />,
         })}
       />

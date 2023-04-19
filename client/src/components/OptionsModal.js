@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, useWindowDimensions } from "react-native";
 import { View, Modal, Text, TouchableWithoutFeedback } from "react-native";
-import { CartIcon, HeartIcon, ShareIcon,ExploreIcon } from "./Icons";
+import { CartIcon, HeartIcon, ShareIcon, ExploreIcon } from "./Icons";
 
 const OptionsModal = ({
   visible,
@@ -124,13 +124,16 @@ const OptionsModal = ({
             <TouchableWithoutFeedback onPress={onPlayPress}>
               <View
                 className="flex-row items-center"
-                style={{ marginBottom: height * 0.02,marginLeft: width * 0.01  }}
+                style={{
+                  marginBottom: height * 0.02,
+                  marginLeft: width * 0.01,
+                }}
               >
-                <ExploreIcon 
-                  style={{marginRight: width * 0.1}}
+                <ExploreIcon
+                  style={{ marginRight: width * 0.1 }}
                   width={width * 0.03}
                   height={height * 0.03}
-                  color={'white'}
+                  color={"white"}
                 />
                 <Text
                   style={{ marginLeft: width * 0.03 }}
