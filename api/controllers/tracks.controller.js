@@ -122,7 +122,7 @@ const getTracks = catchAsync(async (req, res, next) => {
                 },
               }
             : {},
-        }
+        },
       ],
       offset,
       limit,
@@ -384,26 +384,33 @@ const getFavoriteTracks = catchAsync(async (req, res, next) => {
 
   try {
     const tracks = await Track.findAll({
-      include: [{
-        model: User,
-        where: { id: userId },
-        attributes: [],
-        as: 'favoritedBy',
-      }],
+      include: [
+        {
+          model: User,
+          where: { id: userId },
+          attributes: [],
+          as: "favoritedBy",
+        },
+        {
+          model: User,
+          attributes: ["userName", "email"], // Selecciona solo los atributos necesarios del modelo User
+          as: "artist", // Alias para la relación
+        },
+      ],
       limit,
-      order: [["createdAt", "ASC"]]
+      order: [["createdAt", "ASC"]],
     });
 
-    const totalFavorites = await FavoriteTrack.count({ 
-      where: { 
-        userId 
-      } 
-    })
+    const totalFavorites = await FavoriteTrack.count({
+      where: {
+        userId,
+      },
+    });
 
     return res.status(200).json({
       status: "success",
       tracks,
-      limit: totalFavorites <= parseInt(limit)
+      limit: totalFavorites <= parseInt(limit),
     });
   } catch (error) {
     console.error(error);
