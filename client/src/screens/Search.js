@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import {View, StyleSheet, SafeAreaView, Image, Text, Dimensions, ScrollView, ImageBackground, TouchableOpacity, TextInput, FlatList} from 'react-native';
 import { ArrowBackIcon, ArrowDownIcon, SearchIcon } from '../components/Icons';
 import OptionsModal from '../components/OptionsModal';
-import songs from '../database/songs';
 import MusicCard from '../components/MusicCard';
 import axios from 'axios';
 import { useEffect } from 'react';
 import OptionsModalGenres from '../components/OptionsModalGenres';
+
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
@@ -21,18 +21,22 @@ const Search = () => {
     const [moreOptionsModal, setMoreOptionsModal] = useState(false);
     const [moreOptionsModalGenres, setMoreOptionsModalGenres] = useState(false);
     const [songs, setsongs] = useState([]);
+    const [filtro,setFiltro] = useState('');
+    const [Title,setTitle] = useState('Todos');
+    const [input,setinput] = useState('');
+    console.log(input)
 
     useEffect(() => {
         
-        axios.get(`${BaseURL}/api/v1/tracks?page=1&genres=hip hop`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs"}})
-
+        axios.get(`${BaseURL}/api/v1/tracks?page=1${filtro}&search=${input}`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs"}})
+        
         .then((response) => {
           setsongs(response.data.data.tracks);
         })
         .catch((error) => {
           console.log(error);
         });
-      }, []);
+      }, [filtro,input]);
 
       console.log(songs)
     
@@ -43,6 +47,14 @@ const Search = () => {
       });
       if (!loaded) {
         return null;
+      };
+
+      const handleDataFromChild = (data) => {
+        setFiltro(data);
+      };
+
+      const handleTitleFromChild = (title) => {
+        setTitle(title);
       };
 
     return (
@@ -57,14 +69,14 @@ const Search = () => {
                     <View style={{marginLeft:Width*0.04}}>
                     <SearchIcon size={Width*0.055}/>
                     </View>
-                    <TextInput multiline={false} placeholder='¿Qué estás buscando?' placeholderTextColor={'#71737B'} selectionColor={'#CBFB5E'} style={styles.Input}></TextInput>
+                    <TextInput onChangeText={(e)=>setinput(e)} multiline={false} placeholder='¿Qué estás buscando?' placeholderTextColor={'#71737B'} selectionColor={'#CBFB5E'} style={styles.Input}></TextInput>
                 </View>
              </View>
              </View>
              <View style={{height:Height*0.10}} className='flex-row items-center'>
                 <Text style={styles.Generos}>Generos :</Text>
                 <TouchableOpacity className='flex-row items-center' activeOpacity={0.8} onPress={() => setMoreOptionsModalGenres(true)}>
-                    <Text style={styles.Seleccion}>Todos</Text>
+                    <Text className='capitalize' style={styles.Seleccion}>{Title}</Text>
                     <View style={{marginTop:Height*0.005,marginLeft:Width*0.018}}>
                         <ArrowDownIcon color={'white'} size={Height*0.015}/>
                     </View>
@@ -84,7 +96,9 @@ const Search = () => {
         currentItem={{}}   
         onClose={() => setMoreOptionsModal(false)}
         />
-         <OptionsModalGenres
+         <OptionsModalGenres 
+         onData={handleDataFromChild}
+         onTitle={handleTitleFromChild}
         visible={moreOptionsModalGenres}
         currentItem={{}}   
         onClose={() => setMoreOptionsModalGenres(false)}
