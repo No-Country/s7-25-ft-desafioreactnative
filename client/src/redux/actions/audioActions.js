@@ -214,6 +214,20 @@ export const previousSong = createAsyncThunk(
   }
 );
 
+export const stopSong = createAsyncThunk(
+  "audios/stopSong",
+  async (soundObj) => {
+    try {
+      if (soundObj) {
+        await soundObj?.stopAsync();
+        return await soundObj?.unloadAsync();
+      }
+    } catch (error) {
+      console.log("error inside stop song action function =>", error.message);
+    }
+  }
+);
+
 export const resetAudioState = createAsyncThunk(
   "audios/resetAudioState",
   async () => {

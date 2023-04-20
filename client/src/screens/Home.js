@@ -1,30 +1,43 @@
 import { useFonts } from "expo-font";
-import React, { useEffect, useState } from 'react';
-import {View, StyleSheet, SafeAreaView, Image, Text, Dimensions, ScrollView, ImageBackground, TouchableOpacity, FlatList} from 'react-native';
-import { SearchIcon,ShopIcon, } from '../components/Icons';
-import MusicCard from '../components/MusicCard';
-import songs from '../database/songs';
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  Text,
+  Dimensions,
+  ScrollView,
+  ImageBackground,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import { SearchIcon, ShopIcon } from "../components/Icons";
+import MusicCard from "../components/MusicCard";
+import songs from "../database/songs";
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import MinimizedMusicPlayer from "../components/MinimizedMusicPlayer";
 import audioInfo from "../redux/utils/audioInfo";
 import userInfo from "../redux/utils/userInfo";
 
-const Height = Dimensions.get('window').height;
-const Width = Dimensions.get('window').width;
+const Height = Dimensions.get("window").height;
+const Width = Dimensions.get("window").width;
 
 const Home = () => {
   const navigation = useNavigation();
   const [songs, setsongs] = useState([]);
   const { song } = audioInfo();
 
-  const { token, user } = userInfo()
-  const userId = user.data.id
+  const { token, user } = userInfo();
+  const userId = user.data.id;
 
- useEffect(() => {
-        
-      axios.get(`/api/v1/tracks/${userId}?page=1`,{headers:{'Authorization':`Bearer ${token}`}})
- 
+  useEffect(() => {
+    axios
+      .get(`/api/v1/tracks/${userId}?page=1`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
       .then((response) => {
         setsongs(response.data.data.tracks);
       })
@@ -49,22 +62,36 @@ const Home = () => {
     return `${minutos}:${segundosRestantes}`; // retornar objeto con los valores de minutos y segundosRestantes
   };
 
-
-    return (
-        <SafeAreaView className='flex-1 bg-brandBlue'>
-            <View style={styles.header} className='flex-row items-center justify-between'>
-               <View className='flex-row items-center'>
-                    <Image style={styles.image} source={require('../../assets/adaptive-icon.png')}/>
-                    <Text style={styles.soundScaleTitle} className='text-brandGreen w-fit'>SoundScale</Text>
-                </View> 
-                <View className='flex-row gap-x-5 mr-5 items-center'>
-                    <TouchableOpacity onPress={()=>{navigation.navigate('CreateTrack')}}>
-                        <Text style={{fontSize:Height*0.05,color:'white'}}>+</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                    <ShopIcon size={Height*0.030} color={'white'}/>
-                    </TouchableOpacity>    
-                </View>
+  return (
+    <SafeAreaView className="flex-1 bg-brandBlue">
+      <View
+        style={styles.header}
+        className="flex-row items-center justify-between"
+      >
+        <View className="flex-row items-center">
+          <Image
+            style={styles.image}
+            source={require("../../assets/adaptive-icon.png")}
+          />
+          <Text
+            style={styles.soundScaleTitle}
+            className="text-brandGreen w-fit"
+          >
+            SoundScale
+          </Text>
+        </View>
+        <View className="flex-row gap-x-5 mr-5 items-center">
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("CreateTrack");
+            }}
+          >
+            <Text style={{ fontSize: Height * 0.05, color: "white" }}>+</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <ShopIcon size={Height * 0.03} color={"white"} />
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.nuevasPistasContainer}>
         <Text style={styles.nuevasPistasTitle}>Nuevas Pistas</Text>
@@ -132,28 +159,39 @@ const Home = () => {
                 DJ_Lucius
               </Text>
             </View>
-            </ImageBackground>
-            </ScrollView>
-            </View>
-            <View style={styles.RecomendadosContainer}>
-                <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
-                <FlatList overScrollMode='never' 
-                data={songs} 
-                renderItem={({item}) => <MusicCard id={item.id} 
-                                                   artist={item.artist.userName} 
-                                                   title={item.title} price={item.price} 
-                                                   artwork={item.artwork} url={item.url} 
-                                                   duration={convertirMilisegundos(item.duration)} 
-                                                   favoritedBy={item.favoritedBy}
-                                                   purchasedBy={item.purchasedBy} />}
-                keyExtractor={(e) => e.id}
-                />                  
-            </View>
-            <MinimizedMusicPlayer/>
-        </SafeAreaView>
-    );
-}
-
+          </ImageBackground>
+        </ScrollView>
+      </View>
+      <View
+        style={[
+          styles.RecomendadosContainer,
+          { paddingBottom: song ? Height * 0.1 : 0 },
+        ]}
+      >
+        <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
+        <FlatList
+          overScrollMode="never"
+          data={songs}
+          renderItem={({ item }) => (
+            <MusicCard
+              id={item.id}
+              artist={item.artist.userName}
+              title={item.title}
+              price={item.price}
+              artwork={item.artwork}
+              url={item.url}
+              duration={convertirMilisegundos(item.duration)}
+              favoritedBy={item.favoritedBy}
+              purchasedBy={item.purchasedBy}
+            />
+          )}
+          keyExtractor={(e) => e.id}
+        />
+      </View>
+      <MinimizedMusicPlayer />
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   header: {
