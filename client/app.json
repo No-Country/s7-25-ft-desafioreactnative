@@ -26,6 +26,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": [
+      ["expo-document-picker"],
+      [
+        "expo-media-library",
+        {
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ],
     "extra": {
       "api": "https://api-soundscale.up.railway.app",
       "STRIPE_KEY": "pk_test_51Mx22MEKcgSZKCjSxbGhs73qZg6bJzelg7AN5joJyAX4qN9Nffvn2SsJJTQUdqxngRSNbf9tMNU3Gj1XSeleM3rd00pAEqNsPc",

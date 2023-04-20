@@ -1,31 +1,38 @@
-import { Dimensions, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native";
+import {
+  Dimensions,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
-import {ArrowBackIcon,ArrowDownIcon} from '../components/Icons';
+import { ArrowBackIcon, ArrowDownIcon } from "../components/Icons";
 import axios from "axios";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 import OptionsModalGenresCreate from "../components/OptionsModalGenresCreate";
-import userInfo from "../redux/utils/userInfo"
+import userInfo from "../redux/utils/userInfo";
 
-const Height = Dimensions.get('window').height;
-const Width = Dimensions.get('window').width;
-
+const Height = Dimensions.get("window").height;
+const Width = Dimensions.get("window").width;
 
 const CreateTrack = () => {
   const Navigation = useNavigation();
 
   const [fileData, setFileData] = useState(null);
   const [imageData, setImageData] = useState(null);
-  const [InputTitle, setInputTitle] = useState('');
-  const [InputPrice, setInputPrice] = useState('');
-  const [filtro,setFiltro] = useState('');
-  const [Title,setTitle] = useState('Rock');
+  const [InputTitle, setInputTitle] = useState("");
+  const [InputPrice, setInputPrice] = useState("");
+  const [filtro, setFiltro] = useState("");
+  const [Title, setTitle] = useState("Rock");
   const [moreOptionsModalGenres, setMoreOptionsModalGenres] = useState(false);
 
-  const { token, user } = userInfo()
-  const userId = user.data.id
+  const { token, user } = userInfo();
+  const userId = user.data.id;
 
   const pickAudio = async () => {
     try {
@@ -34,7 +41,9 @@ const CreateTrack = () => {
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission denied!");
-        {status}
+        {
+          status;
+        }
         return;
       }
 
@@ -117,11 +126,10 @@ const CreateTrack = () => {
         }
         // cambiar los literales user_id, price y genres
         const trackData = {
-          user_id: userId,/* 
-          title: {InputTitle}, */
-          price: {InputPrice},
+          user_id: userId /* 
+          title: {InputTitle}, */,
+          price: { InputPrice },
           genres: [...Title],
-
         };
 
         formData.append("trackData", JSON.stringify(trackData));
@@ -143,7 +151,6 @@ const CreateTrack = () => {
       } catch (error) {
         console.log(error);
       }
-      
     }
   };
 
@@ -157,89 +164,176 @@ const CreateTrack = () => {
 
   return (
     <>
-    <SafeAreaView className='flex-1 bg-brandBlue'>
-    <View style={styles.header} className='flex-row items-center justify-start'>
-       <TouchableOpacity style={{marginLeft:Width*0.05}} onPress={()=>{Navigation.navigate('Home')}}>
-          <ArrowBackIcon color={'white'} size={Width*0.055}/>
-        </TouchableOpacity>
-    </View>
+      <SafeAreaView className="flex-1 bg-brandBlue">
+        <View
+          style={styles.header}
+          className="flex-row items-center justify-start"
+        >
+          <TouchableOpacity
+            style={{ marginLeft: Width * 0.05 }}
+            onPress={() => {
+              Navigation.navigate("Home");
+            }}
+          >
+            <ArrowBackIcon color={"white"} size={Width * 0.055} />
+          </TouchableOpacity>
+        </View>
 
-    <View style={{marginTop:Height*0.05}} className='items-center'>
-    <View style={styles.InputGroup}>
-   {/*  <View style={{borderRadius:Height*0.009,width:Width*0.8}} className='flex-row items-center bg-[#292D39] border border-[#363942]'>       
+        <View style={{ marginTop: Height * 0.05 }} className="items-center">
+          <View style={styles.InputGroup}>
+            {/*  <View style={{borderRadius:Height*0.009,width:Width*0.8}} className='flex-row items-center bg-[#292D39] border border-[#363942]'>       
       <TextInput onChangeText={(e)=>setInputTitle(e)} multiline={false} placeholder='Titulo' placeholderTextColor={'#71737B'} selectionColor={'#CBFB5E'} style={styles.Input}></TextInput>
     </View> */}
 
-    <View style={{borderRadius:Height*0.009,width:Width*0.8}} className='flex-row items-center bg-[#292D39] border border-[#363942]'>       
-      <TextInput keyboardType="numeric" onChangeText={(e)=>setInputPrice(e)} multiline={false} placeholder='Precio' placeholderTextColor={'#71737B'} selectionColor={'#CBFB5E'} style={styles.Input}></TextInput>
-      <View className=' justify-center' style={{marginRight:Width*0.02,height:Height*0.045,width:Width*0.07,justifyContent:"center"}}> 
-        <Text className='text-[#979797]'>$US</Text>
-      </View> 
-    </View>
-  </View>
+            <View
+              style={{ borderRadius: Height * 0.009, width: Width * 0.8 }}
+              className="flex-row items-center bg-[#292D39] border border-[#363942]"
+            >
+              <TextInput
+                keyboardType="numeric"
+                onChangeText={(e) => setInputPrice(e)}
+                multiline={false}
+                placeholder="Precio"
+                placeholderTextColor={"#71737B"}
+                selectionColor={"#CBFB5E"}
+                style={styles.Input}
+              ></TextInput>
+              <View
+                className=" justify-center"
+                style={{
+                  marginRight: Width * 0.02,
+                  height: Height * 0.045,
+                  width: Width * 0.07,
+                  justifyContent: "center",
+                }}
+              >
+                <Text className="text-[#979797]">$US</Text>
+              </View>
+            </View>
+          </View>
 
-  <View style={{width:Width*0.8}} className='flex-row'>
-    <View style={styles.Genero}>
-    
-    <Text className='text-[#FFF]' style={{fontSize:Height*0.02,marginLeft:Width*0.009}}>Genero:</Text>
+          <View style={{ width: Width * 0.8 }} className="flex-row">
+            <View style={styles.Genero}>
+              <Text
+                className="text-[#FFF]"
+                style={{ fontSize: Height * 0.02, marginLeft: Width * 0.009 }}
+              >
+                Genero:
+              </Text>
 
-    <TouchableOpacity style={{borderWidth:2,borderRadius:Height*0.008,padding:Width*0.010}} className='flex-row items-center border-brandGreen' activeOpacity={0.8} onPress={() => setMoreOptionsModalGenres(true)}>
-      
-      <Text className='capitalize' style={styles.Seleccion}>{Title}</Text>
-        
-        <View style={{marginTop:Height*0.004,padding:Width*0.015}}> 
-          
-          <ArrowDownIcon color={'white'} size={Height*0.015}/>
-        
+              <TouchableOpacity
+                style={{
+                  borderWidth: 2,
+                  borderRadius: Height * 0.008,
+                  padding: Width * 0.01,
+                }}
+                className="flex-row items-center border-brandGreen"
+                activeOpacity={0.8}
+                onPress={() => setMoreOptionsModalGenres(true)}
+              >
+                <Text className="capitalize" style={styles.Seleccion}>
+                  {Title}
+                </Text>
+
+                <View
+                  style={{ marginTop: Height * 0.004, padding: Width * 0.015 }}
+                >
+                  <ArrowDownIcon color={"white"} size={Height * 0.015} />
+                </View>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={styles.Pista} onPress={pickAudio}>
+              <Text className="text-[#FFF] text-center">
+                Seleccionar una pista{"\n"}(Wav o Mp3){" "}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity style={styles.SelectImg} onPress={pickImage}>
+            <Text className="text-[#FFF]">Seleccionar una imagen</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            className="bg-brandGreen"
+            style={styles.Upload}
+            disabled={!fileData?.uri}
+            onPress={uploadTrack}
+          >
+            <Text className="text-neutralMarineBlue">Subir pista</Text>
+          </TouchableOpacity>
         </View>
-    
-    </TouchableOpacity>
-    
-    </View>
-    <TouchableOpacity  style={styles.Pista} onPress={pickAudio}>
-        <Text className='text-[#FFF] text-center'>Seleccionar una pista{'\n'}(Wav o Mp3) </Text>
-      </TouchableOpacity> 
-    </View>
-
-      <TouchableOpacity style={styles.SelectImg}
-        
-        onPress={pickImage}
-      >
-          <Text className='text-[#FFF]'>Seleccionar una imagen</Text>
-
-      </TouchableOpacity>
-
-      <TouchableOpacity
-      className='bg-brandGreen'
-        style={styles.Upload}
-        disabled={!fileData?.uri}
-        onPress={uploadTrack}
-      >
-          <Text className='text-neutralMarineBlue'>Subir pista</Text>
-
-      </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-    <OptionsModalGenresCreate 
-         onData={handleDataFromChild}
-         onTitle={handleTitleFromChild}
+      </SafeAreaView>
+      <OptionsModalGenresCreate
+        onData={handleDataFromChild}
+        onTitle={handleTitleFromChild}
         visible={moreOptionsModalGenres}
-        currentItem={{}}   
+        currentItem={{}}
         onClose={() => setMoreOptionsModalGenres(false)}
-        />
-        </>
+      />
+    </>
   );
 };
 
 export default CreateTrack;
 
 const styles = StyleSheet.create({
-  header:{width:Width*1, height:Height*0.08, marginTop:Height*0.045},
-  Input:{fontFamily:'Roboto-Regular', fontSize:Height*0.02 , width:Width*0.70 , paddingHorizontal:Width*0.02 , height:Height*0.045 , color:'white',marginLeft:Width*0.02},
-  Seleccion:{fontFamily:'Roboto-Bold', fontSize:Height*0.02, color:'white'},
-  InputGroup:{gap:Width*0.05},
-  Genero:{flexDirection:'row',width:Width*0.36,gap:Width*0.02,height:Height*0.07,backgroundColor:'#292D39', borderRadius:Height*0.009,alignItems:"center",marginTop:Width*0.05,marginRight:Width*0.08},
-  Pista:{flexDirection:'row',width:Width*0.36,gap:Width*0.02,height:Height*0.07,backgroundColor:'#292D39', borderRadius:Height*0.009,alignItems:"center",marginTop:Width*0.05},
-  SelectImg:{flexDirection:'row',width:Width*0.8,height:Height*0.07,backgroundColor:'#292D39', borderRadius:Height*0.009,alignItems:"center",marginTop:Width*0.05,justifyContent:"center"},
-  Upload:{flexDirection:'row',width:Width*0.8,height:Height*0.07,borderRadius:Height*0.009,alignItems:"center",justifyContent:"center"},
+  header: {
+    width: Width * 1,
+    height: Height * 0.08,
+    marginTop: Height * 0.045,
+  },
+  Input: {
+    fontFamily: "Roboto-Regular",
+    fontSize: Height * 0.02,
+    width: Width * 0.7,
+    paddingHorizontal: Width * 0.02,
+    height: Height * 0.045,
+    color: "white",
+    marginLeft: Width * 0.02,
+  },
+  Seleccion: {
+    fontFamily: "Roboto-Bold",
+    fontSize: Height * 0.02,
+    color: "white",
+  },
+  InputGroup: { gap: Width * 0.05 },
+  Genero: {
+    flexDirection: "row",
+    width: Width * 0.36,
+    gap: Width * 0.02,
+    height: Height * 0.07,
+    backgroundColor: "#292D39",
+    borderRadius: Height * 0.009,
+    alignItems: "center",
+    marginTop: Width * 0.05,
+    marginRight: Width * 0.08,
+  },
+  Pista: {
+    flexDirection: "row",
+    width: Width * 0.36,
+    gap: Width * 0.02,
+    height: Height * 0.07,
+    backgroundColor: "#292D39",
+    borderRadius: Height * 0.009,
+    alignItems: "center",
+    marginTop: Width * 0.05,
+  },
+  SelectImg: {
+    flexDirection: "row",
+    width: Width * 0.8,
+    height: Height * 0.07,
+    backgroundColor: "#292D39",
+    borderRadius: Height * 0.009,
+    alignItems: "center",
+    marginTop: Width * 0.05,
+    justifyContent: "center",
+  },
+  Upload: {
+    flexDirection: "row",
+    width: Width * 0.8,
+    height: Height * 0.07,
+    borderRadius: Height * 0.009,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
