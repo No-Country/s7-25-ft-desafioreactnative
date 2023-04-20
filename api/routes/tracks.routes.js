@@ -20,7 +20,7 @@ tracksRouter.post("/uploadForTests", uploadTracksTest);
 
 tracksRouter.use(protectSession);
 
-tracksRouter.get("/", getTracks);
+tracksRouter.get("/:userId", getTracks);
 tracksRouter.get("/:id/getUserTracks", getUserTracks);
 
 const storage = multer.memoryStorage();
