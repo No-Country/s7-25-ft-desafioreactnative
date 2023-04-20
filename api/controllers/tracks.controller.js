@@ -72,7 +72,7 @@ const getTracks = catchAsync(async (req, res, next) => {
       genres = [],
     } = req.query;
 
-    const {userId} = req.params;
+    const { userId } = req.params;
 
     const pageSize = 10;
 
@@ -151,12 +151,12 @@ const getTracks = catchAsync(async (req, res, next) => {
             {
               model: User,
               as: "favoritedBy",
-              attributes: ["id"]
+              attributes: ["id"],
             },
             {
               model: User,
               as: "purchasedBy",
-              attributes: ["id"]
+              attributes: ["id"],
             },
           ],
         })
@@ -199,15 +199,24 @@ const getTracks = catchAsync(async (req, res, next) => {
     const totalPages = Math.ceil(totalTracks / pageSize);
     const remainingPages = totalPages - page;
 
-    tracks = tracks.map(track => {
+    tracks = tracks.map((track) => {
+      let trackObj = track.toJSON();
 
-      let trackObj = track.toJSON()
+      const reduceFavorites = trackObj.favoritedBy.reduce(
+        (acc, current) => acc || current.id === userId,
+        false
+      );
+      const reducePurchase = trackObj.purchasedBy.reduce(
+        (acc, current) => acc || current.id === userId,
+        false
+      );
 
-      const reduceFavorites = trackObj.favoritedBy.reduce((acc, current ) => acc || (current.id === userId), false)
-      const reducePurchase = trackObj.purchasedBy.reduce((acc, current ) => acc || (current.id === userId), false)
-
-      return {...trackObj, favoritedBy: reduceFavorites, purchasedBy: reducePurchase}
-    })
+      return {
+        ...trackObj,
+        favoritedBy: reduceFavorites,
+        purchasedBy: reducePurchase,
+      };
+    });
 
     res.status(200).json({
       status: "success",
@@ -412,7 +421,7 @@ const getUserTracks = catchAsync(async (req, res, next) => {
   }
 
   try {
-    const tracks = await Track.findAll({
+    let tracks = await Track.findAll({
       where:
         type === "owner"
           ? {
@@ -427,13 +436,27 @@ const getUserTracks = catchAsync(async (req, res, next) => {
                 attributes: ["userName", "email"],
                 as: "artist",
               },
+              {
+                model: User,
+                as: "favoritedBy",
+                attributes: ["id"],
+              },
+              {
+                model: User,
+                as: "purchasedBy",
+                attributes: ["id"],
+              },
             ]
           : [
               {
                 model: User,
-                where: { id: userId },
-                attributes: [],
-                as: type === "buy" ? "purchasedBy" : "favoritedBy",
+                where: type === "buy" ? { id: userId } : {},
+                as: "purchasedBy",
+              },
+              {
+                model: User,
+                where: type !== "buy" ? { id: userId } : {},
+                as: "favoritedBy",
               },
               {
                 model: User,
@@ -465,10 +488,42 @@ const getUserTracks = catchAsync(async (req, res, next) => {
             ],
     });
 
+    tracks = tracks.map((track) => {
+      let trackObj = track.toJSON();
+      let reduceFavorites = true;
+      let reducePurchase = true;
+
+      if (type === "owner") {
+        reduceFavorites = trackObj.favoritedBy.reduce(
+          (acc, current) => acc || current.id === userId,
+          false
+        );
+        reducePurchase = trackObj.purchasedBy.reduce(
+          (acc, current) => acc || current.id === userId,
+          false
+        );
+      } else if (type === "buy"){
+        reduceFavorites = trackObj.favoritedBy.reduce(
+          (acc, current) => acc || current.id === userId,
+          false
+        );
+      } else if (type === "favorite"){
+        reducePurchase = trackObj.purchasedBy.reduce(
+          (acc, current) => acc || current.id === userId,
+          false
+        );
+      }
+
+      return {
+        ...trackObj,
+        favoritedBy: reduceFavorites,
+        purchasedBy: reducePurchase,
+      };
+    });
+
     return res.status(200).json({
       status: "success",
       tracks,
-      remainingTracksDB: total - limit,
       limit: total <= parseInt(limit),
     });
   } catch (error) {

@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import MinimizedMusicPlayer from "../components/MinimizedMusicPlayer";
 import audioInfo from "../redux/utils/audioInfo";
+import userInfo from "../redux/utils/userInfo";
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
@@ -17,18 +18,12 @@ const Home = () => {
   const [songs, setsongs] = useState([]);
   const { song } = audioInfo();
 
-  useEffect(() => {
-    axios
-      .get(`/api/v1/tracks?page=1`, {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs",
-        },
-      })
+  const { token, user } = userInfo()
+  const userId = user.data.id
 
-    useEffect(() => {
+ useEffect(() => {
         
-      axios.get(`/api/v1/tracks?page=1`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI2ZTk4NjA0LTkzMzMtNDNlNS1hYTU5LTIwNGU0NDAzYmI1NyIsImlhdCI6MTY4MTkyNDMzMywiZXhwIjoxNjg0NTE2MzMzfQ.SqNYwVtUddjeyiLTKTYvCHHxK2CryqlMlD7Kn4CSMH0"}})
+      axios.get(`/api/v1/tracks/${userId}?page=1`,{headers:{'Authorization':`Bearer ${token}`}})
  
       .then((response) => {
         setsongs(response.data.data.tracks);
@@ -144,14 +139,21 @@ const Home = () => {
                 <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
                 <FlatList overScrollMode='never' 
                 data={songs} 
-                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist.userName} title={item.title} price={item.price} artwork={item.artwork} url={item.url} duration={convertirMilisegundos(item.duration)} />}
+                renderItem={({item}) => <MusicCard id={item.id} 
+                                                   artist={item.artist.userName} 
+                                                   title={item.title} price={item.price} 
+                                                   artwork={item.artwork} url={item.url} 
+                                                   duration={convertirMilisegundos(item.duration)} 
+                                                   favoritedBy={item.favoritedBy}
+                                                   purchasedBy={item.purchasedBy} />}
                 keyExtractor={(e) => e.id}
                 />                  
             </View>
             <MinimizedMusicPlayer/>
         </SafeAreaView>
     );
-})}
+}
+
 
 const styles = StyleSheet.create({
   header: {
