@@ -1,11 +1,12 @@
 import { useFonts } from 'expo-font';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {View, StyleSheet, Dimensions, Image, Text, TouchableHighlight, TouchableOpacity} from 'react-native';
 import {FavouritesIcon,FavouritesIconFill,ShopIcon,ThreePoints } from '../components/Icons';
 import { useState } from 'react';
 import OptionsModal from '../components/OptionsModal'
 import { Audio } from 'expo-av';
 import { useNavigation } from '@react-navigation/core';
+import axios from 'axios';
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
@@ -18,6 +19,17 @@ const MusicCard = ({id,title,artist,price,artwork,url,duration}) => {
     const navigation = useNavigation();
     const sound = useRef(new Audio.Sound());
 
+    useEffect(() => {
+
+      axios.post(`/api/v1/tracks/addToFavorite`, {userId: "26e98604-9333-43e5-aa59-204e4403bb57" , trackId: id},{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI2ZTk4NjA0LTkzMzMtNDNlNS1hYTU5LTIwNGU0NDAzYmI1NyIsImlhdCI6MTY4MTkyNDMzMywiZXhwIjoxNjg0NTE2MzMzfQ.SqNYwVtUddjeyiLTKTYvCHHxK2CryqlMlD7Kn4CSMH0"}})
+      .then((response)=>{
+        console.log(response.data)
+      }).catch((error)=>{
+        console.log(error)
+      })
+
+    }, [Favourites]);
+    
     const [loaded] = useFonts({
         'Roboto-Bold': require('../../assets/fonts/Roboto-Bold.ttf'),
         'Roboto-Regular': require('../../assets/fonts/Roboto-Regular.ttf'),

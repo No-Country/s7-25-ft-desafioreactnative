@@ -1,14 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import BottomTabNavigator from "./BottomTabNavigator";
-import { useNavigation } from "@react-navigation/native";
 import MusicPlayer from "../screens/MusicPlayer";
 import PlayingSong from "../screens/PlayingSong";
-import Search from "../screens/Search";
-
+import CreateTrack from '../screens/CreateTrack';
 const Stack = createNativeStackNavigator();
 
 function StackNavigation() {
-  const Navigate = useNavigation();
 
   return (
     <Stack.Navigator
@@ -42,7 +39,7 @@ function StackNavigation() {
             headerMode: "modal",
             title: "",
           }} 
-          name={'Search'} component={Search}  
+          name={'CreateTrack'} component={CreateTrack}  
           />
           
       </Stack.Group>

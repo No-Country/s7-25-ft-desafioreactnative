@@ -12,15 +12,13 @@ import axios from 'axios';
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
 
-const BaseURL = 'http://192.168.0.12:4000';
-
 const Home = () => {
     const navigation = useNavigation();
     const [songs, setsongs] = useState([]);
 
     useEffect(() => {
         
-      axios.get(`${BaseURL}/api/v1/tracks?page=1`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs"}})
+      axios.get(`/api/v1/tracks?page=1`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI2ZTk4NjA0LTkzMzMtNDNlNS1hYTU5LTIwNGU0NDAzYmI1NyIsImlhdCI6MTY4MTkyNDMzMywiZXhwIjoxNjg0NTE2MzMzfQ.SqNYwVtUddjeyiLTKTYvCHHxK2CryqlMlD7Kn4CSMH0"}})
  
       .then((response) => {
         setsongs(response.data.data.tracks);
@@ -57,9 +55,9 @@ const Home = () => {
                     <Image style={styles.image} source={require('../../assets/adaptive-icon.png')}/>
                     <Text style={styles.soundScaleTitle} className='text-brandGreen w-fit'>SoundScale</Text>
                 </View> 
-                <View className='flex-row gap-x-5 mr-5'>
-                    <TouchableOpacity onPress={()=>{navigation.navigate('Search')}}>
-                        <SearchIcon size={Height*0.035}/>
+                <View className='flex-row gap-x-5 mr-5 items-center'>
+                    <TouchableOpacity onPress={()=>{navigation.navigate('CreateTrack')}}>
+                        <Text style={{fontSize:Height*0.05,color:'white'}}>+</Text>
                     </TouchableOpacity>
                     <TouchableOpacity>
                     <ShopIcon size={Height*0.030} color={'white'}/>
@@ -87,7 +85,7 @@ const Home = () => {
                 <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
                 <FlatList overScrollMode='never' 
                 data={songs} 
-                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist} title={item.title} price={3000} artwork={item.artwork} url={item.url} duration={convertirMilisegundos(item.duration)} />}
+                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist.userName} title={item.title} price={item.price} artwork={item.artwork} url={item.url} duration={convertirMilisegundos(item.duration)} />}
                 keyExtractor={(e) => e.id}
                 />                  
             </View>

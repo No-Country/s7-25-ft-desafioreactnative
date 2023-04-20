@@ -37,11 +37,10 @@ const OptionsModalGenres = ({
     
     .then((response) => {
       const data = response.data.genres;
-      const dataMasTodos = [{id:0,name:"Todos",genere:""}].concat(data);
       for (let i = 1; i < data.length; i++) {
         data[i].genere = `&genres[]=${data[i].name}`;
       }
-      setgenres(dataMasTodos);
+      setgenres(data);
       
     })
     .catch((error) => {
