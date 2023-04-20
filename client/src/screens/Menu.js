@@ -186,11 +186,11 @@ const Menu = ({ navigation }) => {
             </Text>
           </Pressable>
         </View>
-        <Pressable onPress={() => handleReset()}>
+        {/*    <Pressable onPress={() => handleReset()}>
           <Text className="text-lg font-bold text-[#FFF]">
             Clear Audio State
           </Text>
-        </Pressable>
+        </Pressable> */}
       </View>
       {/*      <Text className="text-lg font-bold text-[#FFF]">{user.data.email}</Text>
       <Pressable onPress={handleLogOut}>
