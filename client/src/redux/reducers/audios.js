@@ -156,16 +156,13 @@ const audiosReducer = createSlice({
       state.loading = false;
       console.log("PREVIOUS SONG NOT PLAYING===>", action.error.message);
     });
-
     /* Playback status update */
     builder.addCase(playbackStatusUpdate.fulfilled, (state, action) => {
       if (action.payload?.positionMillis && action.payload?.durationMillis) {
         state.soundObjStatus = action.payload;
         state.playbackPosition = action.payload?.positionMillis;
         state.playbackDuration = action.payload?.durationMillis;
-        console.log(action.payload);
       }
-      state.isPlaying = action.payload?.isPlaying;
     });
     builder.addCase(playbackStatusUpdate.rejected, (state, action) => {
       state.isPlaying = false;

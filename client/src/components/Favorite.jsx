@@ -10,18 +10,35 @@ import axios from "axios";
 import { Dimensions } from "react-native";
 import MusicCard from "./MusicCard";
 import userInfo from "../redux/utils/userInfo";
+import { playSong } from "../redux/actions/audioActions";
+import MinimizedMusicPlayer from "./MinimizedMusicPlayer";
+import audioInfo from "../redux/utils/audioInfo";
+import { useWindowDimensions } from "react-native";
+import { useDispatch } from "react-redux";
 
-const Favorite = ({route}) => {
-  
-  const ruteApi = route.params.type
+const Favorite = ({ route, navigation }) => {
+  const ruteApi = route.params.type;
 
   const [favoriteTracks, setFavoriteTracks] = useState([]);
   const [limit, setLimit] = useState(10);
   const [listLoading, setListLoading] = useState(true);
   const [itemsLoading, setItemsLoading] = useState(false);
+  const { height } = useWindowDimensions();
+  const dispatch = useDispatch();
+
+  async function handlePlay(song) {
+    try {
+      dispatch(playSong({ song }));
+      return navigation.navigate("PlayingSong");
+    } catch (error) {
+      // An error occurred!
+      console.log(error);
+    }
+  }
 
   const { token, user } = userInfo();
-  
+  const { song } = audioInfo();
+
   useEffect(() => {
     if (getFavoriteTracks()) {
       setListLoading(false);
@@ -32,7 +49,7 @@ const Favorite = ({route}) => {
   const getFavoriteTracks = async () => {
     try {
       const userId = user.data.id;
-        
+
       const { data } = await axios.get(
         `/api/v1/tracks/${userId}/getUserTracks?type=${ruteApi}&limit=${limit}`,
         {
@@ -63,7 +80,12 @@ const Favorite = ({route}) => {
   };
 
   return (
-    <View className="items-center justify-around bg-brandBlue py-7 flex-1">
+    <View
+      className="items-center justify-around bg-brandBlue py-7 flex-1"
+      style={{
+        paddingBottom: song ? height * 0.1 : 0,
+      }}
+    >
       {listLoading ? (
         <ActivityIndicator size={90} />
       ) : (
@@ -78,14 +100,18 @@ const Favorite = ({route}) => {
             decelerationRate={"fast"}
             onEndReached={(a) => {
               if (limit) {
-                setLimit(limit + 3);/* 
+                setLimit(limit + 3); /* 
                 setItemsLoading(true); */
               }
             }}
             data={favoriteTracks}
             renderItem={({ item }) => {
               return (
-                <View style={{ paddingVertical: 6 }}>
+                <View
+                  style={{
+                    paddingVertical: 6,
+                  }}
+                >
                   <MusicCard
                     id={item.id}
                     artist={item.artist.userName}
@@ -96,6 +122,8 @@ const Favorite = ({route}) => {
                     duration={convertirMilisegundos(item.duration)}
                     favoritedBy={item.favoritedBy}
                     purchasedBy={item.purchasedBy}
+                    song={item}
+                    handlePlay={handlePlay}
                   />
                 </View>
               );
@@ -105,6 +133,7 @@ const Favorite = ({route}) => {
           {/* {itemsLoading ? <ActivityIndicator size={20} /> : null} */}
         </>
       )}
+      <MinimizedMusicPlayer />
     </View>
   );
 };
