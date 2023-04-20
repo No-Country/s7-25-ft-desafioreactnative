@@ -1,31 +1,30 @@
 import { useFonts } from "expo-font";
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Image,
-  Text,
-  Dimensions,
-  ScrollView,
-  ImageBackground,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
-import { ShopIcon } from "../components/Icons";
-import MusicCard from "../components/MusicCard";
-import axios from "axios";
-import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from 'react';
+import {View, StyleSheet, SafeAreaView, Image, Text, Dimensions, ScrollView, ImageBackground, TouchableOpacity, FlatList} from 'react-native';
+import { SearchIcon,ShopIcon, } from '../components/Icons';
+import MusicCard from '../components/MusicCard';
+import songs from '../database/songs';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 import MinimizedMusicPlayer from "../components/MinimizedMusicPlayer";
 import audioInfo from "../redux/utils/audioInfo";
 
-const Height = Dimensions.get("window").height;
-const Width = Dimensions.get("window").width;
+const Height = Dimensions.get('window').height;
+const Width = Dimensions.get('window').width;
 
 const Home = () => {
   const navigation = useNavigation();
   const [songs, setsongs] = useState([]);
   const { song } = audioInfo();
+
+  useEffect(() => {
+    axios
+      .get(`/api/v1/tracks?page=1`, {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs",
+        },
+      })
 
     useEffect(() => {
         
@@ -138,21 +137,21 @@ const Home = () => {
                 DJ_Lucius
               </Text>
             </View>
-          </ImageBackground>
-        </ScrollView>
-      </View>
-      <View style={styles.RecomendadosContainer}>
-        <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
-        <FlatList overScrollMode='never' 
-        data={songs} 
-        renderItem={({item}) => <MusicCard id={item.id} artist={item.artist.userName} title={item.title} price={item.price} artwork={item.artwork} url={item.url} duration={convertirMilisegundos(item.duration)} />}
-        keyExtractor={(e) => e.id}
-        />                  
-      </View>
-      <MinimizedMusicPlayer />
-    </SafeAreaView>
-  );
-};
+            </ImageBackground>
+            </ScrollView>
+            </View>
+            <View style={styles.RecomendadosContainer}>
+                <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
+                <FlatList overScrollMode='never' 
+                data={songs} 
+                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist.userName} title={item.title} price={item.price} artwork={item.artwork} url={item.url} duration={convertirMilisegundos(item.duration)} />}
+                keyExtractor={(e) => e.id}
+                />                  
+            </View>
+            <MinimizedMusicPlayer/>
+        </SafeAreaView>
+    );
+})}
 
 const styles = StyleSheet.create({
   header: {
@@ -161,7 +160,6 @@ const styles = StyleSheet.create({
     marginTop: Height * 0.045,
   },
   image: { height: Height * 0.1, width: Height * 0.1 },
-  
   soundScaleTitle: {
     fontFamily: "Roboto-Bold",
     fontSize: Height * 0.025,

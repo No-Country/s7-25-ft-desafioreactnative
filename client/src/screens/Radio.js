@@ -2,7 +2,7 @@ import { View, Text, Pressable } from "react-native";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { resetAudioState } from "../redux/actions/audioActions";
-import TrackUpButton from "../components/TrackUpButton";
+import TrackUpButton from "../screens/CreateTrack"
 import MinimizedMusicPlayer from "../components/MinimizedMusicPlayer";
 
 const Radio = ({ navigation }) => {
