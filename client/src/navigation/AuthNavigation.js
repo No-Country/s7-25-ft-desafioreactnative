@@ -31,6 +31,8 @@ function StackNavigation() {
           options={{
             headerMode: "modal",
             title: "",
+            animation: "slide_from_bottom",
+            presentation: "modal",
           }}
           name="PlayingSong"
           component={PlayingSong}

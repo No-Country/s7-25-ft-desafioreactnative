@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-export default userInfo = () => {
+const userInfo = () => {
   const userState = useSelector((state) => state.users);
 
   const loading = userState.loading,
@@ -25,3 +25,4 @@ export default userInfo = () => {
     userById,
   };
 };
+export default userInfo;

@@ -27,7 +27,6 @@ import { signInUser } from "../redux/actions/userActions";
 import userInfo from "../redux/utils/userInfo";
 import ValidateEmail from "../utils/validateEmail";
 
-
 const SignIn = () => {
   const [errors, setErrors] = useState({});
   const [valid, setValid] = useState(false);
@@ -40,19 +39,24 @@ const SignIn = () => {
 
   const dispatch = useDispatch();
   const { loading, loggedInUser, actionError } = userInfo();
+
   const signInError = () =>
     Alert.alert("Algo salió mal", `${actionError.message}`, [{ text: "OK" }]);
 
   const handleValidation = async () => {
     Keyboard.dismiss();
     setValid(true);
+    setErrors({});
 
     if (!formData.email) {
       handleError("Por favor, introduzca su correo electrónico", "email");
       setValid(false);
     }
     if (!ValidateEmail(formData.email)) {
-      handleError("Por favor, introduzca un correo electrónico válido");
+      handleError(
+        "Por favor, introduzca un correo electrónico válido",
+        "email"
+      );
       setValid(false);
     }
     if (!formData.password) {
@@ -87,7 +91,6 @@ const SignIn = () => {
 
   return (
     <>
-    
       <ImageBackground
         source={backgroundImage}
         style={{ flex: 1 }}

@@ -1,5 +1,12 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import songs from "../database/songs";
 import Slider from "@react-native-community/slider";
 import { useWindowDimensions } from "react-native";
@@ -17,15 +24,63 @@ import {
 } from "../components/Icons";
 import currencyFormat from "../utils/currencyFormat";
 import convertToMin from "../utils/minutesFormat";
-import { play, resume } from "../redux/actions/audioActions";
+import {
+  nextSong,
+  pauseSong,
+  play,
+  playSong,
+  previousSong,
+  resume,
+  resumeSong,
+} from "../redux/actions/audioActions";
+import audioInfo from "../redux/utils/audioInfo";
+import { setPlaybackPosition } from "../redux/reducers/audios";
+import { useDispatch } from "react-redux";
 
-export default function PlayingSong({ route }) {
-  const song = route?.params.song;
-  const soundObj = route?.params.soundObj;
+export default function PlayingSong({ route, navigation }) {
+  // const song = route?.params.song;
+  /* let soundObjStatus = JSON.parse(route?.params.soundObjStatus);
+  let soundObjSound = JSON.parse(route?.params.soundObjSound); */
   const { height, width } = useWindowDimensions();
-  const [playing, setPlaying] = useState(false);
-  const [PauseButton, setPauseButton] = useState(false);
-  console.log("SOUND=>", soundObj);
+  const [position, setPosition] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isBuffering, setIsBuffering] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(0);
+  const {
+    soundObj,
+    soundObjStatus,
+    currentAudio,
+    playbackPosition,
+    playbackDuration,
+    isPlaying,
+    playbackObj,
+    song,
+    audioFiles,
+    currentAudioIndex,
+    loading,
+  } = audioInfo();
+  const dispatch = useDispatch();
+
+  async function playNextSong() {
+    dispatch(nextSong());
+    return navigation.navigate("PlayingSong");
+  }
+
+  async function playPreviousSong(song) {
+    dispatch(previousSong(song));
+    return navigation.navigate("PlayingSong");
+  }
+  /*   useLayoutEffect(() => {
+    soundObjSound = JSON.parse(route?.params.soundObjSound);
+  }, [route]); */
+
+  /*   useEffect(() => {
+    handlePosition();
+    console.log("HERE=>", playbackPosition);
+    console.log("PLAYBACK DURATION=>", playbackDuration);
+    console.log("is it Playing=>", isPlaying); 
+    console.log("SEEKBAR POSITION?=>", playbackDuration / playbackPosition);
+  }, [soundObjStatus]); */
 
   return (
     <View className="flex-1 bg-brandBlue">
@@ -48,14 +103,28 @@ export default function PlayingSong({ route }) {
             <Text className="text-[#FFF] text-3xl font-bold text-center">
               {song?.title}
             </Text>
-            <View className="flex-row justify-center items-center gap-x-2">
+            <View className="justify-center items-center gap-x-2">
               <Text className="text-[#FFF] text-md text-center mr-2">
                 {song?.artist}
               </Text>
-              <CartIcon color="#CBFB5E" width="16" height="16" />
-              <Text className="text-brandGreen text-xs text-center">
-                {currencyFormat(39)}
-              </Text>
+              <Pressable
+                className="flex-row justify-center items-center bg-brandGreen rounded-full"
+                style={{
+                  height: height * 0.06,
+                  width: width * 0.7,
+                  marginTop: width * 0.05,
+                }}
+              >
+                <CartIcon color="#000" width="16" height="16" />
+                <Text
+                  className="text-[#000] font-bold text-md text-center"
+                  style={{
+                    marginLeft: width * 0.02,
+                  }}
+                >
+                  Comprar a US{currencyFormat(song?.price)}
+                </Text>
+              </Pressable>
             </View>
           </View>
 
@@ -68,22 +137,17 @@ export default function PlayingSong({ route }) {
             <HeartIcon />
             <CartIcon />
           </View>
-
-          <View>
+          <View className="relative">
             <Slider
               minimumValue={0}
-              //maximumValue={soundObj?.status.durationMillis}
+              maximumValue={soundObjStatus?.durationMillis}
               minimumTrackTintColor="#CBFB5E"
               thumbTintColor="#CBFB5E"
               maximumTrackTintColor="#CBFB5E"
-              /*   value={
-                soundObj?.status?.positionMillis /
-                  soundObj?.status.durationMillis || 0
-              }
+              value={soundObjStatus?.positionMillis}
               onValueChange={(value) => {
-                value * soundObj?.status.durationMillis;
-              }} */
-              //onSlidingComplete={handleSeek}
+                console.log("Track progress==>", value);
+              }}
             />
           </View>
           <View
@@ -94,58 +158,101 @@ export default function PlayingSong({ route }) {
             className="flex-row justify-between self-center"
           >
             <Text className="text-[#fff]">
-              {/* convertToMin(soundObj?.status?.positionMillis || 0) */ 0}
+              {soundObjStatus?.isBuffering ||
+              !soundObjStatus?.isLoaded ||
+              loading
+                ? "- : -"
+                : convertToMin(soundObjStatus?.positionMillis || 0)}
             </Text>
             <Text className="text-[#fff]">
-              {convertToMin(/* soundObj?.status?.durationMillis */ 3000)}
+              {soundObjStatus?.isBuffering ||
+              !soundObjStatus?.isLoaded ||
+              loading
+                ? "- : -"
+                : convertToMin(
+                    soundObjStatus?.durationMillis -
+                      soundObjStatus?.positionMillis
+                  )}
             </Text>
           </View>
         </View>
-        <View className="flex-row w-full justify-evenly items-center">
-          <TouchableOpacity /* onPress={handlePrev} */>
-            <ShuffleIcon />
-          </TouchableOpacity>
-          <TouchableOpacity /* onPress={handlePrev} */>
-            <PreviousIcon />
-          </TouchableOpacity>
-            
-            {PauseButton
-            ?
-            <TouchableOpacity
-            onPress={() => {play(soundObj),setPauseButton(false)}}
-            style={{
-              width: width * 0.16,
-              height: height * 0.08,
-            }}
-            className="bg-brandGreen rounded-full items-center justify-center"
-          >
-            <PlayIcon />
-          </TouchableOpacity>
-          :
-          <TouchableOpacity
-            onPress={() => {resume(soundObj), setPauseButton(true)}}
-            style={{
-              width: width * 0.16,
-              height: height * 0.08,
-            }}
-            className="bg-brandGreen rounded-full items-center justify-center"
-          >
-            <PauseIcon color={"#000"} />
-          </TouchableOpacity>
-          }
-    
+        <View className="flex-row w-full justify-evenly items-center relative">
+          {soundObjStatus?.isBuffering ||
+          !soundObjStatus?.isLoaded ||
+          loading ? (
+            <ActivityIndicator
+              animating={
+                soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded
+                  ? true
+                  : false
+              }
+              color="#CBFB5E"
+              className="self-center absolute left-0 right-0 z-10"
+              size="large"
+            />
+          ) : (
+            <>
+              <TouchableOpacity>
+                <ShuffleIcon />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={async () => await playPreviousSong()}>
+                <PreviousIcon />
+              </TouchableOpacity>
 
-          <TouchableOpacity
-          /*  onPress={() =>
-              song?.soundObj?.isPlaying ? handleStop(() => {}) : () => {}
-            }
-            disabled={actions?.stop} */
-          >
-            <NextIcon />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <LoopIcon />
-          </TouchableOpacity>
+              {isPlaying ? (
+                <TouchableOpacity
+                  onPress={() => dispatch(pauseSong(soundObj))}
+                  style={{
+                    width: width * 0.16,
+                    height: height * 0.08,
+                  }}
+                  className="bg-brandGreen rounded-full items-center justify-center"
+                >
+                  <PauseIcon color={"#000"} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => dispatch(resumeSong(soundObj))}
+                  style={{
+                    width: width * 0.16,
+                    height: height * 0.08,
+                  }}
+                  className="bg-brandGreen rounded-full items-center justify-center"
+                  disabled={
+                    soundObjStatus?.isBuffering ||
+                    !soundObjStatus?.isLoaded ||
+                    loading
+                      ? true
+                      : false
+                  }
+                >
+                  <PlayIcon />
+                </TouchableOpacity>
+              )}
+
+              <TouchableOpacity
+                onPress={async () => await playNextSong()}
+                disabled={
+                  soundObjStatus?.isBuffering ||
+                  !soundObjStatus?.isLoaded ||
+                  loading
+                    ? true
+                    : false
+                }
+              >
+                <NextIcon />
+              </TouchableOpacity>
+              <TouchableOpacity
+                disabled={
+                  soundObjStatus?.isBuffering || !soundObjStatus?.isLoaded
+                    ? true
+                    : false
+                }
+              >
+                <LoopIcon />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
     </View>
