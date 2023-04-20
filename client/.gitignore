@@ -12,7 +12,7 @@ npm-debug.*
 web-build/
 .env
 Client/app.json
-app.json
+
 
 # macOS
 .DS_Store
@@ -23,3 +23,4 @@ app.json
 package-lock.json
 yarn.lock
 firebase.js
+app.json

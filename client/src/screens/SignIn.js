@@ -71,7 +71,7 @@ const SignIn = () => {
       setErrors({});
       navigation.navigate("Home");
     }
-    if (actionError) {
+    if (actionError !== null) {
       signInError();
     }
   };

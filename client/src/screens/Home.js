@@ -161,7 +161,12 @@ const Home = () => {
           </ImageBackground>
         </ScrollView>
       </View>
-      <View style={styles.RecomendadosContainer}>
+      <View
+        style={[
+          styles.RecomendadosContainer,
+          { paddingBottom: song ? Height * 0.1 : 0 },
+        ]}
+      >
         <Text style={styles.RecomendadosTitle}>Recomendados para ti</Text>
         <FlatList
           overScrollMode="never"

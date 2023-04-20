@@ -3,12 +3,16 @@ import React from "react";
 import userInfo from "../redux/utils/userInfo";
 import { logOutUser } from "../redux/actions/userActions";
 import { useDispatch } from "react-redux";
+import audioInfo from "../redux/utils/audioInfo";
+import { stopSong } from "../redux/actions/audioActions";
 
 const Account = () => {
   const { user } = userInfo();
   const dispatch = useDispatch();
+  const { soundObj } = audioInfo();
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
+    dispatch(stopSong(soundObj));
     dispatch(logOutUser());
   };
   return (

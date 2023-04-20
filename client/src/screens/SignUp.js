@@ -18,6 +18,7 @@ import backgroundImage from "../../assets/signup-bg.png";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../redux/actions/userActions";
 import ValidateEmail from "../utils/validateEmail";
+import userInfo from "../redux/utils/userInfo";
 
 const SignUp = () => {
   const [errors, setErrors] = useState({});

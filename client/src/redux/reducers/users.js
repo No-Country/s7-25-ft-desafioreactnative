@@ -10,11 +10,11 @@ import {
 } from "../actions/userActions";
 
 const initialState = {
-  users: "",
+  users: null,
   loading: false,
-  currentUser: "",
+  currentUser: null,
   isLogin: false,
-  userById: "",
+  userById: null,
   error: null,
   reqStatus: null,
 };

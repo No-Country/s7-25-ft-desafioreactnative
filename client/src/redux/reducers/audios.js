@@ -8,6 +8,7 @@ import {
   previousSong,
   resetAudioState,
   resumeSong,
+  stopSong,
 } from "../actions/audioActions";
 
 const initialState = {
@@ -162,7 +163,7 @@ const audiosReducer = createSlice({
         state.soundObjStatus = action.payload;
         state.playbackPosition = action.payload?.positionMillis;
         state.playbackDuration = action.payload?.durationMillis;
-        //console.log(action.payload?.isPlaying);
+        console.log(action.payload);
       }
       state.isPlaying = action.payload?.isPlaying;
     });
@@ -181,8 +182,30 @@ const audiosReducer = createSlice({
       console.log("AFTER STATE RESET", state);
     });
     builder.addCase(resetAudioState.rejected, (state, action) => {
-      playbackError = action.error.message;
+      state.playbackError = action.error.message;
       console.log("NOT RESET", action.error.message);
+    });
+    builder.addCase(stopSong.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(stopSong.fulfilled, (state, action) => {
+      state.isPlaying = false;
+      playbackError = null;
+      state.soundObj = null;
+      state.soundObjStatus = null;
+      state.currentAudioIndex = null;
+      state.loading = false;
+      state.song = null;
+      console.log("SONG STOPPED");
+    });
+    builder.addCase(stopSong.rejected, (state, action) => {
+      state.isPlaying = false;
+      state.playbackError = action.error.message;
+      console.log(
+        "SONG COULD NOT BE STOPPED=====>",
+        "ACTION",
+        action.error.message
+      );
     });
 
     /*     builder.addCase(fetchTracks.fulfilled, (state, action) => {
