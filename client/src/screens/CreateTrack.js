@@ -7,6 +7,7 @@ import {ArrowBackIcon,ArrowDownIcon} from '../components/Icons';
 import axios from "axios";
 import { useNavigation } from '@react-navigation/native';
 import OptionsModalGenresCreate from "../components/OptionsModalGenresCreate";
+import userInfo from "../redux/utils/userInfo"
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
@@ -23,6 +24,8 @@ const CreateTrack = () => {
   const [Title,setTitle] = useState('Rock');
   const [moreOptionsModalGenres, setMoreOptionsModalGenres] = useState(false);
 
+  const { token, user } = userInfo()
+  const userId = user.data.id
 
   const pickAudio = async () => {
     try {
@@ -114,10 +117,10 @@ const CreateTrack = () => {
         }
         // cambiar los literales user_id, price y genres
         const trackData = {
-          user_id: "26e98604-9333-43e5-aa59-204e4403bb57",
-          "title": {InputTitle},
+          user_id: userId,/* 
+          title: {InputTitle}, */
           price: {InputPrice},
-          genres: [{Title}],
+          genres: [...Title],
 
         };
 
@@ -127,7 +130,7 @@ const CreateTrack = () => {
           // cambiar literal de token
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI2ZTk4NjA0LTkzMzMtNDNlNS1hYTU5LTIwNGU0NDAzYmI1NyIsImlhdCI6MTY4MTkyNDMzMywiZXhwIjoxNjg0NTE2MzMzfQ.SqNYwVtUddjeyiLTKTYvCHHxK2CryqlMlD7Kn4CSMH0"}`,
+            Authorization: `Bearer ${token}`,
           },
           onUploadProgress: function (progressEvent) {
             const percentCompleted = Math.round(
@@ -163,9 +166,9 @@ const CreateTrack = () => {
 
     <View style={{marginTop:Height*0.05}} className='items-center'>
     <View style={styles.InputGroup}>
-    <View style={{borderRadius:Height*0.009,width:Width*0.8}} className='flex-row items-center bg-[#292D39] border border-[#363942]'>       
+   {/*  <View style={{borderRadius:Height*0.009,width:Width*0.8}} className='flex-row items-center bg-[#292D39] border border-[#363942]'>       
       <TextInput onChangeText={(e)=>setInputTitle(e)} multiline={false} placeholder='Titulo' placeholderTextColor={'#71737B'} selectionColor={'#CBFB5E'} style={styles.Input}></TextInput>
-    </View>
+    </View> */}
 
     <View style={{borderRadius:Height*0.009,width:Width*0.8}} className='flex-row items-center bg-[#292D39] border border-[#363942]'>       
       <TextInput keyboardType="numeric" onChangeText={(e)=>setInputPrice(e)} multiline={false} placeholder='Precio' placeholderTextColor={'#71737B'} selectionColor={'#CBFB5E'} style={styles.Input}></TextInput>
@@ -195,9 +198,7 @@ const CreateTrack = () => {
     </View>
     <TouchableOpacity  style={styles.Pista} onPress={pickAudio}>
         <Text className='text-[#FFF] text-center'>Seleccionar una pista{'\n'}(Wav o Mp3) </Text>
-      </TouchableOpacity>
-          <Text className='text-[#FFF]'>{fileData?.name}</Text>
-          <Text className='text-[#FFF]'>{fileData?.uri}</Text>        
+      </TouchableOpacity> 
     </View>
 
       <TouchableOpacity style={styles.SelectImg}
@@ -207,14 +208,12 @@ const CreateTrack = () => {
           <Text className='text-[#FFF]'>Seleccionar una imagen</Text>
 
       </TouchableOpacity>
-          <Text className='text-[#FFF]'>{imageData?.name}</Text>
-          <Text className='text-[#FFF]'>{imageData?.uri}</Text>
 
       <TouchableOpacity
       className='bg-brandGreen'
         style={styles.Upload}
         disabled={!fileData?.uri}
-        onPress={()=>uploadTrack}
+        onPress={uploadTrack}
       >
           <Text className='text-neutralMarineBlue'>Subir pista</Text>
 
