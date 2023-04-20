@@ -163,6 +163,7 @@ const audiosReducer = createSlice({
         state.playbackPosition = action.payload?.positionMillis;
         state.playbackDuration = action.payload?.durationMillis;
       }
+      state.isPlaying = action.payload?.isPlaying;
     });
     builder.addCase(playbackStatusUpdate.rejected, (state, action) => {
       state.isPlaying = false;

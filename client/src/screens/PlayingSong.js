@@ -34,7 +34,6 @@ import {
   resumeSong,
 } from "../redux/actions/audioActions";
 import audioInfo from "../redux/utils/audioInfo";
-import { setPlaybackPosition } from "../redux/reducers/audios";
 import { useDispatch } from "react-redux";
 
 export default function PlayingSong({ route, navigation }) {

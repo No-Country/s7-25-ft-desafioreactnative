@@ -46,8 +46,8 @@ const MusicCard = ({
   const { token, user } = userInfo();
   const userId = user.data.id;
 
-  const changeFavorite = () => {
-    axios
+  const changeFavorite = async () => {
+    await axios
       .post(
         `/api/v1/tracks/${!Favourites ? "addToFavorite" : "removeFavorite"}`,
         { userId, trackId: id },
