@@ -1,5 +1,5 @@
 import { useFonts } from "expo-font";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -15,10 +15,11 @@ import {
 import { SearchIcon, ShopIcon } from "../components/Icons";
 import MusicCard from "../components/MusicCard";
 import songs from "../database/songs";
-import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import MinimizedMusicPlayer from "../components/MinimizedMusicPlayer";
 import audioInfo from "../redux/utils/audioInfo";
+import userInfo from "../redux/utils/userInfo";
 
 const Height = Dimensions.get("window").height;
 const Width = Dimensions.get("window").width;
@@ -28,13 +29,13 @@ const Home = () => {
   const [songs, setsongs] = useState([]);
   const { song } = audioInfo();
 
+  const { token, user } = userInfo();
+  const userId = user.data.id;
+
   useEffect(() => {
     axios
-      .get(`/api/v1/tracks?page=1`, {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs",
-        },
+      .get(`/api/v1/tracks/${userId}?page=1`, {
+        headers: { Authorization: `Bearer ${token}` },
       })
 
       .then((response) => {
@@ -79,13 +80,13 @@ const Home = () => {
             SoundScale
           </Text>
         </View>
-        <View className="flex-row gap-x-5 mr-5">
+        <View className="flex-row gap-x-5 mr-5 items-center">
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Search");
+              navigation.navigate("CreateTrack");
             }}
           >
-            <SearchIcon size={Height * 0.035} />
+            <Text style={{ fontSize: Height * 0.05, color: "white" }}>+</Text>
           </TouchableOpacity>
           <TouchableOpacity>
             <ShopIcon size={Height * 0.03} color={"white"} />
@@ -174,12 +175,14 @@ const Home = () => {
           renderItem={({ item }) => (
             <MusicCard
               id={item.id}
-              artist={item.artist}
+              artist={item.artist.userName}
               title={item.title}
-              price={3000}
+              price={item.price}
               artwork={item.artwork}
               url={item.url}
               duration={convertirMilisegundos(item.duration)}
+              favoritedBy={item.favoritedBy}
+              purchasedBy={item.purchasedBy}
             />
           )}
           keyExtractor={(e) => e.id}

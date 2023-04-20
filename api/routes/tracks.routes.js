@@ -20,7 +20,7 @@ tracksRouter.post("/uploadForTests", uploadTracksTest);
 
 tracksRouter.use(protectSession);
 
-tracksRouter.get("/", getTracks);
+tracksRouter.get("/:userId", getTracks);
 tracksRouter.get("/:id/getUserTracks", getUserTracks);
 
 const storage = multer.memoryStorage();
@@ -36,6 +36,6 @@ tracksRouter.post("/makePayment", makePayment);
 tracksRouter.post("/completePurchase", completePurchase);
 
 tracksRouter.post("/addToFavorite", addToFavorite);
-tracksRouter.delete("/removeFavorite", removeFavorite);
+tracksRouter.post("/removeFavorite", removeFavorite);
 
 module.exports = { tracksRouter };

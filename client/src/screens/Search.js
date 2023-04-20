@@ -8,27 +8,28 @@ import MusicCard from '../components/MusicCard';
 import axios from 'axios';
 import { useEffect } from 'react';
 import OptionsModalGenres from '../components/OptionsModalGenres';
+import userInfo from "../redux/utils/userInfo";
 
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
 
-const BaseURL = 'http://192.168.0.12:4000';
 
 const Search = () => {
 
-    const navigation = useNavigation();
     const [moreOptionsModal, setMoreOptionsModal] = useState(false);
     const [moreOptionsModalGenres, setMoreOptionsModalGenres] = useState(false);
     const [songs, setsongs] = useState([]);
     const [filtro,setFiltro] = useState('');
     const [Title,setTitle] = useState('Todos');
     const [input,setinput] = useState('');
-    console.log(input)
+
+    const { token, user } = userInfo()
+    const userId = user.data.id
 
     useEffect(() => {
         
-        axios.get(`${BaseURL}/api/v1/tracks?page=1${filtro}&search=${input}`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs"}})
+        axios.get(`/api/v1/tracks/${userId}?page=1${filtro}&searchByTitle=${input}`, {headers:{'Authorization':`Bearer ${token}`}})
         
         .then((response) => {
           setsongs(response.data.data.tracks);
@@ -39,7 +40,6 @@ const Search = () => {
         });
       }, [filtro,input]);
 
-      console.log(songs)
     
     const [loaded] = useFonts({
         'Roboto-Bold': require('../../assets/fonts/Roboto-Bold.ttf'),
@@ -62,11 +62,8 @@ const Search = () => {
         <>
         <SafeAreaView className='flex-1 bg-brandBlue'>
              <View style={styles.header} className='flex-row items-center justify-center'>
-             <View style={{gap:Width*0.035,marginLeft:Width*0.05}} className='flex-row items-center'>
-                <TouchableOpacity onPress={()=>{navigation.navigate('Home')}}>
-                    <ArrowBackIcon color={'white'} size={Height*0.020}/>
-                </TouchableOpacity>
-                <View style={{borderRadius:Height*0.009,marginRight:Width*0.06}} className='flex-row items-center bg-[#292D39] border-[#363942] border'> 
+             <View style={{gap:Width*0.030}} className='flex-row items-center'>
+                <View style={{borderRadius:Height*0.009}} className='flex-row items-center bg-[#292D39] border-[#363942] border'> 
                     <View style={{marginLeft:Width*0.04}}>
                     <SearchIcon size={Width*0.055}/>
                     </View>
@@ -87,7 +84,7 @@ const Search = () => {
              <View style={styles.SearchContainer}>
                 <FlatList overScrollMode='never' 
                 data={songs} 
-                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist} title={item.title} price={3000} artwork={item.artwork} url={item.url} duration={item.duration} />}
+                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist.userName} title={item.title} price={item.price} artwork={item.artwork} url={item.url} duration={item.duration} favoritedBy={item.favoritedBy} purchasedBy={item.purchasedBy}/>}
                 keyExtractor={(e) => e.id}   
                 />
              </View>
@@ -114,7 +111,7 @@ const styles = StyleSheet.create({
     Input:{fontFamily:'Roboto-Regular',fontSize:Height*0.02,width:Width*0.70,paddingHorizontal:Width*0.02,height:Height*0.045,color:'white'},
     Generos:{fontFamily:'Roboto-Bold',fontSize:Height*0.02,color:'#71737B',letterSpacing:Width*0.001,marginLeft:Width*0.065,marginRight:Width*0.04},
     Seleccion:{fontFamily:'Roboto-Bold', fontSize:Height*0.02, color:'white'},
-    SearchContainer:{height:Height*0.75,width:Width*0.9,alignSelf:'center',},
+    SearchContainer:{height:Height*0.68,width:Width*0.9,alignSelf:'center',},
 })
 
 export default Search;
