@@ -1,10 +1,7 @@
-import { View, Text, Dimensions } from "react-native";
+import { Dimensions } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
-import Explore from "../screens/Explore";
-import Radio from "../screens/Radio";
-import Account from "../screens/Account";
 import FavoriteTabs from "../screens/FavoriteTabs";
 import Search from "../screens/Search";
 
@@ -14,7 +11,7 @@ import {
   HomeIcon,
   FavouritesIcon,
 } from "../components/Icons";
-import MusicPlayer from "../screens/MusicPlayer";
+import Menu from "../screens/Menu";
 
 const Tab = createBottomTabNavigator();
 const Height = Dimensions.get("window").height;
@@ -63,15 +60,16 @@ const BottomTabNavigator = () => {
         component={FavoriteTabs}
         options={({ route }) => ({
           tabBarLabel: "Favoritos",
-          headerShown:false,
+          headerShown: false,
           tabBarIcon: (props) => <FavouritesIcon color={props.color} />,
         })}
       />
       <Tab.Screen
-        name="Account"
-        component={Account}
+        name="Menu"
+        component={Menu}
         options={({ route }) => ({
           tabBarLabel: "Menu",
+          headerShown: false,
           tabBarIcon: (props) => <MenuIcon color={props.color} />,
         })}
       />

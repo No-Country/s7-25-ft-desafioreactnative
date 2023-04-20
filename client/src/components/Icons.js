@@ -681,6 +681,7 @@ export const PauseIcon = ({ color, width, height }) => {
     </Svg>
   );
 };
+
 export const ShopIcon = ({ color, size }) => {
   return (
     <Svg
@@ -699,6 +700,7 @@ export const ShopIcon = ({ color, size }) => {
     </Svg>
   );
 };
+
 export const ThreePoints = ({ color, size }) => {
   return (
     <Svg
@@ -718,39 +720,86 @@ export const ThreePoints = ({ color, size }) => {
   );
 };
 
-export const ArrowBackIcon = ({color,size}) =>{
-  return(
-    <Svg xmlns="http://www.w3.org/2000/svg" 
-    width={size} 
-    height={size} 
-    viewBox="0 0 16 16" 
-    fill="none"
+export const ArrowBackIcon = ({ color, size }) => {
+  return (
+    <Svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
     >
-  <Path 
-  fill-rule="evenodd" 
-  clip-rule="evenodd" 
-  d="M3.83 7L9.42 1.41L8 0L0 8L8 16L9.41 14.59L3.83 9H16V7H3.83Z" 
-  fill={color}
-  />
-</Svg>
-  )
-}
-
-export const ArrowDownIcon = ({color,size}) => {
-  return(
-    <Svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size} 
-    height={size} 
-    viewBox="0 0 12 9" 
-    fill="none">
-      <Path 
-      fill-rule="evenodd" 
-      clip-rule="evenodd" 
-      d="M6 5.17253L10.59 0.592529L12 2.00253L6 8.00253L0 2.00253L1.41 0.592529L6 5.17253Z" 
-      fill={color}
+      <Path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M3.83 7L9.42 1.41L8 0L0 8L8 16L9.41 14.59L3.83 9H16V7H3.83Z"
+        fill={color}
       />
     </Svg>
-  )
-}
+  );
+};
 
+export const ArrowDownIcon = ({ color, size }) => {
+  return (
+    <Svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 12 9"
+      fill="none"
+    >
+      <Path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M6 5.17253L10.59 0.592529L12 2.00253L6 8.00253L0 2.00253L1.41 0.592529L6 5.17253Z"
+        fill={color}
+      />
+    </Svg>
+  );
+};
+
+export const LogoutIcon = ({ color, width, height }) => {
+  return (
+    <Svg
+      width={width ? width : "24"}
+      height={height ? height : "24"}
+      fill={color ? color : "#EEEEEE"}
+      viewBox="0 0 24 24"
+    >
+      <Rect width="24" height="24" fill="url(#pattern0)" />
+      <Defs>
+        <Pattern
+          id="pattern0"
+          patternContentUnits="objectBoundingBox"
+          width="1"
+          height="1"
+        >
+          <Use href="#image0_659_13756" transform="scale(0.0416667)" />
+        </Pattern>
+        <Image
+          id="image0_659_13756"
+          width="24"
+          height="24"
+          href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYEAQAAAAa7ikwAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAAAqo0jMgAAAAlwSFlzAAAAYAAAAGAA8GtCzwAAAAd0SU1FB+cEERAMEHeU67gAAAMxSURBVEjHjZbNT1NBFMXPlFIDO0MrsVaX4kYNG2BhRDeIRKOJEv8AUhJD1Og/omGLLizsjTEutaXqhiUmLligorZ9fNSoUNk4PxfTZvr6WuhN3qJ3zpz7MXfO1KgLg54eaXBQOn7ceUolaXPTmH//utl/APHUFCwtQbVKxKpVWFyEycmDOEx74uFhaX5eunBBCgLx6pW0siKVy25XOi2NjEjXr0vHjknForh3z8RWV7vI+s4dqNXg+3eYmXHt6YC18Tg2m4UfP7C7u9jbt7sgtxabz8PAQNettMkkLC+DtXDrVgfy4WGo1bD5PDaRaE+UzWKz2fZriQQUi66Ss2fbBHj3zrXFZw7pNHZiwpPk89h83v+emIB02v9OpaBUasbUiaam3GTMzHjwyZOwsQHr6x0D8PkzfP2KzWS8b3YWAHvlSlOApSWoVJoPFAoF+PMHOzraOcDYmGvJmzehgycI4PnzOqinB6pV7MKC33j5sqvowYNwn8MBHPbhQ5fxxYse9+wZbG9DLBZzN/ToUTfnDbtxQ6rVpKdPDx+hhQXp71/p5k3vXFmRBgZEKhUX6bSMJFMqecDQkLS+bszeXojMfPrUym9iu7vw5YvM6dPeW+cyJ07EZcBlYlputbURMjM3176MFk0yDS6Iha9/w9bWpDNnoK/v0A7R1ycNDYm1Ne9tcJXLMSkIpJ8/nbY07MULKZEQnTJujjA3J/X2yrx86Z2jo9LOjrS5Wc9icRGCABuP+8wKBfj1q3lMo9mPjTlM85j29mK3tiCXawJevepGzcsA9tQp+PYNfv92o9jf7/H9/fDokVvb2AhftLt3IxfNLRSLThWTSR8kk3HCB7C/D6ur7tvfd763b0PkdnAQKpWIVLjF8+dhbw+Wl1vFDi5dgidP4PVr9z1+DOPj4f1HjsCHDx3FzoGmp53kFovYVOrQAw5l/v69k/rD3gQ7Pe0qKZVgdrb54KPYeNz1vFLp9OC0fzLtuXMy8/PS+Li0teWfzMYNzWSkkRFx7ZpMMikKBen+fRP7+LHbquu9n5yEXA52dqKP/vY25HKRaemmgmighig2/raUy1IQGBOVk1b7DxjUp/XQ878hAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIzLTA0LTE3VDE2OjEyOjE2KzAwOjAw8TjxlAAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMy0wNC0xN1QxNjoxMjoxNiswMDowMIBlSSgAAAAodEVYdGRhdGU6dGltZXN0YW1wADIwMjMtMDQtMTdUMTY6MTI6MTYrMDA6MDDXcGj3AAAAAElFTkSuQmCC"
+        />
+      </Defs>
+    </Svg>
+  );
+};
+
+export const ArrowRightIcon = ({ color, width, height }) => {
+  return (
+    <Svg
+      width={width ? width : "8"}
+      height={height ? height : "12"}
+      fill={color ? color : "#EEEEEE"}
+      viewBox="0 0 8 12"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M1.70504 0L0.295044 1.41L4.87504 6L0.295044 10.59L1.70504 12L7.70504 6L1.70504 0Z"
+        fill="#CAC4D0"
+      />
+    </Svg>
+  );
+};

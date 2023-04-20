@@ -215,7 +215,8 @@ export const previousSong = createAsyncThunk(
 
 export const stopSong = createAsyncThunk(
   "audios/stopSong",
-  async (soundObj) => {
+  async (_, { getState }) => {
+    const { soundObj } = getState().audios;
     try {
       if (soundObj) {
         await soundObj?.stopAsync();
