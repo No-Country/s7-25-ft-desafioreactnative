@@ -2,7 +2,7 @@ import { View, Text, Pressable } from "react-native";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { resetAudioState } from "../redux/actions/audioActions";
-import TrackUpButton from "../screens/CreateTrack"
+import TrackUpButton from "../screens/CreateTrack";
 import MinimizedMusicPlayer from "../components/MinimizedMusicPlayer";
 
 const Radio = ({ navigation }) => {
@@ -17,9 +17,7 @@ const Radio = ({ navigation }) => {
       <Pressable onPress={() => navigation.navigate("MusicPlayer")}>
         <Text>Music Player</Text>
       </Pressable>
-      <Pressable onPress={() => handleReset()}>
-        <Text>Clear Audio State</Text>
-      </Pressable>
+
       <TrackUpButton />
       <MinimizedMusicPlayer />
     </View>

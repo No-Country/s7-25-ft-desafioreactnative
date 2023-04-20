@@ -29,7 +29,7 @@ export const playSong = createAsyncThunk(
         const index = await audioFiles.findIndex(({ id }) => id === song?.id);
         const playbackObj = await playbackObject.createAsync(
           { uri: song?.url },
-          { shouldPlay: true, progressUpdateIntervalMillis: 1000 }
+          { shouldPlay: true }
         );
         //Update the playback object status as it plays by dispatching the playbackStatusUpdate action
         playbackObj?.sound.setOnPlaybackStatusUpdate((status) =>
@@ -43,7 +43,6 @@ export const playSong = createAsyncThunk(
         { uri: song?.url },
         {
           shouldPlay: false,
-          progressUpdateIntervalMillis: 1000,
         }
       );
 

@@ -20,12 +20,15 @@ import axios from "axios";
 import MinimizedMusicPlayer from "../components/MinimizedMusicPlayer";
 import audioInfo from "../redux/utils/audioInfo";
 import userInfo from "../redux/utils/userInfo";
+import { useDispatch } from "react-redux";
+import { playSong } from "../redux/actions/audioActions";
 
 const Height = Dimensions.get("window").height;
 const Width = Dimensions.get("window").width;
 
 const Home = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [songs, setsongs] = useState([]);
   const { song } = audioInfo();
 
@@ -53,6 +56,16 @@ const Home = () => {
   });
   if (!loaded) {
     return null;
+  }
+
+  async function handlePlay(song) {
+    try {
+      dispatch(playSong({ song }));
+      return navigation.navigate("PlayingSong");
+    } catch (error) {
+      // An error occurred!
+      console.log(error);
+    }
   }
 
   const convertirMilisegundos = (milisegundos) => {
@@ -183,6 +196,8 @@ const Home = () => {
               duration={convertirMilisegundos(item.duration)}
               favoritedBy={item.favoritedBy}
               purchasedBy={item.purchasedBy}
+              song={item}
+              handlePlay={handlePlay}
             />
           )}
           keyExtractor={(e) => e.id}

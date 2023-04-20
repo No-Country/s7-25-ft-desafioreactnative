@@ -49,13 +49,9 @@ export default function PlayingSong({ route, navigation }) {
   const {
     soundObj,
     soundObjStatus,
-    currentAudio,
-    playbackPosition,
-    playbackDuration,
     isPlaying,
     playbackObj,
     song,
-    audioFiles,
     currentAudioIndex,
     loading,
   } = audioInfo();
@@ -70,17 +66,22 @@ export default function PlayingSong({ route, navigation }) {
     dispatch(previousSong(song));
     return navigation.navigate("PlayingSong");
   }
+  async function playInSequence() {
+    return dispatch(playNextSong());
+  }
+
   /*   useLayoutEffect(() => {
     soundObjSound = JSON.parse(route?.params.soundObjSound);
   }, [route]); */
 
-  /*   useEffect(() => {
-    handlePosition();
-    console.log("HERE=>", playbackPosition);
-    console.log("PLAYBACK DURATION=>", playbackDuration);
-    console.log("is it Playing=>", isPlaying); 
-    console.log("SEEKBAR POSITION?=>", playbackDuration / playbackPosition);
-  }, [soundObjStatus]); */
+  useEffect(() => {
+    if (
+      soundObjStatus?.durationMillis - soundObjStatus?.positionMillis <=
+      500
+    ) {
+      playInSequence();
+    }
+  }, [soundObjStatus]);
 
   return (
     <View className="flex-1 bg-brandBlue">
@@ -105,7 +106,7 @@ export default function PlayingSong({ route, navigation }) {
             </Text>
             <View className="justify-center items-center gap-x-2">
               <Text className="text-[#FFF] text-md text-center mr-2">
-                {song?.artist}
+                {song?.artist?.userName}
               </Text>
               <Pressable
                 className="flex-row justify-center items-center bg-brandGreen rounded-full"
