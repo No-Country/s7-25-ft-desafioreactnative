@@ -4,8 +4,6 @@ import { View, Modal, Text, TouchableWithoutFeedback } from "react-native";
 import axios from "axios";
 
 
-const BaseURL = 'http://192.168.0.12:4000';
-
 const OptionsModalGenres = ({
   onData,
   onTitle,
@@ -33,7 +31,7 @@ const OptionsModalGenres = ({
 
   useEffect(() => {
         
-    axios.get(`${BaseURL}/api/v1/genres`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlMDIyZjE5LTc5Y2UtNDhmMC1hNzY0LWJhZWEzNjRmMjAxNiIsImlhdCI6MTY4MTc2MjkwNSwiZXhwIjoxNjg0MzU0OTA1fQ.I7jKyOGmZ-YD0kvz5YJcL3O0aTC0hv8SN1sAjTfmiPs"}})
+    axios.get(`/api/v1/genres`)
     
     .then((response) => {
       const data = response.data.genres;

@@ -36,6 +36,6 @@ tracksRouter.post("/makePayment", makePayment);
 tracksRouter.post("/completePurchase", completePurchase);
 
 tracksRouter.post("/addToFavorite", addToFavorite);
-tracksRouter.delete("/removeFavorite", removeFavorite);
+tracksRouter.post("/removeFavorite", removeFavorite);
 
 module.exports = { tracksRouter };

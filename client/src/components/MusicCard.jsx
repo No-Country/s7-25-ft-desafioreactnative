@@ -7,28 +7,32 @@ import OptionsModal from '../components/OptionsModal'
 import { Audio } from 'expo-av';
 import { useNavigation } from '@react-navigation/core';
 import axios from 'axios';
+import userInfo from '../redux/utils/userInfo';
 
 const Height = Dimensions.get('window').height;
 const Width = Dimensions.get('window').width;
 
-const MusicCard = ({id,title,artist,price,artwork,url,duration}) => {
+const MusicCard = ({id,title,artist,price,artwork,url,duration,favoritedBy, purchasedBy}) => {
 
-    const [Favourites, setFavourites] = useState(false);
+    const [Favourites, setFavourites] = useState(favoritedBy);
     const [moreOptionsModal, setMoreOptionsModal] = useState(false);
 
     const navigation = useNavigation();
     const sound = useRef(new Audio.Sound());
 
-    useEffect(() => {
+    const { token, user } = userInfo()
+    const userId = user.data.id
 
-      axios.post(`/api/v1/tracks/addToFavorite`, {userId: "26e98604-9333-43e5-aa59-204e4403bb57" , trackId: id},{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI2ZTk4NjA0LTkzMzMtNDNlNS1hYTU5LTIwNGU0NDAzYmI1NyIsImlhdCI6MTY4MTkyNDMzMywiZXhwIjoxNjg0NTE2MzMzfQ.SqNYwVtUddjeyiLTKTYvCHHxK2CryqlMlD7Kn4CSMH0"}})
+    const changeFavorite = () => {
+
+      axios.post(`/api/v1/tracks/${!Favourites? "addToFavorite" : "removeFavorite"}`, {userId, trackId: id},{headers:{'Authorization':`Bearer ${token}`}})
       .then((response)=>{
-        console.log(response.data)
+        setFavourites(!Favourites)
       }).catch((error)=>{
         console.log(error)
       })
 
-    }, [Favourites]);
+    };
     
     const [loaded] = useFonts({
         'Roboto-Bold': require('../../assets/fonts/Roboto-Bold.ttf'),
@@ -71,11 +75,11 @@ const MusicCard = ({id,title,artist,price,artwork,url,duration}) => {
                 <View style={styles.favArtistContainer}>
                     {Favourites
                     ?
-                    <TouchableHighlight key={id} onPress={()=>setFavourites(false)}>   
+                    <TouchableHighlight key={id} onPress={()=> changeFavorite()}>   
                         <FavouritesIconFill color={'#CBFB5E'}/>
                     </TouchableHighlight>
                     :
-                    <TouchableHighlight key={id} onPress={()=>setFavourites(true)}>   
+                    <TouchableHighlight key={id} onPress={()=> changeFavorite()}>   
                         <FavouritesIcon color={'#CBFB5E'}/>
                     </TouchableHighlight>
                     
@@ -86,9 +90,9 @@ const MusicCard = ({id,title,artist,price,artwork,url,duration}) => {
                 </View>
             </View>
             <View style={{height:'100%',marginTop:Height*0.089,flexDirection:'row'}}>
-                <Text style={styles.Price}>US${price}</Text>
+                <Text style={styles.Price}>{purchasedBy? "Comprada" : `US$${price}`}</Text>
                 <View style={{marginTop:Height*0.002}}>
-                <ShopIcon color={'#CBFB5E'} size={Height*0.02}/>
+                {purchasedBy? null : <ShopIcon color={'#CBFB5E'} size={Height*0.02}/>}
                 </View>
             </View>
             <TouchableHighlight style={{marginLeft:Width*0.05}}  onPress={() => setMoreOptionsModal(true)}>

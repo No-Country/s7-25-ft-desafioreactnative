@@ -94,6 +94,8 @@ const Favorite = ({route}) => {
                     artwork={item.artwork}
                     url={item.url}
                     duration={convertirMilisegundos(item.duration)}
+                    favoritedBy={item.favoritedBy}
+                    purchasedBy={item.purchasedBy}
                   />
                 </View>
               );

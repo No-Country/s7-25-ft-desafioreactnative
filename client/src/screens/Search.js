@@ -8,6 +8,7 @@ import MusicCard from '../components/MusicCard';
 import axios from 'axios';
 import { useEffect } from 'react';
 import OptionsModalGenres from '../components/OptionsModalGenres';
+import userInfo from "../redux/utils/userInfo";
 
 
 const Height = Dimensions.get('window').height;
@@ -22,11 +23,13 @@ const Search = () => {
     const [filtro,setFiltro] = useState('');
     const [Title,setTitle] = useState('Todos');
     const [input,setinput] = useState('');
-    console.log(input)
+
+    const { token, user } = userInfo()
+    const userId = user.data.id
 
     useEffect(() => {
         
-        axios.get(`/api/v1/tracks?page=1${filtro}&searchByTitle=${input}`,{headers:{'Authorization':"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI2ZTk4NjA0LTkzMzMtNDNlNS1hYTU5LTIwNGU0NDAzYmI1NyIsImlhdCI6MTY4MTkyNDMzMywiZXhwIjoxNjg0NTE2MzMzfQ.SqNYwVtUddjeyiLTKTYvCHHxK2CryqlMlD7Kn4CSMH0"}})
+        axios.get(`/api/v1/tracks/${userId}?page=1${filtro}&searchByTitle=${input}`, {headers:{'Authorization':`Bearer ${token}`}})
         
         .then((response) => {
           setsongs(response.data.data.tracks);
@@ -81,7 +84,7 @@ const Search = () => {
              <View style={styles.SearchContainer}>
                 <FlatList overScrollMode='never' 
                 data={songs} 
-                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist.userName} title={item.title} price={item.price} artwork={item.artwork} url={item.url} duration={item.duration} />}
+                renderItem={({item}) => <MusicCard id={item.id} artist={item.artist.userName} title={item.title} price={item.price} artwork={item.artwork} url={item.url} duration={item.duration} favoritedBy={item.favoritedBy} purchasedBy={item.purchasedBy}/>}
                 keyExtractor={(e) => e.id}   
                 />
              </View>
