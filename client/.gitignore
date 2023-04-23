@@ -9,6 +9,9 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+.env
+Client/app.json
+
 
 # macOS
 .DS_Store
@@ -17,3 +20,6 @@ web-build/
 .metro-health-check*
 
 package-lock.json
+yarn.lock
+firebase.js
+app.json

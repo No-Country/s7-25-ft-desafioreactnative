@@ -2,12 +2,15 @@ const express = require('express');
 
 // Controllers
 const {
-	getAllUsers,
-	createUser,
-	updateUser,
-	deleteUser,
-	login,
-} = require('../controllers/users.controller');
+  getAllUsers,
+  createUser,
+  updateUser,
+  deleteUser,
+  login,
+  forgotPassword,
+  resetPassword,
+  bulkCreateUsers
+} = require("../controllers/users.controller");
 
 // Middlewares
 const { userExists } = require('../middlewares/users.middlewares');
@@ -22,7 +25,10 @@ const {
 
 const usersRouter = express.Router();
 
-usersRouter.post('/', createUserValidators, createUser);
+// register
+usersRouter.post("/", createUserValidators, createUser);
+
+usersRouter.post("/createUsers", bulkCreateUsers);
 
 usersRouter.post('/login', login);
 

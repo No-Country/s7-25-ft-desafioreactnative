@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "soundScale",
-    "slug": "soundScale",
+    "slug": "soundscale",
+    "scheme": "soundscale",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +26,22 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      ["expo-document-picker"],
+      [
+        "expo-media-library",
+        {
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ],
+    "extra": {
+      "api": "https://api-soundscale.up.railway.app",
+      "STRIPE_KEY": "pk_test_51Mx22MEKcgSZKCjSxbGhs73qZg6bJzelg7AN5joJyAX4qN9Nffvn2SsJJTQUdqxngRSNbf9tMNU3Gj1XSeleM3rd00pAEqNsPc",
+      "eas": {
+        "projectId": "e50b4fe6-894a-4eb4-9426-6e45542e8f25"
+      }
     }
   }
 }
